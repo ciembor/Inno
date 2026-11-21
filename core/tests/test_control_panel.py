@@ -146,11 +146,11 @@ def test_metrics_panel_shows_operational_counts_and_import_duration(admin_client
         started_at=timezone.now() - timedelta(minutes=3), finished_at=timezone.now()
     )
 
-    response = admin_client.get(reverse("control_metrics"))
+    response = admin_client.get(reverse("control_dashboard"))
 
     content = response.content.decode()
     assert response.status_code == 200
-    assert "Metryki Innoradaru" in content
+    assert "Panel administracyjny" in content
     assert "Instytucja z aktualnościami" not in content
     assert ">2<" in content
     assert ">10<" in content
@@ -158,6 +158,8 @@ def test_metrics_panel_shows_operational_counts_and_import_duration(admin_client
     assert "Średni czas importu" in content
     assert "min</dd>" in content
     assert "Ostatnie importy" in content
+    assert reverse("control_csv_export") in content
+    assert admin_client.get(reverse("control_metrics")).url == reverse("control_dashboard")
 
 
 def test_duration_formatter_covers_all_display_forms():

@@ -1,6 +1,6 @@
 {% extends "core/control/base.html" %}
 {% block control_content %}
-  <h1>Metryki Innoradaru</h1>
+  <h1>Panel administracyjny</h1>
   <p>Stan danych i działania automatycznych procesów. Liczby aktualizują się po każdym imporcie i ocenie.</p>
   <dl class="metrics-grid">
     <div><dt>Instytucje</dt><dd>{{ institution_count }}</dd><small>organizacje w katalogu</small></div>
@@ -19,5 +19,6 @@
       <div><dt>Instytucje</dt><dd>{% if latest_institution_run %}{{ latest_institution_run.get_status_display|default:latest_institution_run.status }}{% else %}Brak{% endif %}</dd></div>
       <div><dt>NCBR</dt><dd>{% if latest_ncbr_run %}{{ latest_ncbr_run.get_status_display|default:latest_ncbr_run.status }}{% else %}Brak{% endif %}</dd></div>
     </dl>
+    <p><a class="button" href="{% url 'control_csv_export' %}">Pobierz eksport CSV</a></p>
   </section>
 {% endblock %}

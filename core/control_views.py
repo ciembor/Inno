@@ -90,15 +90,8 @@ def panel_logout(request):
 
 @login_required
 def panel_dashboard(request):
-    return render(
-        request,
-        "core/control/dashboard.html",
-        {
-            "active_page": "control",
-            "institution_count": Institution.objects.count(),
-            "latest_run": InstitutionImportRun.objects.first(),
-        },
-    )
+    """Główna strona administracji prezentuje bieżące metryki systemu."""
+    return _metrics_response(request)
 
 
 def _format_duration(seconds):
@@ -118,6 +111,11 @@ def _format_duration(seconds):
 
 @login_required
 def panel_metrics(request):
+    """Zachowuje dotychczasowy adres metryk i kieruje do głównego panelu."""
+    return redirect("control_dashboard")
+
+
+def _metrics_response(request):
     """Pokazuje administratorowi mierniki działania całego Innoradaru."""
     institution_imports = InstitutionImportRun.objects.aggregate(
         articles=Sum("ideas_created") + Sum("ideas_skipped"),
