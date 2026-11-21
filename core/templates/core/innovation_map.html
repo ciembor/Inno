@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}Mapa innowacji — innoradar{% endblock %}
+{% block external_scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" defer></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
+{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/innovation_map.css' %}?v=2">{% endblock %}
+{% block content %}
+<main id="main-content" class="container map-page" data-innovations-url="{% url 'innovation_map_data' %}" data-boundary-url="{% url 'poland_boundary' %}" tabindex="-1">
+  <h1>Mapa innowacji Polski</h1>
+  {% if map_ideas %}
+  <div id="interactive-map" class="map-shell">
+    <p v-if="error" class="empty" role="alert" v-text="error"></p>
+    <div ref="map" class="map" role="application" aria-label="Mapa innowacji Polski"></div>
+  </div>
+  <noscript><p>Interaktywna mapa wymaga JavaScriptu. Inicjatywy są dostępne w poniższej liście.</p></noscript>
+  <details class="map-fallback">
+    <summary>Lista inicjatyw na mapie ({{ map_ideas|length }})</summary>
+    <ul>
+      {% for idea in map_ideas %}
+      <li><a href="{% url 'innovation_detail' idea.pk %}">{{ idea.name }}</a> — {{ idea.locality.name }}{% if idea.innovation_score != None %}, wynik innowacyjności: {{ idea.innovation_score|floatformat:"1u" }}{% endif %}.</li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% else %}
+  <p class="empty">Mapa zostanie uzupełniona po przypisaniu lokalizacji do inicjatyw.</p>
+  {% endif %}
+</main>
+{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/innovation_map.js' %}?v=2" defer></script>{% endblock %}

@@ -1,0 +1,106 @@
+{
+  "novelty": [
+    {
+      "title": "mLegitymacja",
+      "description": "Szkoła udostępnia uczniom elektroniczną legitymację w aplikacji mObywatel. Wdraża gotową usługę, bez opisanej autorskiej modyfikacji.",
+      "score": 5,
+      "rationale": "Rutynowe wdrożenie istniejącego rozwiązania, czyli przedział 0–20. Użyteczność usługi nie zwiększa nowatorstwa; opis nie wskazuje własnej modyfikacji."
+    },
+    {
+      "title": "Punktowe Zaliczanie Przedmiotów",
+      "description": "Model oceniania ciągłego oferuje siedem ścieżek zdobywania punktów, cztery obowiązkowe i trzy opcjonalne, pulę 100 punktów, poprawianie wyników oraz elektroniczne monitorowanie postępów.",
+      "score": 35,
+      "rationale": "Konkretna adaptacja znanych mechanizmów oceniania ciągłego, odpowiadająca przedziałowi 21–40. Opis wyjaśnia organizację, ale nie wskazuje zasadniczo nowej metody uczenia lub oceniania."
+    },
+    {
+      "title": "Urodzeni pod szczęśliwą gwiazdą",
+      "description": "Dostosowana ścieżka akademickiego kształcenia artystycznego dla osób z niepełnosprawnością intelektualną łączy samodzielną twórczość z płatnymi rolami w instytucji kultury.",
+      "score": 55,
+      "rationale": "Nietypowe połączenie edukacji, twórczości i rzeczywistego uczestnictwa zawodowego odpowiada przedziałowi 41–60. Wyróżnikiem jest mechanizm przejścia do płatnych ról, nie sama integracja; opis nie ustanawia całkowicie nowej praktyki."
+    },
+    {
+      "title": "Powłoka antybakteryjna Ag–Pt–TiO₂",
+      "description": "Nanokompozytowa powłoka na powierzchnie, w tym ekrany dotykowe, wykorzystuje kompozycję Ag–Pt–TiO₂ i połączenie dwóch mechanizmów działania antybakteryjnego. Według opisu redukcja bakterii przekracza 90%, wobec 30–60% dla porównywanych rozwiązań. Rozwiązanie objęto patentem.",
+      "score": 65,
+      "rationale": "Konkretna kompozycja i połączenie mechanizmów uzasadniają wyraźne wyróżnienie technologiczne w przedziale 61–80. Sam patent ani skuteczność nie dowodzą zasadniczo nowej klasy technologii; szczegółowe różnice wobec podobnych powłok pozostają niewiadomą."
+    }
+  ],
+  "value": [
+    {
+      "title": "Strefa wypoczynku nad zalewem w Radawie",
+      "description": "Modernizacja obejmuje taras widokowy, elementy bezpieczeństwa, oświetlenie solarne oraz miejsca do siedzenia i stoły przy zalewie.",
+      "score": 25,
+      "rationale": "Względem istniejącego miejsca rekreacji wyposażenie i remont poprawiają komfort użytkowania, co odpowiada niewielkiemu usprawnieniu, 21–40. Opis nie wskazuje zasadniczej zmiany dostępności lub sposobu zaspokajania potrzeby."
+    },
+    {
+      "title": "mStudia",
+      "description": "Aplikacja skupia plan zajęć, oceny, kontakt i powiadomienia, oferuje logowanie biometryczne oraz wersje polską i angielską. Informacje o odwołaniu zajęć mają być przekazywane wyłącznie w aplikacji, bez publikowania ich na stronie i wysyłania e-mailem.",
+      "score": 40,
+      "rationale": "Integracja istniejących kanałów usprawnia dostęp do informacji, czyli górna część przedziału 21–40. Wyłączność aplikacji może pogorszyć dostęp osób, które jej nie używają; nie znamy skali tego ograniczenia ani oszczędności czasu."
+    },
+    {
+      "title": "Transport door-to-door w powiecie lubaczowskim",
+      "description": "Bezpłatny transport osób z ograniczoną mobilnością zapewnia pojazd z rampą i miejscem na wózek oraz pomoc kierowcy i asystenta przy dotarciu do celu. Usługa odpowiada na bariery dostępu do opieki zdrowotnej, urzędów i kultury.",
+      "score": 75,
+      "rationale": "Dostosowanie pojazdu, asysta i bezpłatność usuwają opisane bariery, co może oznaczać dostęp do usług zamiast faktycznego braku dostępu. To duża poprawa, 61–80, mimo znanej technologii. Nie znamy liczby odbiorców ani stopnia zaspokojenia potrzeb."
+    },
+    {
+      "title": "Powłoka antybakteryjna Ag–Pt–TiO₂",
+      "description": "Powłoka nanokompozytowa na powierzchnie, w tym ekrany dotykowe, według opisu redukuje bakterie o ponad 90%, wobec 30–60% dla porównywanych rozwiązań.",
+      "score": 80,
+      "rationale": "Przy założeniu porównywalności przytoczonych testów opis wskazuje dużą poprawę bezpośredniej funkcji antybakteryjnej, górna granica 61–80. Nie znamy trwałości efektu; nie przypisujemy powłoce wykazanego zmniejszenia liczby zakażeń."
+    }
+  ],
+  "replicability": [
+    {
+      "title": "Zakład odzysku energii z RDF/pre-RDF",
+      "description": "Zakład odzyskuje energię z frakcji energetycznej odpadów komunalnych RDF/pre-RDF. Rozwiązanie ma charakter dużej instalacji infrastrukturalnej, wykorzystującej odpady jako paliwo.",
+      "score": 25,
+      "rationale": "Charakter instalacji oznacza duże wymagania infrastrukturalne oraz zależność od strumienia odpadów i odbioru energii, odpowiadające barierom 21–40. To wnioski z mechanizmu, nie kara za brak kosztorysu; szczegółowe koszty pozostają nieznane."
+    },
+    {
+      "title": "QRS — Quick Response System",
+      "description": "Platforma badawczo-testowa szybkiego reagowania łączy autonomiczne drony, prywatną sieć 5G, AI oraz centrum sterowania i zaplecze lotnicze.",
+      "score": 45,
+      "rationale": "Przeniesienie wymaga integracji specjalistycznego sprzętu, łączności i sterowania, czyli znaczącej adaptacji w przedziale 41–60. Nie jest to prosta gotowa usługa; nie znamy stopnia standaryzacji wdrożenia."
+    },
+    {
+      "title": "Punktowe Zaliczanie Przedmiotów",
+      "description": "Model oceniania ciągłego oferuje obowiązkowe i opcjonalne ścieżki zdobywania punktów, poprawianie wyników oraz elektroniczne monitorowanie postępów.",
+      "score": 70,
+      "rationale": "Model można przenieść do wielu uczelni bez wyjątkowej infrastruktury, przy osiągalnych wymaganiach, 61–80. Wymaga dostosowania zasad, pracy nauczycieli i obsługi informatycznej; szczegółowy nakład organizacyjny zależy od uczelni."
+    },
+    {
+      "title": "ReBox",
+      "description": "Uczniowie organizują cykliczne zbiórki tematyczne ubrań, książek i przyborów szkolnych, przekazywanych lokalnym odbiorcom.",
+      "score": 90,
+      "rationale": "Mechanizm wykorzystuje powszechnie dostępne zasoby, bez specjalistycznej technologii i wyjątkowych warunków, co odpowiada przedziałowi 81–100. Potrzebna jest koordynacja i kontakt z odbiorcami; ich dostępność trzeba ustalić lokalnie."
+    }
+  ],
+  "impact": [
+    {
+      "title": "Strefa wypoczynku nad zalewem w Radawie",
+      "description": "Modernizacja obejmuje taras widokowy, elementy bezpieczeństwa, oświetlenie solarne oraz miejsca do siedzenia i stoły przy zalewie.",
+      "score": 25,
+      "rationale": "Nawet po rozpowszechnieniu podobnych modernizacji efektem jest głównie poprawa komfortu rekreacji, czyli ograniczona zmiana, 21–40. Opis nie wskazuje mechanizmu głębszej zmiany społecznej; liczba użytkowników jest nieznana."
+    },
+    {
+      "title": "Tutoring akademicki",
+      "description": "Pilotaż zakłada regularną indywidualną pracę tutora ze studentem, wspierającą jego rozwój i ścieżkę edukacyjną.",
+      "score": 45,
+      "rationale": "Rozpowszechnienie indywidualnego wsparcia może istotnie poprawiać rozwój studentów w wielu uczelniach, 41–60. Opis nie uzasadnia przebudowy efektów całego systemu; głębokość korzyści pozostaje niepewna, ale mała obecna skala pilotażu sama nie obniża potencjału."
+    },
+    {
+      "title": "Podkarpacki System Informacji Przestrzennej",
+      "description": "PSIP łączy dane przestrzenne, wspólne standardy i e-usługi wielu jednostek, udostępniając informacje mieszkańcom, przedsiębiorstwom i administracji.",
+      "score": 70,
+      "rationale": "Interoperacyjne dane mogą zmieniać współpracę i wykorzystanie informacji przez wiele jednostek oraz odbiorców, co odpowiada dużej zmianie sektorowej, 61–80. Nie zakładamy konkretnej oszczędności czasu ani pełnego wykorzystania wszystkich usług."
+    },
+    {
+      "title": "AWARENESS",
+      "description": "Projekt łączy dane z różnych źródeł, AI, cyfrowe bliźniaki i odporną komunikację w systemie wczesnego ostrzegania przed zagrożeniami, w tym powodziami błyskawicznymi i pożarami.",
+      "score": 80,
+      "rationale": "Przy skutecznym rozpowszechnieniu wcześniejsze ostrzeganie i koordynacja reagowania mogą poprawiać ochronę ludzi w wielu regionach, górna część 61–80. Wynik opiera się na mechanizmie i znaczeniu korzyści, nie samym AI. Skuteczność pozostaje niepewna; nie deklarujemy liczby uratowanych osób."
+    }
+  ]
+}

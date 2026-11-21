@@ -1,0 +1,78 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block description %}Innoradar — dostrzegamy lokalne inicjatywy o potencjale większej zmiany.{% endblock %}
+{% block title %}innoradar — pomysły, które zasługują na szansę{% endblock %}
+{% block external_scripts %}<script nonce="{{ request.csp_nonce }}">document.documentElement.classList.add("js");</script>{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/home.css' %}">{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/home.js' %}" defer></script>{% endblock %}
+{% block content %}
+<main id="main-content" tabindex="-1">
+  <section class="hero" id="start" aria-labelledby="hero-title">
+    <div class="hero__clouds" aria-hidden="true" data-cloud-base-url="{% static 'core/images/clouds/' %}">
+      <span class="hero__cloud" data-cloud="1"></span><span class="hero__cloud" data-cloud="2"></span><span class="hero__cloud" data-cloud="3"></span><span class="hero__cloud" data-cloud="4"></span><span class="hero__cloud" data-cloud="5"></span><span class="hero__cloud" data-cloud="6"></span><span class="hero__cloud" data-cloud="7"></span><span class="hero__cloud" data-cloud="8"></span>
+    </div>
+    <div class="hero__content">
+      <h1 id="hero-title">Pomysły, które zasługują na szansę.</h1>
+      <p class="hero__lead">W szkołach, uczelniach, samorządach i innych instytucjach publicznych rodzą się pomysły, których znaczenie może wykraczać daleko poza miejsce ich powstania.</p>
+      <a class="scroll-hint" href="#podejscie">Zobacz, czego szukamy</a>
+    </div>
+  </section>
+
+  <section class="intro" id="podejscie" aria-labelledby="approach-title">
+    <div class="container">
+      <div class="intro__grid">
+        <div>
+          <p class="section-label">Szukamy innowacji</p>
+          <h2 id="approach-title">Jak szukamy i oceniamy innowacje?</h2>
+        </div>
+        <p class="intro__copy">Przeszukujemy aktualności instytucji z województwa podkarpackiego oraz przyjmujemy zgłoszenia. LLM analizuje opis każdej inicjatywy w czterech kryteriach: nowatorstwa, wartości, replikowalności i potencjału oddziaływania.</p>
+      </div>
+      <div class="signals">
+        <article class="signal"><strong>Nowatorstwo</strong><p>Na ile rozwiązanie wprowadza nowe lub nietypowe podejście do znanego problemu?</p></article>
+        <article class="signal"><strong>Wartość</strong><p>Jak dużą poprawę względem dotychczasowych rozwiązań może przynieść?</p></article>
+        <article class="signal"><strong>Replikowalność</strong><p>Czy rozwiązanie mogą wykorzystać inne szkoły, uczelnie, samorządy lub instytucje?</p></article>
+        <article class="signal"><strong>Oddziaływanie</strong><p>Jaką zmianę ponadlokalną może wywołać, jeśli zostanie skutecznie rozpowszechnione?</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="city" aria-labelledby="city-title">
+    <div class="city__overlay" aria-hidden="true"></div>
+    <div class="container">
+      <div class="city__card">
+        <p class="section-label">Dlaczego oceniamy najlepiej</p>
+        <h2 id="city-title">Kalibracja i kompleksowość.</h2>
+        <p>Ocena nie opiera się na jednym poleceniu. Panel administracyjny pozwala zarządzać instytucjami i ich źródłami, importować dane z CSV oraz aktualizować prompty. Crawler automatycznie przeszukuje aktualności, a przykłady kalibracyjne pomagają utrzymać spójne kryteria oceny.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="examples" id="przyklady" aria-labelledby="examples-title">
+    <div class="container">
+      <div class="examples__head"><p class="section-label">Gdzie szukamy</p><h2 id="examples-title">Liczba obserwowanych instytucji: <span class="examples__total">{{ institution_counts.total }}</span></h2></div>
+      <div class="cards">
+        <article class="card"><h3>Uczelnie</h3><strong class="card__count" data-counter data-count="{{ institution_counts.universities }}">{{ institution_counts.universities }}</strong></article>
+        <article class="card"><h3>Szkoły</h3><strong class="card__count" data-counter data-count="{{ institution_counts.schools }}">{{ institution_counts.schools }}</strong></article>
+        <article class="card"><h3>Samorządy</h3><strong class="card__count" data-counter data-count="{{ institution_counts.local_governments }}">{{ institution_counts.local_governments }}</strong></article>
+        <article class="card"><h3>Inne instytucje</h3><strong class="card__count" data-counter data-count="{{ institution_counts.other }}">{{ institution_counts.other }}</strong></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-cta" aria-labelledby="cta-title">
+    <div class="container home-cta__content">
+      <p class="section-label">Import danych</p>
+      <h2 id="cta-title">Jedna baza, wiele źródeł.</h2>
+      <p>Panel administracyjny pozwala importować instytucje z plików CSV, przypisywać miejscowości oraz zarządzać adresami aktualności. Radar może rozszerzać zasięg bez przebudowy systemu.</p>
+    </div>
+  </section>
+
+  <section class="home-outro" aria-labelledby="outro-title">
+    <div class="container home-outro__content">
+      <p class="section-label">Jakość produktu</p>
+      <h2 id="outro-title">Gotowość do wdrożenia</h2>
+      <p>Interfejs spełnia założenia WCAG 2.2 AA. Oprogramowanie chronią testy jednostkowe i integracyjne ze 100% pokryciem, a Ruff i Radon automatycznie wykrywają problemy lintingu, nadmierną złożoność i code smells. To produkt prosty w utrzymaniu oraz gotowy do dalszego rozwoju.</p>
+    </div>
+  </section>
+</main>
+{% endblock %}

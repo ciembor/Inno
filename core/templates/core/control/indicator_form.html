@@ -1,0 +1,16 @@
+{% extends "core/control/base.html" %}
+{% block control_content %}
+<h1>{% if indicator %}Edytuj wskaźnik{% else %}Dodaj wskaźnik{% endif %}</h1>
+<section class="control-card indicator-settings">
+  <p class="indicator-settings__intro">Klucz to stały angielski identyfikator, np. <code>novelty</code>. Polska nazwa pojawi się w wynikach i panelu. {% if indicator %}Wagę i aktywność ustawisz na liście wskaźników.{% else %}Nowy wskaźnik jest początkowo wyłączony — wagę i aktywność ustawisz na liście.{% endif %}</p>
+  <form method="post" class="panel-form">
+    {% csrf_token %}{{ form.non_field_errors }}
+    <div class="indicator-form__identity">
+      {% for field in form %}{% if field.name == "key" or field.name == "name" %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</p>{% endif %}{% endfor %}
+    </div>
+    {% for field in form %}{% if field.name == "question" %}<p class="indicator-form__question"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</p>{% endif %}{% endfor %}
+    <div class="panel-form__actions"><a class="button button--secondary" href="{% url 'control_indicators' %}">Anuluj</a><button class="button" type="submit">Zapisz wskaźnik</button></div>
+  </form>
+  {% if indicator %}<form method="post" class="delete-form" action="{% url 'control_indicator_delete' indicator.pk %}">{% csrf_token %}<button class="button button--danger" type="submit">Usuń wskaźnik</button></form>{% endif %}
+</section>
+{% endblock %}

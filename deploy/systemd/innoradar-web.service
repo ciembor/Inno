@@ -1,0 +1,17 @@
+[Unit]
+Description=Innoradar Django web application
+After=network.target
+
+[Service]
+Type=simple
+User=ciembor
+Group=ciembor
+WorkingDirectory=__APP_DIR__
+EnvironmentFile=__APP_DIR__/.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=__APP_DIR__/.venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8010 --workers 2 --access-logfile - --error-logfile -
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

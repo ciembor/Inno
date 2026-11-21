@@ -1,0 +1,4 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/control.css' %}">{% endblock %}
+{% block content %}<main id="main-content" class="container login" tabindex="-1"><h1>Administracja</h1><form method="post" class="panel-form">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</p>{% endfor %}<div class="panel-form__actions"><button type="submit">Zaloguj</button></div></form></main>{% endblock %}

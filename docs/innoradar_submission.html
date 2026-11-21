@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Innoradar — Radar innowacji</title>
+    <style>
+      @page { size: 16in 9in; margin: 0; }
+      * { box-sizing: border-box; }
+      body { margin: 0; color: #122947; font-family: Arial, Helvetica, sans-serif; }
+      .slide { position: relative; width: 16in; height: 9in; overflow: hidden; padding: .68in .86in; page-break-after: always; background: #f7fbfc; }
+      .slide:last-child { page-break-after: auto; }
+      .dark { color: #f8fcff; background: #102947; }
+      .eyebrow { margin: 0 0 .16in; color: #078a7d; font-size: .16in; font-weight: 800; letter-spacing: .06in; text-transform: uppercase; }
+      .dark .eyebrow { color: #55d9c6; }
+      h1 { max-width: 10.8in; margin: .08in 0 .26in; font-size: .64in; line-height: 1.04; letter-spacing: -.025in; }
+      h2 { max-width: 11.6in; margin: 0 0 .26in; font-size: .44in; line-height: 1.1; letter-spacing: -.014in; }
+      h3 { margin: 0 0 .11in; font-size: .22in; }
+      p { font-size: .205in; line-height: 1.42; }
+      .lead { max-width: 8.7in; margin: 0; font-size: .29in; line-height: 1.33; }
+      .muted { color: #62768f; }
+      .dark .muted { color: #b5c7d7; }
+      .logo { width: 3.25in; height: auto; background: #fff; border-radius: .12in; padding: .1in .16in; }
+      .dark .logo { background: transparent; }
+      .footer { position: absolute; right: .86in; bottom: .39in; color: #71849a; font-size: .14in; }
+      .dark .footer { color: #b5c7d7; }
+      .accent { color: #078a7d; }
+      .line { width: 1.1in; height: .07in; margin: .34in 0; border-radius: 1in; background: #24c7b2; }
+      .grid { display: grid; gap: .2in; }
+      .three { grid-template-columns: repeat(3, 1fr); }
+      .two { grid-template-columns: repeat(2, 1fr); }
+      .card { min-height: 1.62in; padding: .26in; border: 1px solid #d8e6ec; border-radius: .15in; background: #fff; }
+      .card p { margin: 0; font-size: .18in; }
+      .card .num { margin-bottom: .12in; color: #078a7d; font-size: .18in; font-weight: 800; }
+      .quote { max-width: 10.5in; margin: .45in 0; font-size: .36in; font-weight: 700; line-height: 1.25; }
+      .flow { display: grid; grid-template-columns: 1fr .2in 1fr .2in 1fr .2in 1fr .2in 1fr; align-items: center; margin-top: .5in; }
+      .step { min-height: 1.43in; padding: .2in; border-radius: .16in; background: #fff; box-shadow: 0 .07in .15in rgba(10, 38, 66, .08); }
+      .step b { display: block; margin-bottom: .1in; color: #078a7d; font-size: .16in; }
+      .step span { font-size: .19in; font-weight: 700; line-height: 1.16; }
+      .arrow { color: #18bda8; font-size: .36in; font-weight: 700; text-align: center; }
+      .metric { padding: .24in; border-radius: .17in; color: #fff; background: #16385e; }
+      .metric strong { display: block; margin-bottom: .07in; color: #55d9c6; font-size: .38in; }
+      .metric span { font-size: .17in; line-height: 1.25; }
+      .table { width: 100%; border-collapse: collapse; font-size: .18in; }
+      .table th { padding: .12in .14in; color: #fff; background: #16385e; font-size: .15in; text-align: left; }
+      .table td { padding: .13in .14in; border-bottom: 1px solid #d9e6ec; vertical-align: top; line-height: 1.25; }
+      .check { color: #078a7d; font-weight: 800; }
+      .pill { display: inline-block; padding: .07in .13in; border-radius: 2in; color: #075e58; background: #d9f5ef; font-size: .15in; font-weight: 700; }
+      .callout { margin-top: .28in; padding: .25in .3in; border-left: .08in solid #24c7b2; border-radius: 0 .12in .12in 0; background: #e9f8f5; font-size: .22in; font-weight: 700; line-height: 1.28; }
+      .url { margin-top: .3in; color: #55d9c6; font-size: .23in; font-weight: 700; }
+      .small { font-size: .16in; }
+    </style>
+  </head>
+  <body>
+    <section class="slide dark">
+      <img class="logo" src="../core/static/core/images/innoradar-logo-high-contrast.svg" alt="innoradar" />
+      <p class="eyebrow" style="margin-top:.72in">Radar innowacji</p>
+      <h1>Ukryte pomysły.<br /><span class="accent" style="color:#55d9c6">Widoczna droga</span> do wdrożenia.</h1>
+      <p class="lead">Innoradar automatycznie odnajduje lokalne innowacje, ocenia ich potencjał i łączy je z organizacjami, które mogą je wdrożyć, rozwinąć lub finansować.</p>
+      <div class="line"></div>
+      <p class="muted">Prototyp dla wyzwania Podkarpackiego Centrum Innowacji<br />HackNation 2026</p>
+      <p class="footer">1 / 9</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Problem</p>
+      <h2>Wartościowe rozwiązania powstają lokalnie — i zbyt często tam zostają.</h2>
+      <div class="grid three" style="margin-top:.42in">
+        <div class="card"><p class="num">01</p><h3>Niewidoczne</h3><p>Pomysły ze szkół, uczelni i samorządów są rozproszone w aktualnościach, projektach i formularzach.</p></div>
+        <div class="card"><p class="num">02</p><h3>Nieporównywalne</h3><p>Brakuje wspólnych, jasnych kryteriów, które pozwalają szybko ocenić ich potencjał.</p></div>
+        <div class="card"><p class="num">03</p><h3>Bez dalszego kroku</h3><p>Twórcy nie wiedzą, z kim połączyć rozwiązanie, by ruszyć z pilotażem, transferem lub finansowaniem.</p></div>
+      </div>
+      <p class="quote">Innoradar zamienia rozproszoną informację w <span class="accent">konkretną decyzję: co dalej i z kim.</span></p>
+      <p class="footer">2 / 9</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Rozwiązanie</p>
+      <h2>Jeden prosty przepływ — od sygnału do partnera.</h2>
+      <div class="flow">
+        <div class="step"><b>01 · WYKRYJ</b><span>Crawling źródeł instytucji, NCBR lub ręczne zgłoszenie</span></div><div class="arrow">→</div>
+        <div class="step"><b>02 · UPORZĄDKUJ</b><span>Opis, źródło, data, instytucja i lokalizacja</span></div><div class="arrow">→</div>
+        <div class="step"><b>03 · OCEŃ</b><span>AI ocenia potencjał i podaje uzasadnienie</span></div><div class="arrow">→</div>
+        <div class="step"><b>04 · POPROWADŹ</b><span>Rekomendacja dalszego kroku i ryzyk</span></div><div class="arrow">→</div>
+        <div class="step"><b>05 · POŁĄCZ</b><span>Podobne rozwiązania oraz partnerzy do wdrożenia</span></div>
+      </div>
+      <div class="callout">To nie jest ranking dla rankingu: każda ocena kończy się odpowiedzią <em>„co zrobić dalej?”</em>.</div>
+      <p class="footer">3 / 9</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Doświadczenie użytkownika</p>
+      <h2>Wynik, który można zrozumieć w kilkanaście sekund.</h2>
+      <div class="grid two" style="margin-top:.25in">
+        <div class="card" style="min-height:2.12in"><span class="pill">Karta innowacji</span><h3 style="margin-top:.2in">Jasny kontekst</h3><p>Opis inicjatywy, źródło, data dodania lub publikacji, instytucja i miejscowość — bez szukania po wielu systemach.</p></div>
+        <div class="card" style="min-height:2.12in"><span class="pill">Ocena AI</span><h3 style="margin-top:.2in">Nie tylko liczba</h3><p>Cztery kryteria, wynik łączny i uzasadnienie oparte na materiale źródłowym, z nazwaniem niepewności.</p></div>
+        <div class="card" style="min-height:2.12in"><span class="pill">Rekomendacja</span><h3 style="margin-top:.2in">Konkretny następny krok</h3><p>Etap rozwoju, ścieżka, uzasadnienie oraz ryzyko lub brakująca informacja.</p></div>
+        <div class="card" style="min-height:2.12in"><span class="pill">Transfer</span><h3 style="margin-top:.2in">Mniej dublowania prac</h3><p>Podobne inicjatywy i 3–5 dopasowanych partnerów z wyjaśnieniem dopasowania oraz kontaktem.</p></div>
+      </div>
+      <p class="footer">4 / 9</p>
+    </section>
+
+    <section class="slide dark">
+      <p class="eyebrow">Ocena, której można zaufać</p>
+      <h2>AI nie zastępuje decyzji. Uporządkowuje ją i pokazuje podstawy.</h2>
+      <div class="grid two" style="margin-top:.3in">
+        <div class="metric"><strong>4 kryteria</strong><span>nowatorstwo · wartość · replikowalność · potencjał oddziaływania</span></div>
+        <div class="metric"><strong>0–100</strong><span>ocena z wagami i osobnym uzasadnieniem dla każdego kryterium</span></div>
+        <div class="metric"><strong>Niepewność nazwana</strong><span>brak danych nie jest udawany jako pewny wynik ani automatycznie jako niska ocena</span></div>
+        <div class="metric"><strong>Człowiek ma kontrolę</strong><span>administrator może poprawić, ponowić generowanie i zatwierdzić rekomendację</span></div>
+      </div>
+      <p class="callout" style="background:#1b4168;color:#fff;border-color:#55d9c6">Przejrzyste kryteria + źródło + uzasadnienie = wynik możliwy do zweryfikowania.</p>
+      <p class="footer">5 / 9</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Wdrożenie i skalowanie</p>
+      <h2>Zaplanowany do pracy ciągłej, nie tylko na pokaz.</h2>
+      <table class="table" style="margin-top:.26in">
+        <thead><tr><th>Element</th><th>Jak działa w Innoradarze</th><th>Dlaczego to ważne</th></tr></thead>
+        <tbody>
+          <tr><td><b>Źródła</b></td><td>Aktualności instytucji, projekty NCBR i zgłoszenia ręczne.</td><td>Można stopniowo dołączać kolejne organizacje i źródła.</td></tr>
+          <tr><td><b>Automatyzacja</b></td><td>Worker wykonuje scoring, tagowanie i rekomendacje w tle; timeouty są ponawiane.</td><td>Interfejs nie blokuje użytkownika, a proces jest odporny na chwilowe błędy API.</td></tr>
+          <tr><td><b>Integracje</b></td><td>Import CSV instytucji i partnerów; architektura gotowa na dalsze źródła.</td><td>Obniża koszt rozpoczęcia współpracy z kolejną instytucją.</td></tr>
+          <tr><td><b>Bezpieczeństwo</b></td><td>Polityka prywatności, zgoda przy zgłoszeniu, ograniczenie prób, CSP i nagłówki bezpieczeństwa.</td><td>Odpowiedzialne przetwarzanie danych i gotowość do rozwoju.</td></tr>
+        </tbody>
+      </table>
+      <p class="footer">6 / 9</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Walidacja</p>
+      <h2>Dwa różne wejścia, ten sam mierzalny rezultat.</h2>
+      <div class="grid two" style="margin-top:.3in">
+        <div class="card" style="min-height:3.45in"><span class="pill">Przypadek A · automatyczne wykrycie</span><h3 style="margin-top:.2in">Innowacja ze źródła publicznego</h3><p><span class="check">✓</span> crawler wykrywa opis<br /><span class="check">✓</span> system zapisuje źródło i dane<br /><span class="check">✓</span> AI ocenia potencjał<br /><span class="check">✓</span> powstaje ścieżka rozwoju<br /><span class="check">✓</span> użytkownik widzi podobne inicjatywy i partnerów</p></div>
+        <div class="card" style="min-height:3.45in"><span class="pill">Przypadek B · zgłoszenie ręczne</span><h3 style="margin-top:.2in">Pomysł zgłoszony przez twórcę</h3><p><span class="check">✓</span> formularz zbiera opis i zgodę<br /><span class="check">✓</span> zadanie działa w tle z retry<br /><span class="check">✓</span> szczegóły oceny trafiają na kartę<br /><span class="check">✓</span> AI proponuje następny krok<br /><span class="check">✓</span> partnerzy są dobierani po potrzebach</p></div>
+      </div>
+      <div class="callout">Miernik sukcesu: od sygnału do uzasadnionej rekomendacji i kontaktu do właściwego partnera — w jednym przepływie.</div>
+      <p class="footer">7 / 9</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Dopasowanie do kryteriów oceny</p>
+      <h2>Pełne pokrycie pięciu równoważnych kryteriów.</h2>
+      <table class="table" style="margin-top:.22in">
+        <thead><tr><th>Kryterium · 20%</th><th>Dowód w rozwiązaniu</th></tr></thead>
+        <tbody>
+          <tr><td><b>Związek z wyzwaniem</b></td><td>Od wykrycia lokalnego pomysłu do wskazania realnej drogi rozwoju.</td></tr>
+          <tr><td><b>Pomysł i oryginalność</b></td><td>Łączy discovery, ocenę z uzasadnieniem, podobieństwo i transfer w jednym narzędziu.</td></tr>
+          <tr><td><b>Użyteczność i UX</b></td><td>Karta innowacji prowadzi użytkownika od opisu do jednoznacznego następnego kroku.</td></tr>
+          <tr><td><b>Prototyp i demonstracja</b></td><td>Działający serwis produkcyjny, automatyczne joby, panel kontroli oraz dwa scenariusze użycia.</td></tr>
+          <tr><td><b>Wdrożenie, skala, transfer</b></td><td>Wiele typów instytucji, import źródeł, retry, partnerzy, bezpieczeństwo i architektura rozszerzalna.</td></tr>
+        </tbody>
+      </table>
+      <p class="footer">8 / 9</p>
+    </section>
+
+    <section class="slide dark">
+      <img class="logo" src="../core/static/core/images/innoradar-logo-high-contrast.svg" alt="innoradar" />
+      <p class="eyebrow" style="margin-top:.5in">Gotowe do obejrzenia</p>
+      <h1 style="max-width:10.6in">Zobacz, jak lokalny pomysł dostaje <span style="color:#55d9c6">drogę do działania.</span></h1>
+      <p class="lead">Publiczny demonstrator: wyszukaj innowację, sprawdź ocenę, rekomendację rozwoju, podobne rozwiązania i dopasowanych partnerów.</p>
+      <p class="url">maciej-ciemborowicz.eu/inno/</p>
+      <div class="line"></div>
+      <p class="muted small">Źródła danych, założenia AI i ograniczenia są udokumentowane w repozytorium projektu. System działa z automatycznym przetwarzaniem w tle i retry dla błędów przejściowych.</p>
+      <p class="footer">9 / 9</p>
+    </section>
+  </body>
+</html>

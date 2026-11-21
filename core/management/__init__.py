@@ -1,0 +1,1 @@
+"""Polecenia administracyjne aplikacji core."""

@@ -1,0 +1,73 @@
+{% extends "core/control/base.html" %}
+{% load static %}
+{% block control_content %}
+  <h1>Crawling</h1>
+  <section class="crawl-card crawl-schedule">
+    <h2>Automatyczny crawling</h2>
+    <p>Pełny crawling wszystkich typów instytucji uruchomi się o wybranej godzinie. Aktywny przebieg nie zostanie przerwany ani zdublowany.</p>
+    <form method="post" action="{% url 'control_crawling_schedule' %}" class="panel-form crawl-schedule__form">
+      {% csrf_token %}
+      {{ schedule_form.non_field_errors }}
+      <label class="crawl-schedule__switch" for="{{ schedule_form.enabled.id_for_label }}">
+        {{ schedule_form.enabled }}
+        <span>Włącz automatyczny crawling</span>
+      </label>
+      <div class="crawl-schedule__fields">
+        <div class="crawl-schedule__field">
+          <label for="{{ schedule_form.interval_days.id_for_label }}">Uruchamiaj co ile dni</label>
+          <div class="crawl-schedule__input-with-unit">{{ schedule_form.interval_days }}<span>dni</span></div>
+          {{ schedule_form.interval_days.errors }}
+        </div>
+        <div class="crawl-schedule__field">
+          <label for="{{ schedule_form.run_at.id_for_label }}">Godzina uruchomienia</label>
+          {{ schedule_form.run_at }}
+          {{ schedule_form.run_at.errors }}
+        </div>
+      </div>
+      <div class="crawl-schedule__actions"><button type="submit">Zapisz harmonogram</button></div>
+    </form>
+    {% if crawl_schedule.enabled and crawl_schedule.next_run_at %}<p>Następne uruchomienie: <strong>{{ crawl_schedule.next_run_at|date:"d.m.Y, H:i" }}</strong>.</p>{% endif %}
+  </section>
+  <section class="crawl-card crawl-status" data-status-url="{% url 'control_crawling_status' %}">
+    <h2>Ręczny crawling</h2>
+    <p>Import czyta aktualności wybranych instytucji, wyodrębnia inicjatywy i zleca ich ocenę.</p>
+    <form id="crawl-start" method="post" class="panel-form crawl-start">
+      {% csrf_token %}
+      <fieldset>
+        <legend>Typy instytucji</legend>
+        {% for value, label in types %}
+          <label><input type="checkbox" name="institution_types" value="{{ value }}"{% if value in selected_types %} checked{% endif %}> {{ label }}</label>
+        {% endfor %}
+      </fieldset>
+    </form>
+    <div class="crawl-actions">
+      <button form="crawl-start" type="submit">Uruchom crawling</button>
+      {% if latest_run.status == "pending" or latest_run.status == "running" %}
+        <form method="post" action="{% url 'control_crawling_stop' %}" class="crawl-stop">{% csrf_token %}<button type="submit">Zatrzymaj crawling</button></form>
+      {% endif %}
+    </div>
+    <hr class="crawl-status__divider">
+    <p data-status role="status">Ładowanie stanu…</p>
+    <progress data-progress value="0" max="1" aria-label="Postęp crawlingu">0%</progress>
+    <p data-current></p>
+    <dl><div><dt>Przetworzone instytucje</dt><dd data-processed>—</dd></div><div><dt>Dodane innowacje</dt><dd data-created>—</dd></div></dl>
+    <h3>Ostatnie zdarzenia</h3>
+    <ul data-events class="crawl-events"></ul>
+  </section>
+  <section class="crawl-card crawl-status" data-status-url="{% url 'control_ncbr_crawling_status' %}">
+    <h2>Crawling NCBR</h2>
+    <p>Importuje publicznie opisane projekty z całej Polski z wyszukiwarki sukcesów beneficjentów NCBR i przekazuje nowe pozycje do oceny.</p>
+    <form method="post" action="{% url 'control_ncbr_crawling' %}" class="crawl-actions">
+      {% csrf_token %}
+      <button type="submit">Uruchom crawling NCBR</button>
+    </form>
+    <hr class="crawl-status__divider">
+    <p data-status role="status">Ładowanie stanu…</p>
+    <progress data-progress value="0" max="1" aria-label="Postęp crawlowania NCBR">0%</progress>
+    <p data-current></p>
+    <dl><div><dt>Przetworzone projekty</dt><dd data-processed>—</dd></div><div><dt>Dodane innowacje</dt><dd data-created>—</dd></div></dl>
+    <h3>Ostatnie zdarzenia</h3>
+    <ul data-events class="crawl-events"></ul>
+  </section>
+{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/control_crawling.js' %}" defer></script>{% endblock %}

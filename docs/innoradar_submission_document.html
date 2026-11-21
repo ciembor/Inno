@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Innoradar — zgłoszenie do wyzwania Radar innowacji</title>
+    <style>
+      @page { size: A4; margin: 16mm 17mm 15mm; }
+      * { box-sizing: border-box; }
+      body { color: #172d47; font-family: Arial, Helvetica, sans-serif; font-size: 10.5pt; line-height: 1.47; }
+      h1, h2, h3 { color: #102d50; line-height: 1.15; }
+      h1 { margin: 11mm 0 4mm; font-size: 28pt; letter-spacing: -.5pt; }
+      h2 { margin: 0 0 4mm; font-size: 17pt; }
+      h3 { margin: 0 0 2mm; font-size: 11.5pt; }
+      p { margin: 0 0 3.5mm; }
+      ul { margin: 2mm 0 4mm; padding-left: 5mm; }
+      li { margin: 1.6mm 0; }
+      a { color: #007f75; font-weight: 700; text-decoration: none; }
+      .page { min-height: 262mm; page-break-after: always; }
+      .page:last-child { page-break-after: auto; }
+      .cover { display: flex; min-height: 262mm; flex-direction: column; justify-content: center; }
+      .logo { width: 65mm; margin-bottom: 12mm; }
+      .eyebrow { margin: 0; color: #078a7d; font-size: 9pt; font-weight: 800; letter-spacing: 1.7pt; text-transform: uppercase; }
+      .lead { max-width: 145mm; font-size: 15pt; line-height: 1.38; }
+      .rule { width: 26mm; height: 2.5mm; margin: 8mm 0; border-radius: 3mm; background: #21c7b1; }
+      .meta { color: #60748d; font-size: 9.5pt; }
+      .section-intro { margin-bottom: 5mm; color: #536981; }
+      .grid { display: grid; gap: 4mm; }
+      .two { grid-template-columns: repeat(2, 1fr); }
+      .three { grid-template-columns: repeat(3, 1fr); }
+      .card { padding: 4.5mm; border: 1px solid #d7e6ea; border-radius: 3mm; background: #fbfdfe; }
+      .card p { margin: 0; font-size: 9.5pt; }
+      .number { color: #078a7d; font-size: 9pt; font-weight: 800; }
+      .flow { display: grid; grid-template-columns: 1fr 8mm 1fr 8mm 1fr; align-items: stretch; margin: 5mm 0; }
+      .flow-item { padding: 4mm; border-radius: 3mm; color: #fff; background: #173a5f; font-size: 9.2pt; }
+      .flow-item b { display: block; margin-bottom: 1mm; color: #5ce2cd; font-size: 8pt; }
+      .arrow { align-self: center; color: #13af9e; font-size: 19pt; font-weight: 800; text-align: center; }
+      .note { margin: 4mm 0; padding: 4mm 5mm; border-left: 2.5mm solid #21c7b1; background: #eaf8f5; }
+      table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+      th { padding: 2.7mm 3mm; color: #fff; background: #173a5f; text-align: left; }
+      td { padding: 2.7mm 3mm; border-bottom: 1px solid #d8e4ea; vertical-align: top; }
+      .tag { display: inline-block; padding: 1mm 2.5mm; border-radius: 5mm; color: #076e64; background: #dcf6f0; font-size: 8.2pt; font-weight: 700; }
+      .footer { position: relative; margin-top: 8mm; color: #70839a; font-size: 8pt; text-align: right; }
+      .page-no { position: absolute; right: 0; bottom: 0; color: #70839a; font-size: 8pt; }
+      .final { min-height: 262mm; padding-top: 15mm; }
+      .linkbox { margin: 9mm 0; padding: 7mm; border-radius: 4mm; color: #fff; background: #102d50; }
+      .linkbox a { color: #62e2cf; font-size: 13pt; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="page cover">
+        <img class="logo" src="../core/static/core/images/innoradar-logo.svg" alt="Logo Innoradar" />
+        <p class="eyebrow">Zgłoszenie do wyzwania</p>
+        <h1>Radar innowacji</h1>
+        <p class="lead">Innoradar odnajduje lokalne innowacje, ocenia ich potencjał i prowadzi je do dalszego rozwoju, wdrożenia albo finansowania.</p>
+        <div class="rule"></div>
+        <p><b>Problem:</b> wartościowe pomysły ze szkół, uczelni, samorządów i innych instytucji publicznych są rozproszone, trudno je porównać i jeszcze trudniej połączyć z właściwym partnerem.</p>
+        <p><b>Rozwiązanie:</b> działający system cyfrowy, który zamienia sygnał o innowacji w uzasadnioną ocenę, konkretny następny krok oraz kontakt do możliwego partnera.</p>
+        <p class="meta">Podkarpackie Centrum Innowacji · HackNation 2026<br />Wersja zgłoszeniowa · demonstrator: <a href="https://maciej-ciemborowicz.eu/inno/">maciej-ciemborowicz.eu/inno/</a></p>
+        <span class="page-no">1 / 5</span>
+      </section>
+
+      <section class="page">
+        <p class="eyebrow">1. Problem i odpowiedź</p>
+        <h2>Od ukrytej informacji do decyzji „co dalej?”</h2>
+        <p class="section-intro">Dziś innowacje często pozostają w aktualnościach instytucji, w pojedynczych projektach albo w głowach ich twórców. Brakuje powtarzalnego procesu wykrycia, oceny i przekazania pomysłu osobie lub organizacji, która może go rozwijać.</p>
+        <div class="grid three">
+          <article class="card"><p class="number">PROBLEM 01</p><h3>Brak widoczności</h3><p>Inicjatywy są rozproszone między szkołami, uczelniami, samorządami i programami publicznymi.</p></article>
+          <article class="card"><p class="number">PROBLEM 02</p><h3>Brak porównywalności</h3><p>Nie ma wspólnych kryteriów ani czytelnego uzasadnienia, dlaczego pomysł jest wart dalszej pracy.</p></article>
+          <article class="card"><p class="number">PROBLEM 03</p><h3>Brak transferu</h3><p>Twórcy nie otrzymują konkretnej ścieżki ani kontaktu do potencjalnego użytkownika, partnera lub finansowania.</p></article>
+        </div>
+        <div class="note"><b>Innoradar odpowiada na cały proces:</b> wykrywa lub przyjmuje pomysł, porządkuje jego dane, ocenia potencjał, wskazuje dalszą ścieżkę oraz proponuje partnerów i podobne rozwiązania.</div>
+        <h3>Użytkownicy</h3>
+        <p>Pracownicy i przedstawiciele szkół, uczelni, jednostek samorządu terytorialnego, innych instytucji publicznych oraz podmioty poszukujące gotowych lub rozwijających się rozwiązań.</p>
+        <span class="page-no">2 / 5</span>
+      </section>
+
+      <section class="page">
+        <p class="eyebrow">2. Jak działa rozwiązanie</p>
+        <h2>Jeden przepływ, który nie blokuje użytkownika</h2>
+        <div class="flow">
+          <div class="flow-item"><b>WYKRYJ</b>Aktualności instytucji, projekty NCBR albo ręczne zgłoszenie.</div><div class="arrow">→</div>
+          <div class="flow-item"><b>OCEN</b>AI ocenia cztery kryteria i podaje uzasadnienia oraz niepewności.</div><div class="arrow">→</div>
+          <div class="flow-item"><b>POPROWADŹ</b>System wskazuje etap, ścieżkę i następny krok oraz partnerów.</div>
+        </div>
+        <h3>Główne funkcje demonstratora</h3>
+        <div class="grid two">
+          <article class="card"><span class="tag">Discovery</span><h3 style="margin-top:3mm">Automatyczne i ręczne wejście</h3><p>Crawler aktualności szkół, uczelni i samorządów, importer projektów NCBR oraz formularz zgłoszenia inicjatywy.</p></article>
+          <article class="card"><span class="tag">Ocena</span><h3 style="margin-top:3mm">Czytelna punktacja</h3><p>Nowatorstwo, wartość, replikowalność i potencjał oddziaływania; każda ocena ma własne uzasadnienie.</p></article>
+          <article class="card"><span class="tag">Rekomendacja</span><h3 style="margin-top:3mm">Następny krok</h3><p>Etap rozwoju, możliwa ścieżka — np. pilotaż lub transfer — uzasadnienie oraz ryzyko albo niewiadoma.</p></article>
+          <article class="card"><span class="tag">Transfer</span><h3 style="margin-top:3mm">Partnerzy i podobne rozwiązania</h3><p>Partnerzy są dobierani po tagach potrzeb; podobne inicjatywy pomagają ograniczać dublowanie prac.</p></article>
+        </div>
+        <div class="note">Przetwarzanie wymagające AI odbywa się w tle. Użytkownik od razu otrzymuje stronę inicjatywy, a wynik pojawia się po zakończeniu zadania; błędy przejściowe są automatycznie ponawiane.</div>
+        <span class="page-no">3 / 5</span>
+      </section>
+
+      <section class="page">
+        <p class="eyebrow">3. Wiarygodność, dane i wdrożenie</p>
+        <h2>AI wspiera ocenę, a nie ukrywa decyzji.</h2>
+        <table>
+          <thead><tr><th>Obszar</th><th>Rozwiązanie w Innoradarze</th></tr></thead>
+          <tbody>
+            <tr><td><b>Źródła danych</b></td><td>Publiczne aktualności instytucji, publiczne projekty NCBR oraz treści zgłoszone ręcznie. Przy inicjatywie prezentowane są źródło, data i dostępny kontekst instytucji.</td></tr>
+            <tr><td><b>Przejrzystość oceny</b></td><td>Model zwraca wynik dla każdego kryterium, uzasadnienie i poziom pewności. Brak danych jest nazywany niewiadomą, a nie maskowany arbitralną oceną.</td></tr>
+            <tr><td><b>Kontrola człowieka</b></td><td>Rekomendację można w panelu sprawdzić, poprawić, wygenerować ponownie i zatwierdzić. System nie odbiera decyzji osobie odpowiedzialnej.</td></tr>
+            <tr><td><b>Skalowanie i integracje</b></td><td>Źródła instytucji i partnerów można importować z CSV; zadania działają przez kolejkę i mogą być rozszerzane o kolejne kanały danych.</td></tr>
+            <tr><td><b>Bezpieczeństwo i prywatność</b></td><td>Polityka prywatności i zgoda przy zgłoszeniu, limitowanie prób, ochrona przed spamem, CSP oraz nagłówki bezpieczeństwa. Dostęp administracyjny jest chroniony.</td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:6mm">Ograniczenia i odpowiedzialne użycie</h3>
+        <p>Rekomendacja ma charakter wstępny: zależy od jakości opisu oraz dostępnych danych. System wskazuje ryzyka i brakujące informacje; nie zastępuje weryfikacji technicznej, prawnej, finansowej ani decyzji partnera wdrożeniowego.</p>
+        <span class="page-no">4 / 5</span>
+      </section>
+
+      <section class="page final">
+        <p class="eyebrow">4. Walidacja i dalszy rozwój</p>
+        <h2>Dwa scenariusze, jeden sprawdzalny rezultat</h2>
+        <div class="grid two">
+          <article class="card"><span class="tag">Scenariusz A</span><h3 style="margin-top:3mm">Automatyczne wykrycie</h3><ul><li>Crawler znajduje opis innowacji w źródle publicznym.</li><li>System zapisuje i porządkuje dane.</li><li>AI tworzy ocenę oraz rekomendację.</li><li>Użytkownik otrzymuje podobne rozwiązania i partnerów.</li></ul></article>
+          <article class="card"><span class="tag">Scenariusz B</span><h3 style="margin-top:3mm">Ręczne zgłoszenie</h3><ul><li>Twórca opisuje własną inicjatywę w formularzu.</li><li>Job w tle ocenia ją z retry dla błędów przejściowych.</li><li>Na stronie pojawiają się szczegóły oceny.</li><li>System wskazuje drogę rozwoju i pasujących partnerów.</li></ul></article>
+        </div>
+        <div class="note"><b>Miernik skuteczności demonstratora:</b> dla każdego przypadku da się przejść od sygnału o innowacji do uzasadnionej rekomendacji oraz wskazania możliwego odbiorcy, partnera albo finansowania — bez opuszczania jednego narzędzia.</div>
+        <h3>Dlaczego rozwiązanie może działać po hackathonie?</h3>
+        <p>Innoradar działa jako publiczny demonstrator, ma automatyczne zadania w tle, monitoring, retry, mechanizmy prywatności i bezpieczeństwa oraz architekturę umożliwiającą dołączanie kolejnych instytucji, źródeł i partnerów. Następny etap to rozszerzenie baz danych i integracji oraz wspólna walidacja rekomendacji z instytucjami wdrożeniowymi.</p>
+        <div class="linkbox"><b>Demonstrator:</b><br /><a href="https://maciej-ciemborowicz.eu/inno/">https://maciej-ciemborowicz.eu/inno/</a></div>
+        <p class="meta">Projekt odpowiada na pięć kryteriów oceny: związek z wyzwaniem, oryginalność, użyteczność, kompletność demonstratora oraz potencjał wdrożeniowy i transferowy.</p>
+        <span class="page-no">5 / 5</span>
+      </section>
+    </main>
+  </body>
+</html>

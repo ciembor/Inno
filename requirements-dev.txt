@@ -1,0 +1,6 @@
+-r requirements.txt
+pytest>=8.0
+pytest-django>=4.9
+pytest-cov>=6.0
+radon>=6.0
+ruff>=0.11

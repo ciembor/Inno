@@ -1,0 +1,4 @@
+{% extends "core/control/base.html" %}
+{% block control_content %}
+<h1>Import partnerów z CSV</h1><p>Wymagane kolumny: <code>name,organization_type,description</code>. Opcjonalne: <code>contact,contact_url,locality_simc,areas,tags,is_active</code>. Tagi oddziel znakiem <code>|</code>.</p><form method="post" enctype="multipart/form-data" class="panel-form control-card">{% csrf_token %}<p><label for="file">Plik CSV w UTF-8</label><input id="file" name="file" type="file" accept=".csv,text/csv" required></p><div class="panel-form__actions"><button class="button" type="submit">Importuj plik</button></div></form>
+{% endblock %}

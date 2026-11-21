@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block description %}{{ idea.name }} — oceniona lokalna inicjatywa w Innoradar.{% endblock %}
+{% block title %}{{ idea.name }} — innoradar{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/innovation_detail.css' %}">{% endblock %}
+
+{% block content %}
+<main id="main-content" class="container innovation" tabindex="-1">
+  <a class="back" href="{% url back_page %}">← Wróć do: {{ back_label }}</a>
+  <h1>{{ idea.name }}</h1>
+  <div class="meta">
+    <span>Dodano: {{ idea.created_at|date:"d.m.Y" }}</span>
+    {% if idea.locality %}<span>{{ idea.locality.name }}</span>{% endif %}
+    {% if idea.institution %}<span>Instytucja: {{ idea.institution.name }}</span>{% endif %}
+  </div>
+
+  <section class="content" aria-labelledby="description-title">
+    <h2 id="description-title">Opis inicjatywy</h2>
+    {{ idea.content|linebreaks }}
+    {% if idea.source_url %}<p><a href="{{ idea.source_url }}" rel="noopener">{% if idea.source_label %}Źródło: {{ idea.source_label }}{% else %}Źródłowy artykuł{% endif %}</a></p>{% endif %}
+  </section>
+
+  <section class="provenance" aria-labelledby="provenance-title">
+    <h2 id="provenance-title">Twórcy i pochodzenie</h2>
+    <dl>
+      <div><dt>Instytucja źródłowa</dt><dd>{% if idea.institution %}{{ idea.institution.name }} · {{ idea.get_institution_role_display }}{% else %}Brak wskazanej instytucji źródłowej{% endif %}</dd></div>
+      <div><dt>Twórca lub zespół</dt><dd>{% if idea.creator_name %}{{ idea.creator_name }}{% endif %}{% if idea.creator_name and idea.creator_team %}<br>{% endif %}{% if idea.creator_team %}{{ idea.creator_team|linebreaksbr }}{% endif %}{% if not idea.creator_name and not idea.creator_team %}Brak potwierdzonych danych{% endif %}</dd></div>
+      {% if idea.creator_contact %}<div><dt>Kontakt do twórcy lub zespołu</dt><dd>{{ idea.creator_contact }}</dd></div>{% endif %}
+      {% if idea.implementing_institution %}<div><dt>Instytucja wdrażająca</dt><dd>{{ idea.implementing_institution.name }}</dd></div>{% endif %}
+    </dl>
+  </section>
+
+  <section class="criteria" aria-labelledby="criteria-title">
+    <h2 id="criteria-title">Ocena według wskaźników</h2>
+    {% if assessments %}<dl>{% for assessment in assessments %}<div><dt>{% if assessment.indicator %}{{ assessment.indicator.name }}{% else %}{{ assessment.criterion }}{% endif %}</dt><dd>{% if assessment.score != None %}{{ assessment.score }}/100{% else %}Brak danych do oceny{% endif %}{% if assessment.rationale %}<p>{{ assessment.rationale }}</p>{% endif %}</dd></div>{% endfor %}</dl>{% else %}<p>Ocena i szczegóły innowacji są przygotowywane w tle.</p>{% endif %}
+  </section>
+
+  {% if idea.recommendation and idea.recommendation.status != "failed" %}
+    <section class="recommendation" aria-labelledby="recommendation-title"><p class="recommendation__eyebrow">{{ idea.recommendation.get_stage_display }} · {{ idea.recommendation.get_development_path_display }}</p><h2 id="recommendation-title">Rekomendowany dalszy rozwój</h2><dl><div><dt>Najbliższy krok</dt><dd>{{ idea.recommendation.next_step }}</dd></div><div><dt>Dlaczego</dt><dd>{{ idea.recommendation.rationale }}</dd></div><div><dt>Na co uważać</dt><dd>{{ idea.recommendation.risk }}</dd></div></dl></section>
+  {% endif %}
+
+  {% if partner_matches %}
+    <section class="partners" aria-labelledby="partners-title"><h2 id="partners-title">Partnerzy do dalszego rozwoju</h2><p>Organizacje dopasowane do jawnie określonych potrzeb inicjatywy.</p><ul>{% for match in partner_matches %}<li><h3>{{ match.organization.name }}</h3><p class="partners__type">{{ match.organization.get_organization_type_display }}</p><p>{{ match.organization.description }}</p><p><strong>{{ match.rationale }}</strong></p>{% if match.organization.contact_url %}<a href="{{ match.organization.contact_url }}" rel="noopener">{{ match.organization.contact|default:"Przejdź do kontaktu" }}</a>{% elif match.organization.contact %}<p>{{ match.organization.contact }}</p>{% endif %}</li>{% endfor %}</ul></section>
+  {% endif %}
+
+  {% if similar_ideas %}
+    <section class="similar-ideas" aria-labelledby="similar-ideas-title"><h2 id="similar-ideas-title">Podobne rozwiązania</h2><p>Powiązania wynikają ze wspólnych tagów problemu, odbiorców, mechanizmu i kontekstu inicjatywy.</p><ul>{% for match in similar_ideas %}<li><p class="similar-ideas__relationship">{{ match.relationship_label }} · {{ match.score }}% podobieństwa</p><h3><a href="{% url 'innovation_detail' match.idea.pk %}">{{ match.idea.name }}</a></h3><p>{{ match.rationale }}</p></li>{% endfor %}</ul></section>
+  {% endif %}
+
+  <section class="score" aria-label="Wynik innowacyjności"><span class="score__label">Wynik innowacyjności</span><strong>{% if idea.innovation_score != None %}{{ idea.innovation_score|floatformat:"1u" }}{% elif idea.scored_at %}<small>Wymaga uzupełnienia danych</small>{% else %}<small>Ocena w toku</small>{% endif %}</strong></section>
+</main>
+{% endblock %}

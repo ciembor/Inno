@@ -1,0 +1,35 @@
+{% extends "core/control/base.html" %}
+{% load static %}
+{% block control_content %}
+<h1>Prompty</h1>
+<p>Zmiany obowiązują przy kolejnych wywołaniach LLM. Przebiegi badań i rankingów już utworzone wcześniej zachowują prompt zapisany w momencie ich rozpoczęcia.</p>
+
+<section class="prompt-editor control-card" aria-labelledby="prompt-editor-heading">
+  <div class="prompt-editor__header">
+    <p class="prompt-editor__selection">
+      <label class="sr-only" for="prompt-select">Wybierz prompt</label>
+      <select id="prompt-select" data-prompt-select>
+        {% for prompt in prompts %}
+          <option value="{{ prompt.key }}"{% if prompt.key == selected_prompt.key %} selected{% endif %}>{{ prompt.label }}</option>
+        {% endfor %}
+      </select>
+    </p>
+    <p data-prompt-description>{{ selected_prompt.description }}</p>
+  </div>
+
+  <form method="post" action="{{ selected_prompt.update_url }}" data-prompt-editor>
+    {% csrf_token %}
+    <p class="prompt-editor__field">
+      <label for="prompt-content">Treść promptu</label>
+      <textarea id="prompt-content" name="{{ selected_prompt.key }}" rows="16" data-prompt-content>{{ selected_prompt.content }}</textarea>
+    </p>
+    <div class="prompt-form__actions">
+      <p class="prompt-form__status" data-prompt-status role="status" aria-live="polite"></p>
+      <button class="button" type="submit">Zapisz prompt</button>
+    </div>
+  </form>
+</section>
+
+{{ prompts|json_script:"prompt-data" }}
+{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/control_prompts.js' %}" defer></script>{% endblock %}

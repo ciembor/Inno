@@ -1,0 +1,27 @@
+{% extends "core/control/base.html" %}
+{% block control_content %}
+<h1>Wskaźniki innowacji</h1>
+<section class="control-card indicator-configuration" aria-labelledby="indicator-configuration-heading">
+  <h2 id="indicator-configuration-heading">Wagi i aktywność</h2>
+  <p>Wagi są zapisywane jednocześnie. Suma wag włączonych wskaźników musi wynosić dokładnie 1,00.</p>
+  <form method="post" action="{% url 'control_indicator_configuration_update' %}">
+    {% csrf_token %}{{ configuration_form.non_field_errors }}
+    <div class="indicator-configuration__rows">
+      {% for indicator, enabled_field, weight_field in configuration_rows %}
+        <div class="indicator-configuration__row">
+          <div><strong>{{ indicator.name }}</strong><code>{{ indicator.key }}</code></div>
+          <p class="indicator-configuration__enabled">{{ enabled_field }}<label for="{{ enabled_field.id_for_label }}">{{ enabled_field.label }}</label>{{ enabled_field.errors }}</p>
+          <p><label for="{{ weight_field.id_for_label }}">{{ weight_field.label }}</label>{{ weight_field }}{{ weight_field.errors }}</p>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="panel-form__actions"><button class="button" type="submit">Zapisz wagi</button></div>
+  </form>
+</section>
+<section class="control-card indicator-settings" aria-labelledby="indicator-settings-heading">
+  <h2 id="indicator-settings-heading">Aktywne i zapisane wskaźniki</h2>
+  <p>Każdy wskaźnik ma polską nazwę dla użytkownika oraz angielski klucz wykorzystywany przez oceniacz. Wagi aktywnych wskaźników muszą sumować się do 1,00. Kolejność zmienisz bezpośrednio na liście.</p>
+  <div class="table-wrap" tabindex="0"><table><thead><tr><th scope="col">Kolejność</th><th scope="col">Nazwa</th><th scope="col">Klucz</th><th scope="col">Waga</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Działania</span></th></tr></thead><tbody>{% for indicator in indicators %}<tr><td><div class="indicator-order"><span aria-label="Pozycja {{ forloop.counter }}">{{ forloop.counter }}</span><div class="indicator-order__actions"><form method="post" action="{% url 'control_indicator_move' indicator.pk 'up' %}">{% csrf_token %}<button type="submit" class="indicator-order__button"{% if forloop.first %} disabled{% endif %} aria-label="Przesuń {{ indicator.name }} wyżej">↑</button></form><form method="post" action="{% url 'control_indicator_move' indicator.pk 'down' %}">{% csrf_token %}<button type="submit" class="indicator-order__button"{% if forloop.last %} disabled{% endif %} aria-label="Przesuń {{ indicator.name }} niżej">↓</button></form></div></div></td><th scope="row">{{ indicator.name }}</th><td><code>{{ indicator.key }}</code></td><td>{{ indicator.weight }}</td><td>{% if indicator.enabled %}Aktywny{% else %}Wyłączony{% endif %}</td><td><a class="control-table__action" href="{% url 'control_indicator_edit' indicator.pk %}">Edytuj</a></td></tr>{% empty %}<tr><td colspan="6">Brak wskaźników.</td></tr>{% endfor %}</tbody></table></div>
+  <div class="panel-form__actions"><a class="button" href="{% url 'control_indicator_add' %}">Dodaj wskaźnik</a></div>
+</section>
+{% endblock %}

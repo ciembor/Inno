@@ -1,0 +1,61 @@
+{% extends "core/control/base.html" %}
+{% load static %}
+{% block control_content %}
+<h1>Kalibracja ocen</h1>
+
+<section class="control-card calibration-panel" aria-labelledby="calibration-setting-heading">
+  <h2 id="calibration-setting-heading">Ustawienie kalibracji</h2>
+  <p>Włączone przykłady są przekazywane oceniaczowi przy kolejnych ocenach.</p>
+  <form method="post" action="{% url 'control_calibration_update' %}" class="calibration-panel__toggle">
+    {% csrf_token %}
+    {{ calibration_form.enabled }}
+    <label for="{{ calibration_form.enabled.id_for_label }}">{{ calibration_form.enabled.label }}</label>
+    {{ calibration_form.enabled.errors }}
+    <button class="button" type="submit">Zapisz ustawienie</button>
+  </form>
+</section>
+
+<section class="control-card calibration-editor" aria-labelledby="calibration-editor-heading">
+  <div class="calibration-editor__header">
+    <h2 id="calibration-editor-heading" class="sr-only">Edytor przykładów kalibracyjnych</h2>
+    <p class="calibration-editor__selection">
+      <label class="sr-only" for="calibration-example-select">Wybierz przykład kalibracyjny</label>
+      <select id="calibration-example-select" data-calibration-select>
+        {% for example, example_form, indicator_name in calibration_examples %}
+          <option value="example-{{ example.pk }}">{{ indicator_name }} — {{ example.title }}</option>
+        {% endfor %}
+        <option value="new"{% if not calibration_examples %} selected{% endif %}>Dodaj przykład kalibracyjny</option>
+      </select>
+    </p>
+    <p class="calibration-editor__description">Przykłady pokazują oceniaczowi oczekiwany poziom punktacji dla wybranego kryterium.</p>
+  </div>
+
+  {% for example, example_form, indicator_name in calibration_examples %}
+    <section data-calibration-editor="example-{{ example.pk }}"{% if not forloop.first %} hidden{% endif %}>
+      <form id="calibration-example-{{ example.pk }}" method="post" action="{% url 'control_calibration_example_update' example.pk %}">
+        {% csrf_token %}
+        {% for field in example_form %}
+          <p class="calibration-editor__field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</p>
+        {% endfor %}
+      </form>
+      <div class="calibration-editor__actions">
+        <button class="button" form="calibration-example-{{ example.pk }}" type="submit">Zapisz przykład</button>
+        <form method="post" action="{% url 'control_calibration_example_delete' example.pk %}" class="delete-form">
+          {% csrf_token %}<button class="button button--danger" type="submit">Usuń przykład</button>
+        </form>
+      </div>
+    </section>
+  {% endfor %}
+
+  <section data-calibration-editor="new"{% if calibration_examples %} hidden{% endif %}>
+    <form method="post" action="{% url 'control_calibration_example_add' %}">
+      {% csrf_token %}
+      {% for field in calibration_example_form %}
+        <p class="calibration-editor__field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</p>
+      {% endfor %}
+      <div class="prompt-form__actions"><button class="button" type="submit">Dodaj przykład</button></div>
+    </form>
+  </section>
+</section>
+{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/control_calibration.js' %}" defer></script>{% endblock %}

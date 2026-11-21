@@ -1,0 +1,20 @@
+{% extends "core/control/base.html" %}
+{% block control_content %}
+<h1>Rekomendacje rozwoju</h1>
+<p>Po ocenie inicjatywy LLM proponuje etap rozwoju, ścieżkę oraz konkretny następny krok. Rekomendację można zweryfikować, poprawić i zatwierdzić.</p>
+
+<section class="control-card control-card--wide">
+  <div class="table-wrap"><table>
+    <caption class="sr-only">Lista rekomendacji rozwoju inicjatyw</caption>
+    <thead><tr><th scope="col">Inicjatywa</th><th scope="col">Etap</th><th scope="col">Ścieżka</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Działania</span></th></tr></thead>
+    <tbody>{% for idea in page %}<tr>
+      <th scope="row">{{ idea.name }}</th>
+      <td>{% if idea.recommendation %}{{ idea.recommendation.get_stage_display }}{% else %}—{% endif %}</td>
+      <td>{% if idea.recommendation %}{{ idea.recommendation.get_development_path_display }}{% else %}Oczekuje na wygenerowanie{% endif %}</td>
+      <td>{% if idea.recommendation %}{{ idea.recommendation.get_status_display }}{% else %}—{% endif %}</td>
+      <td>{% if idea.recommendation %}<a class="control-table__action" href="{% url 'control_recommendation_edit' idea.pk %}">Edytuj</a>{% else %}<form class="inline-form" method="post" action="{% url 'control_recommendation_regenerate' idea.pk %}">{% csrf_token %}<button class="button" type="submit">Wygeneruj</button></form>{% endif %}</td>
+    </tr>{% empty %}<tr><td colspan="5">Nie ma jeszcze ocenionych inicjatyw.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% if page.paginator.num_pages > 1 %}<nav class="control-pagination" aria-label="Strony rekomendacji"><ul>{% if page.has_previous %}<li><a href="?page={{ page.previous_page_number }}">Poprzednia</a></li>{% endif %}<li><span aria-current="page">{{ page.number }} / {{ page.paginator.num_pages }}</span></li>{% if page.has_next %}<li><a href="?page={{ page.next_page_number }}">Następna</a></li>{% endif %}</ul></nav>{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}{{ catalog_title }} | Innoradar{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/innovations.css' %}?v=14">{% endblock %}
+{% block content %}
+<main id="main-content" class="container innovations" tabindex="-1">
+  <h1>{{ catalog_title }}. <span>{{ page.paginator.count }}</span></h1>
+  {% if page.object_list %}
+    <div class="toolbar">
+      <form class="sort" method="get">
+    <div class="sort__field"><label for="sort">Sortowanie</label><div class="select-wrap"><select id="sort" name="sort"><option value="score"{% if sort == "score" %} selected{% endif %}>Wynik innowacyjności</option><option value="novelty"{% if sort == "novelty" %} selected{% endif %}>Nowatorstwo</option><option value="value"{% if sort == "value" %} selected{% endif %}>Wartość innowacji</option><option value="replicability"{% if sort == "replicability" %} selected{% endif %}>Replikowalność</option><option value="impact"{% if sort == "impact" %} selected{% endif %}>Potencjał oddziaływania</option><option value="date"{% if sort == "date" %} selected{% endif %}>{{ date_sort_label }}</option></select></div></div>
+        {% if show_institution_filter %}{% if institution_types or unassigned_count %}<div class="sort__field"><label for="type">Typ instytucji</label><div class="select-wrap"><select id="type" name="type"><option value="">Wszystkie typy</option>{% for value, label in institution_types %}<option value="{{ value }}"{% if institution_type == value %} selected{% endif %}>{{ label }}</option>{% endfor %}{% if unassigned_count %}<option value="unassigned"{% if institution_type == "unassigned" %} selected{% endif %}>NCBR ({{ unassigned_count }} innowacji)</option>{% endif %}</select></div></div>{% endif %}{% endif %}
+      </form>
+      <div class="view-switch"><span class="view-switch__label">Widok</span><div class="view-switch__controls" role="group" aria-label="Wybór widoku"><button type="button" data-view="grid" aria-pressed="true">Kafle</button><button type="button" data-view="list" aria-pressed="false">Lista</button></div></div>
+    </div>
+    <section class="cards" aria-label="{{ catalog_title }}">
+      {% for idea in page %}
+        <article class="card" tabindex="0"><h2><a href="{% url 'innovation_detail' idea.pk %}">{{ idea.name }}</a></h2><p class="date">{% if date_field == "published_at" and idea.published_at %}Opublikowano: {{ idea.published_at|date:"d.m.Y" }}{% else %}Dodano: {{ idea.created_at|date:"d.m.Y" }}{% endif %}</p><p class="score" aria-label="Wynik innowacyjności">{% if idea.innovation_score != None %}{{ idea.innovation_score|floatformat:"1u" }}{% else %}<small>Wymaga uzupełnienia danych</small>{% endif %}</p><dl class="details" aria-label="Szczegóły oceny: {{ idea.name }}">{% for assessment in idea.indicator_scores.all %}<div><dt>{{ assessment.indicator.name }}</dt><dd>{% if assessment.score != None %}{{ assessment.score }}/100{% else %}Brak danych do oceny{% endif %}</dd></div>{% endfor %}</dl><a class="details__link" href="{% url 'innovation_detail' idea.pk %}">Zobacz szczegóły</a></article>
+      {% endfor %}
+    </section>
+    <div class="table-wrap" tabindex="0"><table class="innovations-table"><caption class="sr-only">{{ catalog_caption }}</caption><thead><tr><th scope="col">Inicjatywa</th><th scope="col">{{ date_label }}</th><th scope="col">Wynik</th>{% for indicator in indicators %}<th scope="col">{{ indicator.name }}</th>{% endfor %}</tr></thead><tbody>{% for idea in page %}<tr><th scope="row"><a href="{% url 'innovation_detail' idea.pk %}">{{ idea.name }}</a></th><td>{% if date_field == "published_at" %}{% if idea.published_at %}{{ idea.published_at|date:"d.m.Y" }}{% else %}—{% endif %}{% else %}{{ idea.created_at|date:"d.m.Y" }}{% endif %}</td><td>{% if idea.innovation_score != None %}{{ idea.innovation_score|floatformat:"1u" }}{% else %}Brak danych do oceny{% endif %}</td>{% for assessment in idea.indicator_scores.all %}<td>{% if assessment.score != None %}{{ assessment.score }}/100{% else %}Brak danych do oceny{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+    {% if page.paginator.num_pages > 1 %}
+      <nav class="pagination" aria-label="Strony innowacji">
+        <p class="sr-only">Strona {{ page.number }} z {{ page.paginator.num_pages }}</p>
+        <ul class="pagination__list">
+          <li>{% if page.has_previous %}<a class="pagination__control" href="?{{ pagination_query }}&amp;page=1" aria-label="Pierwsza strona">Pierwsza</a>{% else %}<span class="pagination__control pagination__control--disabled" aria-disabled="true">Pierwsza</span>{% endif %}</li>
+          <li>{% if page.has_previous %}<a class="pagination__control" href="?{{ pagination_query }}&amp;page={{ page.previous_page_number }}" rel="prev" aria-label="Poprzednia strona">Poprzednia</a>{% else %}<span class="pagination__control pagination__control--disabled" aria-disabled="true">Poprzednia</span>{% endif %}</li>
+          {% for page_number in page_range %}
+            <li>{% if page_number == page.paginator.ELLIPSIS %}<span class="pagination__ellipsis" aria-hidden="true">…</span><span class="sr-only">Pomijane strony</span>{% elif page_number == page.number %}<span class="pagination__page" aria-current="page" aria-label="Strona {{ page.number }}, bieżąca">{{ page.number }}</span>{% else %}<a class="pagination__page" href="?{{ pagination_query }}&amp;page={{ page_number }}" aria-label="Strona {{ page_number }}">{{ page_number }}</a>{% endif %}</li>
+          {% endfor %}
+          <li>{% if page.has_next %}<a class="pagination__control" href="?{{ pagination_query }}&amp;page={{ page.next_page_number }}" rel="next" aria-label="Następna strona">Następna</a>{% else %}<span class="pagination__control pagination__control--disabled" aria-disabled="true">Następna</span>{% endif %}</li>
+          <li>{% if page.has_next %}<a class="pagination__control" href="?{{ pagination_query }}&amp;page={{ page.paginator.num_pages }}" aria-label="Ostatnia strona">Ostatnia</a>{% else %}<span class="pagination__control pagination__control--disabled" aria-disabled="true">Ostatnia</span>{% endif %}</li>
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}<p class="empty">{{ empty_message }}</p>{% endif %}
+</main>
+{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/innovations.js' %}?v=2" defer></script>{% endblock %}

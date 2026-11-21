@@ -1,0 +1,6 @@
+{% extends "core/control/base.html" %}
+{% block control_content %}
+<h1>{% if partner %}Edytuj partnera{% else %}Dodaj partnera{% endif %}</h1>
+<form method="post" class="control-card panel-form">{% csrf_token %}{% for field in form %}<p>{{ field.label_tag }}{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{{ field.errors }}</p>{% endfor %}<div class="panel-form__actions"><a class="button button--secondary" href="{% url 'control_partners' %}">Anuluj</a><button class="button" type="submit">Zapisz partnera</button></div></form>
+{% if partner %}<form method="post" action="{% url 'control_partner_delete' partner.pk %}" class="delete-form">{% csrf_token %}<button class="button button--danger" type="submit">Usuń partnera</button></form>{% endif %}
+{% endblock %}

@@ -1,0 +1,649 @@
+.hero,
+.city {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.hero {
+  min-height: min(760px, calc(100vh - 76px));
+  display: grid;
+  align-items: end;
+  color: #fff;
+  background-color: var(--deep);
+}
+.hero::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(9, 26, 49, 0.26) 0%,
+      rgba(9, 26, 49, 0.12) 35%,
+      rgba(9, 26, 49, 0.89) 100%
+    ),
+    url("../../images/bieszczady-illustration.webp");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.hero__clouds {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__cloud {
+  position: absolute;
+  bottom: calc(var(--cloud-bottom) + var(--cloud-mobile-offset, 0px));
+  left: calc(100% + 5vw);
+  width: var(--cloud-width);
+  aspect-ratio: var(--cloud-ratio);
+  translate: 0 var(--cloud-scroll-offset);
+  background: center / contain no-repeat var(--cloud-image);
+  filter: drop-shadow(0 8px 18px rgba(9, 26, 49, 0.13));
+  animation: cloud-drift var(--cloud-duration) linear infinite;
+  animation-delay: var(--cloud-delay);
+}
+@keyframes cloud-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100vw - 140%));
+  }
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+}
+.hero__content {
+  width: min(1160px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 130px 0 80px;
+}
+.eyebrow {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  color: var(--mint);
+  background-color: var(--deep);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+h1 {
+  max-width: 850px;
+  margin: 0;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.065em;
+}
+.hero__lead {
+  max-width: 550px;
+  margin: 28px 0 0;
+  color: #d8f1f4;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.65;
+}
+.scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 42px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.scroll-hint::before {
+  width: 34px;
+  height: 1px;
+  content: "";
+  background: var(--mint);
+}
+.intro {
+  padding: clamp(72px, 10vw, 136px) 0;
+  background: #fff;
+}
+.section-label {
+  margin: 0 0 15px;
+  color: var(--mint);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+}
+.intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: clamp(42px, 9vw, 132px);
+  align-items: end;
+}
+.intro__copy {
+  margin: 0;
+  color: #52657c;
+  font-size: 1.06rem;
+  line-height: 1.75;
+}
+.signals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 64px;
+  border-top: 1px solid var(--line);
+}
+.signal {
+  padding: 25px 24px 0 0;
+  border-right: 1px solid var(--line);
+}
+.signal + .signal {
+  padding-left: 24px;
+}
+.signal:last-child {
+  border-right: 0;
+}
+.signal strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+.signal p {
+  margin: 0;
+  color: #687a8e;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.city {
+  min-height: 680px;
+  display: flex;
+  align-items: flex-start;
+  padding: clamp(72px, 9vw, 120px) 0;
+  background-color: #e9f7fc;
+}
+.city::before,
+.city::after,
+.city__overlay {
+  position: absolute;
+  inset: 0;
+}
+.city::before,
+.city::after {
+  z-index: 0;
+  content: "";
+  background-position: center bottom;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.city::before {
+  background-image: url("../../images/przemysl-illustration.webp");
+  animation: city-fade-primary 18s ease-in-out infinite;
+}
+.city::after {
+  background-image: url("../../images/rzeszow-illustration.webp");
+  animation: city-fade-secondary 18s ease-in-out infinite;
+}
+.city__overlay {
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 251, 252, 0.95) 0%,
+    rgba(247, 251, 252, 0.67) 45%,
+    rgba(247, 251, 252, 0.05) 100%
+  );
+}
+@keyframes city-fade-primary {
+  0%,
+  42% {
+    opacity: 1;
+  }
+  50%,
+  92% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes city-fade-secondary {
+  0%,
+  42% {
+    opacity: 0;
+  }
+  50%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.city > .container {
+  position: relative;
+  z-index: 2;
+}
+.city__card {
+  width: min(540px, 100%);
+  padding: clamp(30px, 5vw, 56px);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(195, 227, 236, 0.8);
+  box-shadow: 0 16px 60px rgba(20, 42, 71, 0.1);
+  backdrop-filter: blur(8px);
+}
+.city__card p:last-child {
+  max-width: 440px;
+  margin: 24px 0 0;
+  color: #52657c;
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+.examples {
+  --examples-overlap: 420px;
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
+  margin-top: calc(-1 * var(--examples-overlap));
+  padding: calc(clamp(72px, 10vw, 130px) + var(--examples-overlap)) 0
+    clamp(72px, 10vw, 130px);
+  background: transparent;
+}
+.examples::before,
+.examples::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background-position: center -40px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll;
+}
+.examples::before {
+  background-image: url("../../images/rzeszow-illustration.webp");
+}
+.examples::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 251, 252, 0.95) 0%,
+    rgba(247, 251, 252, 0.67) 45%,
+    rgba(247, 251, 252, 0.05) 100%
+  );
+  -webkit-mask: url("../../images/rzeszow-illustration.webp") center -40px /
+    cover no-repeat;
+  mask: url("../../images/rzeszow-illustration.webp") center -40px / cover
+    no-repeat;
+}
+.examples > .container {
+  position: relative;
+  z-index: 1;
+}
+.examples__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.examples__head .section-label {
+  width: fit-content;
+  margin: 0;
+  padding: 10px 14px;
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.examples__head h2 {
+  max-width: min(760px, 100%);
+  margin: 0;
+}
+.examples__head h2 {
+  color: var(--navy);
+  text-shadow:
+    -8px -8px 18px #fff,
+    8px -8px 18px #fff,
+    -8px 8px 18px #fff,
+    8px 8px 18px #fff,
+    0 0 42px #fff,
+    0 0 76px #fff;
+}
+.examples__total {
+  display: inline-block;
+  min-width: 3ch;
+  color: var(--mint);
+  font-variant-numeric: tabular-nums;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 50px;
+}
+.card {
+  min-height: 195px;
+  padding: 27px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.card__count {
+  margin-top: auto;
+  min-width: 3ch;
+  color: var(--mint);
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+.js .card__count[data-counter] {
+  visibility: hidden;
+}
+.card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.home-cta {
+  position: relative;
+  z-index: 3;
+  padding: clamp(82px, 11vw, 150px) 0;
+  background: transparent;
+}
+.home-cta__content {
+  max-width: 760px;
+}
+.home-cta__content,
+.home-outro__content {
+  position: relative;
+  z-index: 1;
+}
+.home-cta__content::before,
+.home-outro__content::before {
+  position: absolute;
+  z-index: -1;
+  inset: -40px;
+  content: "";
+  background: #fff;
+}
+.home-cta__content::before {
+  inset: -18px -24px;
+}
+.home-cta__content > p:not(.section-label) {
+  max-width: none;
+  margin: 28px 0 0;
+  color: #52657c;
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+.home-outro {
+  --outro-overlap: 470px;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  min-height: 540px;
+  margin-top: calc(-1 * var(--outro-overlap));
+  padding: calc(var(--outro-overlap) + clamp(82px, 10vw, 140px)) 0
+    clamp(82px, 10vw, 140px);
+  overflow: hidden;
+  background: transparent;
+}
+.home-outro::before,
+.home-outro::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-attachment: scroll;
+}
+.home-outro::before {
+  background-image: url("../../images/warszawa_alpha.png");
+}
+.home-outro::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 251, 252, 0.95) 0%,
+    rgba(247, 251, 252, 0.67) 45%,
+    rgba(247, 251, 252, 0.05) 100%
+  );
+  -webkit-mask: url("../../images/warszawa_alpha.png") center bottom / 100% auto
+    no-repeat;
+  mask: url("../../images/warszawa_alpha.png") center bottom / 100% auto no-repeat;
+}
+.home-outro__content {
+  max-width: 760px;
+}
+.home-outro__content > p:not(.section-label) {
+  max-width: none;
+  margin: 26px 0 0;
+  color: var(--navy);
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+@media (max-width: 1040px) and (min-width: 761px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .hero__content {
+    width: min(100% - 32px, 1160px);
+    padding-bottom: 52px;
+  }
+  .hero {
+    min-height: 650px;
+    background-position: 58% center;
+  }
+  .hero__cloud {
+    --cloud-mobile-offset: -15px;
+  }
+  .intro__grid,
+  .cards {
+    grid-template-columns: 1fr;
+  }
+  .signals {
+    grid-template-columns: 1fr;
+    margin-top: 45px;
+  }
+  .signal,
+  .signal + .signal {
+    padding: 20px 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .city {
+    min-height: 620px;
+  }
+  .city::before,
+  .city::after {
+    background-position: 66% bottom;
+  }
+  .city__card {
+    background: rgba(255, 255, 255, 0.92);
+  }
+  .examples {
+    --examples-overlap: 240px;
+    padding-top: calc(
+      clamp(72px, 10vw, 130px) + var(--examples-overlap) - 60px
+    );
+  }
+  .examples::before,
+  .examples::after {
+    inset: -200px 0 250px;
+    background-position: center top;
+  }
+  .examples::after {
+    -webkit-mask-position: center top;
+    mask-position: center top;
+  }
+  .home-outro {
+    --outro-overlap: 330px;
+    min-height: 500px;
+  }
+  .home-outro::before,
+  .home-outro::after {
+    background-position: 58% bottom;
+  }
+  .home-outro::after {
+    -webkit-mask-position: 58% bottom;
+    mask-position: 58% bottom;
+  }
+}
+@media (min-width: 761px) {
+  .examples {
+    margin-bottom: -40px;
+  }
+}
+.city::before {
+  animation: none;
+  opacity: 1;
+}
+.city::after {
+  display: none;
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero,
+  .city::before,
+  .city::after {
+    background-attachment: scroll;
+  }
+  .hero__cloud {
+    animation: none;
+  }
+  .city::after {
+    display: none;
+  }
+}
+.high-contrast .intro {
+  color: #fff;
+  background: #000;
+  border-color: #fff;
+}
+.high-contrast .examples,
+.inverted-contrast .examples {
+  background: transparent;
+  border-color: transparent;
+}
+.high-contrast .hero,
+.high-contrast .city,
+.high-contrast .home-cta,
+.high-contrast .home-outro {
+  background-image: none;
+  background-color: #000;
+}
+.high-contrast .hero::before,
+.high-contrast .hero__clouds,
+.high-contrast .city::before,
+.high-contrast .city::after,
+.high-contrast .city__overlay,
+.high-contrast .examples::before,
+.high-contrast .examples::after,
+.high-contrast .home-outro::before,
+.high-contrast .home-outro::after {
+  display: none;
+}
+.high-contrast .hero__lead,
+.high-contrast .intro__copy,
+.high-contrast .signal p,
+.high-contrast .examples__count,
+.high-contrast .home-cta__content > p:not(.section-label),
+.high-contrast .home-outro__content > p:not(.section-label) {
+  color: #fff;
+}
+.high-contrast .examples__head .section-label,
+.high-contrast .signal,
+.high-contrast .signals,
+.high-contrast .card {
+  border-color: #fff;
+  color: #fff;
+  background: #000;
+}
+.high-contrast .examples__head .section-label,
+.high-contrast .card {
+  border: 2px solid #fff;
+}
+.high-contrast .examples__head h2 {
+  color: #fff;
+  text-shadow: none;
+}
+.high-contrast .eyebrow,
+.high-contrast .section-label,
+.high-contrast .card__count,
+.high-contrast .examples__total,
+.high-contrast .examples__count strong,
+.high-contrast .examples__head .section-label {
+  color: #ffff00;
+}
+.high-contrast .city__card {
+  border: 2px solid #fff;
+  color: #fff;
+  background: #000;
+  box-shadow: none;
+}
+.high-contrast .city__card p:last-child {
+  color: #fff;
+}
+.high-contrast .home-outro h2,
+.high-contrast .home-outro__content > p:not(.section-label) {
+  text-shadow: none;
+}
+.high-contrast .home-cta__content::before,
+.high-contrast .home-outro__content::before {
+  background: #000;
+}
+.high-contrast .scroll-hint::before {
+  background: #fff;
+}
+.inverted-contrast .examples__head .section-label {
+  color: #000;
+  background: #fff;
+  border-color: #000;
+}
+.inverted-contrast .examples__head h2 {
+  color: #000;
+  text-shadow: none;
+}
+.inverted-contrast .home-cta,
+.inverted-contrast .home-outro {
+  color: #000;
+  background: #fff;
+}
+.inverted-contrast .home-outro::before,
+.inverted-contrast .home-outro::after {
+  display: none;
+}
+.inverted-contrast .home-outro h2,
+.inverted-contrast .home-outro__content > p:not(.section-label) {
+  color: #000;
+  text-shadow: none;
+}
+.inverted-contrast .home-cta__content > p:not(.section-label) {
+  color: #000;
+}
+.inverted-contrast .home-cta__content::before,
+.inverted-contrast .home-outro__content::before {
+  background: #fff;
+}

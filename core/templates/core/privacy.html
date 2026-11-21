@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+{% block title %}Polityka prywatności — innoradar{% endblock %}
+{% block description %}Informacja o przetwarzaniu danych osobowych w Innoradar.{% endblock %}
+{% block content %}
+<main id="main-content" class="container privacy-page" tabindex="-1">
+  <p class="eyebrow">Prywatność</p>
+  <h1>Polityka prywatności</h1>
+  <section><h2>Administrator i zakres danych</h2><p>Administratorem danych jest {{ privacy_controller_name }}. W formularzu zgłoszenia przetwarzamy imię i nazwisko, adres e-mail, miejscowość oraz treść zgłoszenia. Dane są potrzebne wyłącznie do przyjęcia, analizy i kontaktu w sprawie inicjatywy.</p></section>
+  <section><h2>Cel i podstawa przetwarzania</h2><p>Dane przetwarzamy na podstawie zgody udzielonej przez wysłanie formularza oraz uzasadnionego interesu administratora: prowadzenia radaru lokalnych innowacji, oceny zgłoszeń i zapobiegania nadużyciom.</p></section>
+  <section><h2>Retencja i publikacja</h2><p>Dane kontaktowe zgłoszenia przechowujemy maksymalnie przez 12 miesięcy od zakończenia analizy. Opublikowane mogą zostać wyłącznie informacje o inicjatywie, bez danych kontaktowych osoby zgłaszającej, chyba że wyrazi ona odrębną zgodę.</p></section>
+  <section><h2>Twoje prawa i usunięcie zgłoszenia</h2><p>Możesz żądać dostępu do danych, ich sprostowania, ograniczenia przetwarzania lub usunięcia zgłoszenia. Napisz na <a href="mailto:{{ privacy_contact_email }}">{{ privacy_contact_email }}</a>, podając adres e-mail użyty w formularzu oraz nazwę zgłoszenia. Odpowiedź otrzymasz bez zbędnej zwłoki, nie później niż w ciągu miesiąca.</p></section>
+</main>
+{% endblock %}

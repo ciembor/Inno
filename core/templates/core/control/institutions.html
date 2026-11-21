@@ -1,0 +1,42 @@
+{% extends "core/control/base.html" %}
+{% load static %}
+{% block control_content %}
+<div class="page-title">
+  <div>
+    <h1>Instytucje</h1>
+    <p>Źródła aktualności używane przez crawler.</p>
+  </div>
+  <div class="page-title__actions">
+    <a class="button" href="{% url 'control_institution_add' %}">Dodaj instytucję</a>
+    <a class="button button--secondary" href="{% url 'control_institutions_csv' %}">Import CSV</a>
+  </div>
+</div>
+<form class="institution-filters" method="get">
+  <p><label for="{{ filters.institution_type.id_for_label }}">{{ filters.institution_type.label }}</label>{{ filters.institution_type }}{{ filters.institution_type.errors }}</p>
+  <div class="location-field" id="institution-filter-locality" data-locality-url="{% url 'locality_search' %}">
+    <label for="institution-filter-locality-query">Miejscowość</label>
+    <input id="institution-filter-locality-query" value="{{ locality_label }}" autocomplete="off" placeholder="Zacznij wpisywać nazwę miejscowości" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="institution-filter-locality-results">
+    {{ filters.locality }}{{ filters.locality.errors }}
+    <ul id="institution-filter-locality-results" class="location-results" role="listbox" hidden></ul>
+  </div>
+  <p><label for="{{ filters.published_from.id_for_label }}">{{ filters.published_from.label }}</label>{{ filters.published_from }}{{ filters.published_from.errors }}</p>
+  <p><label for="{{ filters.published_to.id_for_label }}">{{ filters.published_to.label }}</label>{{ filters.published_to }}{{ filters.published_to.errors }}</p>
+  <div class="institution-filters__actions"><button class="button" type="submit">Filtruj</button><a class="button button--secondary" href="{% url 'control_institutions' %}">Wyczyść filtry</a></div>
+  {{ filters.non_field_errors }}
+</form>
+<p class="control-table__summary">{{ page.paginator.count }} instytucji</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Nazwa</th><th scope="col">Typ</th><th scope="col">Miejscowość</th><th scope="col">Innowacje</th><th scope="col"><span class="sr-only">Działania</span></th></tr></thead><tbody>{% for institution in page %}<tr><td>{{ institution.name }}</td><td>{{ institution.get_institution_type_display }}</td><td>{{ institution.locality|default:"—" }}</td><td>{{ institution.ideas_count }}</td><td><a class="control-table__action" href="{% url 'control_institution_edit' institution.pk %}" aria-label="Edytuj: {{ institution.name }}">Edytuj</a></td></tr>{% empty %}<tr><td colspan="5">Brak instytucji.</td></tr>{% endfor %}</tbody></table></div>
+{% if page.has_other_pages %}
+<nav class="control-pagination" aria-label="Strony instytucji">
+  <p class="sr-only">Strona {{ page.number }} z {{ page.paginator.num_pages }}</p>
+  <ul>
+    <li>{% if page.has_previous %}<a href="?{{ filter_query }}{% if filter_query %}&amp;{% endif %}page={{ page.previous_page_number }}" rel="prev">Poprzednia</a>{% else %}<span aria-disabled="true">Poprzednia</span>{% endif %}</li>
+    {% for page_number in page_range %}
+      <li>{% if page_number == page.paginator.ELLIPSIS %}<span class="control-pagination__ellipsis" aria-hidden="true">…</span><span class="sr-only">Pomijane strony</span>{% elif page_number == page.number %}<span aria-current="page" aria-label="Strona {{ page.number }}, bieżąca">{{ page.number }}</span>{% else %}<a href="?{{ filter_query }}{% if filter_query %}&amp;{% endif %}page={{ page_number }}" aria-label="Strona {{ page_number }}">{{ page_number }}</a>{% endif %}</li>
+    {% endfor %}
+    <li>{% if page.has_next %}<a href="?{{ filter_query }}{% if filter_query %}&amp;{% endif %}page={{ page.next_page_number }}" rel="next">Następna</a>{% else %}<span aria-disabled="true">Następna</span>{% endif %}</li>
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/institution_filter_locality.js' %}" defer></script>{% endblock %}

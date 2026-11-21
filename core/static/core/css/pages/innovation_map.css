@@ -1,0 +1,122 @@
+.innovation-cluster {
+  display: grid;
+  place-items: center;
+  border: 3px solid #07574f;
+  border-radius: 50%;
+  background: #0c796e;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+}
+.innovation-point {
+  border: 2px solid #07574f;
+  border-radius: 50%;
+  background: #11bca7;
+}
+.high-contrast .innovation-cluster,
+.high-contrast .innovation-point {
+  background: #ffff00;
+  color: #000;
+  border-color: #fff;
+}
+.innovation-cluster:focus-visible,
+.innovation-point:focus-visible {
+  outline: 3px solid #102b4d;
+  outline-offset: 3px;
+}
+.high-contrast .innovation-cluster:focus-visible,
+.high-contrast .innovation-point:focus-visible {
+  outline-color: #fff;
+}
+.high-contrast .leaflet-popup-content-wrapper,
+.high-contrast .leaflet-popup-tip {
+  background: #000;
+  color: #fff;
+}
+.high-contrast .leaflet-popup-content a {
+  color: #ffff00;
+}
+.high-contrast .leaflet-cluster-spider-leg {
+  stroke: #fff;
+}
+
+[v-cloak] {
+  display: none;
+}
+.map-page {
+  padding: clamp(58px, 8vw, 100px) 0;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 5.2rem);
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+}
+.lead {
+  max-width: 570px;
+  color: #62758a;
+  line-height: 1.7;
+}
+.map-shell {
+  min-height: 580px;
+  margin-top: 36px;
+}
+.map {
+  height: 580px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+.map .leaflet-control-attribution {
+  font-size: 0.62rem;
+}
+.empty {
+  margin: 0;
+  color: #62758a;
+}
+.map-fallback {
+  color: #62758a;
+  line-height: 1.6;
+}
+.map-fallback h2 {
+  margin-top: 24px;
+  color: var(--navy);
+  font-size: 1.25rem;
+}
+.map-fallback ul {
+  padding-left: 20px;
+}
+.map-fallback a {
+  color: var(--deep);
+  font-weight: 700;
+}
+.high-contrast .lead,
+.high-contrast .empty,
+.high-contrast .map-fallback {
+  color: #fff;
+}
+.high-contrast .map-fallback h2,
+.high-contrast .map-fallback a {
+  color: #ffff00;
+}
+.high-contrast .map {
+  border-color: #fff;
+  background: #000;
+}
+.high-contrast .map .leaflet-bar a,
+.high-contrast .map .leaflet-control-attribution {
+  color: #fff;
+  border-color: #fff;
+  background: #000;
+}
+.high-contrast .map .leaflet-control-attribution a {
+  color: #ffff00;
+}
+@media (max-width: 800px) {
+  .map-shell {
+    min-height: 460px;
+  }
+  .map {
+    height: 460px;
+  }
+}
