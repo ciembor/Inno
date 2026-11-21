@@ -3,20 +3,25 @@
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.core import signing
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 
 from .forms import IdeaForm
 from .innovation_catalog import INNOVATION_SORTS, annotate_criteria, assessment_rows
-from .models import Idea, InnovationIndicator, Institution
+from .models import DevelopmentRecommendation, Idea, InnovationIndicator, Institution
 from .security import client_ip, consume_attempt, too_many_requests
+from .services.development_recommendations import recommend_development
+from .services.idea_similarity import classify_idea as classify_idea_tags
 from .services.idea_similarity import similar_ideas
 from .services.partner_matching import recommended_partners
-from .tasks import score_idea
+from .services.partner_needs import add_default_partner_needs
+from .tasks import _score_idea
 
 
 @never_cache
@@ -47,16 +52,61 @@ def submit_idea(request):
         form = IdeaForm(request.POST)
         if form.is_valid():
             idea = form.save()
-            score_idea.delay(idea.pk)
             return JsonResponse(
                 {
                     "id": idea.id,
                     "redirect_url": reverse("innovation_detail", args=[idea.pk]),
+                    "workflow_token": signing.dumps(
+                        {"idea_id": idea.pk}, salt="manual-idea-workflow"
+                    ),
                 },
                 status=201,
             )
         return JsonResponse({"errors": form.errors}, status=400)
     return render(request, "core/submit_idea.html", {"form": IdeaForm(), "active_page": "submit"})
+
+
+@require_POST
+def submit_idea_step(request, idea_id):
+    """Wykonuje jeden rzeczywisty, blokujący etap oceny ręcznego zgłoszenia."""
+    try:
+        payload = signing.loads(
+            request.POST["workflow_token"], salt="manual-idea-workflow", max_age=900
+        )
+    except (KeyError, signing.BadSignature):
+        raise Http404 from None
+    if payload.get("idea_id") != idea_id:
+        raise Http404
+    idea = get_object_or_404(Idea, pk=idea_id)
+    action = request.POST.get("action")
+    try:
+        if action == "score":
+            _score_idea(idea.pk, schedule_followups=False)
+        elif action == "recommend":
+            recommendation = recommend_development(idea)
+            DevelopmentRecommendation.objects.update_or_create(
+                idea=idea,
+                defaults={
+                    "stage": recommendation.stage,
+                    "development_path": recommendation.development_path,
+                    "next_step": recommendation.next_step,
+                    "rationale": recommendation.rationale,
+                    "risk": recommendation.risk,
+                    "status": DevelopmentRecommendation.Status.GENERATED,
+                    "error": "",
+                    "approved_at": None,
+                },
+            )
+            add_default_partner_needs(idea, recommendation.development_path)
+        elif action == "classify":
+            classify_idea_tags(idea)
+        else:
+            return JsonResponse({"error": "Nieznany etap przetwarzania."}, status=400)
+    except Exception:
+        return JsonResponse(
+            {"error": "Nie udało się ukończyć etapu. Spróbuj ponownie za chwilę."}, status=503
+        )
+    return JsonResponse({"status": "completed", "action": action})
 
 
 @never_cache

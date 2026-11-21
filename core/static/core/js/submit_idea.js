@@ -15,6 +15,23 @@ window.addEventListener("DOMContentLoaded", () => {
       submitting: false,
       error: "",
       privacyAccepted: false,
+      steps: [
+        {
+          action: "score",
+          label: "Oceniamy potencjał innowacji",
+          status: "waiting",
+        },
+        {
+          action: "recommend",
+          label: "Przygotowujemy ścieżkę rozwoju i partnerów",
+          status: "waiting",
+        },
+        {
+          action: "classify",
+          label: "Szukamy podobnych inicjatyw",
+          status: "waiting",
+        },
+      ],
     }),
     computed: {
       activeLocalityId() {
@@ -101,6 +118,27 @@ window.addEventListener("DOMContentLoaded", () => {
             this.error = Object.values(data.errors).flat().join(" ");
             this.submitting = false;
             return;
+          }
+          for (const step of this.steps) {
+            step.status = "active";
+            const workflowResponse = await fetch(
+              `${root.dataset.submitUrl}${data.id}/etap/`,
+              {
+                method: "POST",
+                headers: { "X-CSRFToken": token, Accept: "application/json" },
+                body: new URLSearchParams({
+                  action: step.action,
+                  workflow_token: data.workflow_token,
+                }),
+              },
+            );
+            const workflowData = await workflowResponse.json();
+            if (!workflowResponse.ok) {
+              this.error = workflowData.error;
+              this.submitting = false;
+              return;
+            }
+            step.status = "completed";
           }
           window.location.assign(data.redirect_url);
         } catch {

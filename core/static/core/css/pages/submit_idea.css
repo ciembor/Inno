@@ -165,6 +165,42 @@ input:focus,
   border-radius: 8px;
   font-weight: 650;
 }
+.workflow {
+  padding: 4px 0;
+}
+.workflow h2 {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+}
+.workflow ol {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.workflow li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 1px solid #bfd7e0;
+  border-radius: 8px;
+  color: #62758a;
+}
+.workflow li.active {
+  border-color: var(--mint);
+  color: var(--navy);
+  background: #e0f7f1;
+}
+.workflow li.completed {
+  border-color: #8ad6c9;
+  color: #096857;
+}
+.workflow li span {
+  white-space: nowrap;
+  font-weight: 750;
+}
 .success {
   color: #096857;
   background: #e0f7f1;

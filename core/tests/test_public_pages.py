@@ -1,5 +1,4 @@
-# Mechanical split of the former test_core.py by responsibility.
-
+from types import SimpleNamespace
 
 import pytest
 from django.core.cache import cache
@@ -196,11 +195,7 @@ def test_about_page_explains_data_ai_limits_and_security(client):
 
 
 @pytest.mark.django_db
-def test_valid_idea_submission_is_queued_for_scoring_before_redirect(client, monkeypatch):
-    scored_ids = []
-    monkeypatch.setattr(
-        "core.page_views.score_idea.delay", lambda idea_id: scored_ids.append(idea_id)
-    )
+def test_valid_idea_submission_runs_each_blocking_workflow_step(client, monkeypatch):
     locality = Locality.objects.create(
         simc_code="0654321",
         name="Rzeszów",
@@ -227,9 +222,54 @@ def test_valid_idea_submission_is_queued_for_scoring_before_redirect(client, mon
     assert response.status_code == 201
     idea = Idea.objects.get()
     assert response.json()["redirect_url"] == reverse("innovation_detail", args=[idea.pk])
+    token = response.json()["workflow_token"]
     assert idea.name == "Biblioteka sąsiedzka"
     assert idea.locality == locality
-    assert scored_ids == [idea.pk]
+    step_url = reverse("submit_idea_step", args=[idea.pk])
+    scored_ids, classified_ids = [], []
+    monkeypatch.setattr(
+        "core.page_views._score_idea",
+        lambda idea_id, **kwargs: scored_ids.append((idea_id, kwargs)),
+    )
+    monkeypatch.setattr(
+        "core.page_views.recommend_development",
+        lambda item: SimpleNamespace(
+            stage="pilot",
+            development_path="pilot",
+            next_step="Test.",
+            rationale="Dlaczego.",
+            risk="Ryzyko.",
+        ),
+    )
+    monkeypatch.setattr("core.page_views.add_default_partner_needs", lambda *_: None)
+    monkeypatch.setattr(
+        "core.page_views.classify_idea_tags", lambda item: classified_ids.append(item.pk)
+    )
+
+    for action in ("score", "recommend", "classify"):
+        assert client.post(step_url, {"action": action, "workflow_token": token}).json()[
+            "status"
+        ] == "completed"
+    assert scored_ids == [(idea.pk, {"schedule_followups": False})]
+    assert classified_ids == [idea.pk]
+    assert DevelopmentRecommendation.objects.filter(idea=idea).exists()
+
+    assert client.post(
+        step_url, {"action": "unknown", "workflow_token": token}
+    ).status_code == 400
+    assert client.post(
+        step_url, {"action": "score", "workflow_token": "niepoprawny"}
+    ).status_code == 404
+    assert client.post(
+        reverse("submit_idea_step", args=[idea.pk + 1]),
+        {"action": "score", "workflow_token": token},
+    ).status_code == 404
+    monkeypatch.setattr(
+        "core.page_views.classify_idea_tags", lambda _: (_ for _ in ()).throw(RuntimeError)
+    )
+    assert client.post(
+        step_url, {"action": "classify", "workflow_token": token}
+    ).status_code == 503
 
 
 @pytest.mark.django_db

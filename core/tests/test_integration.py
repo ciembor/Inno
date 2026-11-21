@@ -141,10 +141,6 @@ def test_dynamic_page_scripts_receive_urls_through_data_attributes(client):
 @pytest.mark.django_db
 def test_idea_submission_journey_uses_locality_lookup_and_persists_the_idea(client, monkeypatch):
     locality = create_locality()
-    scored_ids = []
-    monkeypatch.setattr(
-        "core.page_views.score_idea.delay", lambda idea_id: scored_ids.append(idea_id)
-    )
 
     suggestions = client.get(reverse("locality_search"), {"q": "Rz"})
     submission = client.post(
@@ -165,9 +161,9 @@ def test_idea_submission_journey_uses_locality_lookup_and_persists_the_idea(clie
     }
     assert submission.status_code == 201
     assert submission.json()["redirect_url"]
+    assert submission.json()["workflow_token"]
     idea = Idea.objects.get(name="Mobilna pracownia nauki")
     assert idea.locality == locality
-    assert scored_ids == [idea.pk]
 
 
 @pytest.mark.django_db
