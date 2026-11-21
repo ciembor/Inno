@@ -47,6 +47,7 @@ def parse_podkarpackie_localities(archive: bytes):
                         yield Locality(
                             simc_code=fields["SYM"],
                             name=fields["NAZWA"],
+                            voivodeship_code=fields["WOJ"],
                             county_code=fields["POW"],
                             municipality_code=fields["GMI"],
                             municipality_type_code=fields["RODZ_GMI"],
@@ -67,6 +68,7 @@ class Command(BaseCommand):
             update_conflicts=True,
             update_fields=[
                 "name",
+                "voivodeship_code",
                 "county_code",
                 "municipality_code",
                 "municipality_type_code",

@@ -8,6 +8,7 @@ def create_locality():
     return Locality.objects.create(
         simc_code="0654321",
         name="Rzeszów",
+        voivodeship_code="18",
         county_code="63",
         municipality_code="01",
         municipality_type_code="1",

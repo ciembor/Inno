@@ -10,6 +10,7 @@ class Locality(models.Model):
 
     simc_code = models.CharField("Identyfikator SIMC", max_length=7, primary_key=True)
     name = models.CharField("Nazwa miejscowości", max_length=100)
+    voivodeship_code = models.CharField("Kod województwa", max_length=2, db_index=True, default="")
     county_code = models.CharField("Kod powiatu", max_length=2)
     municipality_code = models.CharField("Kod gminy", max_length=2)
     municipality_type_code = models.CharField("Rodzaj gminy", max_length=1)

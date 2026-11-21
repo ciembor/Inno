@@ -204,6 +204,7 @@ def test_valid_idea_submission_is_queued_for_scoring_before_redirect(client, mon
     locality = Locality.objects.create(
         simc_code="0654321",
         name="Rzeszów",
+        voivodeship_code="18",
         county_code="63",
         municipality_code="01",
         municipality_type_code="1",
@@ -278,6 +279,7 @@ def test_locality_search_returns_imported_matching_localities(client):
     locality = Locality.objects.create(
         simc_code="0654321",
         name="Rzeszów",
+        voivodeship_code="18",
         county_code="63",
         municipality_code="01",
         municipality_type_code="1",
@@ -292,6 +294,26 @@ def test_locality_search_returns_imported_matching_localities(client):
         "results": [{"id": locality.pk, "name": "Rzeszów", "county": "powiat Rzeszów"}]
     }
     assert too_short.json() == {"results": []}
+
+
+@pytest.mark.django_db
+def test_locality_search_identifies_localities_outside_podkarpackie(client):
+    locality = Locality.objects.create(
+        simc_code="0918123",
+        name="Warszawa",
+        voivodeship_code="14",
+        county_code="01",
+        municipality_code="01",
+        municipality_type_code="1",
+        locality_type_code="96",
+        registry_date="2026-01-01",
+    )
+
+    response = client.get(reverse("locality_search"), {"q": "Wa"})
+
+    assert response.json() == {
+        "results": [{"id": locality.pk, "name": "Warszawa", "county": "woj. mazowieckie"}]
+    }
 
 
 @pytest.mark.django_db

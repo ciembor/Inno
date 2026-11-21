@@ -9,6 +9,7 @@ from django.core.management import call_command
 from core.management.commands import (
     assign_random_localities,
     import_podkarpackie_localities,
+    import_polish_localities,
 )
 from core.management.commands.assign_random_localities import GeocodingError
 from core.models import Idea, Locality
@@ -44,6 +45,17 @@ def test_simc_import_downloads_and_saves_only_podkarpackie_localities(monkeypatc
     assert str(locality) == "Rzeszów"
     assert locality.registry_date.isoformat() == "2026-01-01"
     assert opener.open.call_count == 2
+
+
+@pytest.mark.django_db
+def test_polish_simc_import_saves_localities_from_every_voivodeship(monkeypatch):
+    monkeypatch.setattr(import_polish_localities, "download_simc", simc_archive)
+
+    call_command("import_polish_localities")
+
+    assert list(
+        Locality.objects.order_by("simc_code").values_list("name", "voivodeship_code")
+    ) == [("Rzeszów", "18"), ("Warszawa", "14")]
 
 
 def test_geocode_locality_uses_geocoder_response(monkeypatch):

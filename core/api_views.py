@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET
 from .geojson_views import podkarpackie_county_names
 from .models import Idea, Locality
 from .services.partner_matching import recommended_partners
+from .services.teryt import VOIVODESHIP_NAMES
 
 
 def chrome_devtools_config(request):
@@ -56,12 +57,18 @@ def locality_search(request):
                 {
                     "id": item.pk,
                     "name": item.name,
-                    "county": county_names.get(item.county_code, f"powiat {item.county_code}"),
+                    "county": _locality_area_label(item, county_names),
                 }
                 for item in localities
             ]
         }
     )
+
+
+def _locality_area_label(locality, county_names):
+    if locality.voivodeship_code == "18":
+        return county_names.get(locality.county_code, "woj. podkarpackie")
+    return f"woj. {VOIVODESHIP_NAMES.get(locality.voivodeship_code, 'nieustalone')}"
 
 
 @never_cache

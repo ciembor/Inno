@@ -325,6 +325,15 @@ Błędny wiersz wycofuje cały import. CSV nie uruchamia pobierania artykułów.
 
 ### Organizacje pozarządowe
 
+Formularze oraz panel administracyjny korzystają z pełnego, urzędowego słownika
+SIMC dla całej Polski. Aby odświeżyć słownik, uruchom:
+
+```bash
+python manage.py import_polish_localities
+```
+
+Wyszukiwarka miejscowości podaje województwo, a dla Podkarpacia również powiat.
+
 Referencyjny plik `organizacje_innowacje_aktualnosci.csv` zawiera organizacje,
 zweryfikowane strony ich aktualności oraz przykładowe artykuły. Polecenie pobiera
 wyłącznie wskazane miejscowości z urzędowego rejestru SIMC GUS, przypisuje im
