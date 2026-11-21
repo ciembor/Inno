@@ -101,8 +101,8 @@ def panel_dashboard(request):
     )
 
 
-def _format_processing_time(seconds):
-    """Zwraca krótki, czytelny czas od dodania inicjatywy do jej oceny."""
+def _format_duration(seconds):
+    """Zwraca krótki, czytelny czas trwania zakończonego procesu."""
     if seconds is None:
         return "Brak danych"
     total_minutes = round(seconds / 60)
@@ -127,12 +127,17 @@ def panel_metrics(request):
         articles=Sum("ideas_created") + Sum("ideas_skipped"),
         duplicates=Sum("ideas_skipped"),
     )
-    processing_times = [
-        (scored_at - created_at).total_seconds()
-        for created_at, scored_at in Idea.objects.exclude(scored_at__isnull=True).values_list(
-            "created_at", "scored_at"
+    import_durations = list(
+        InstitutionImportRun.objects.exclude(duration_seconds__isnull=True).values_list(
+            "duration_seconds", flat=True
         )
-    ]
+    )
+    import_durations.extend(
+        (finished_at - started_at).total_seconds()
+        for started_at, finished_at in NCBRImportRun.objects.exclude(
+            finished_at__isnull=True
+        ).values_list("started_at", "finished_at")
+    )
     recommendation_count = DevelopmentRecommendation.objects.count()
     approved_recommendation_count = DevelopmentRecommendation.objects.filter(
         status=DevelopmentRecommendation.Status.APPROVED
@@ -160,8 +165,8 @@ def panel_metrics(request):
             "recommendation_count": recommendation_count,
             "approved_recommendation_count": approved_recommendation_count,
             "partner_match_count": partner_match_count,
-            "average_processing_time": _format_processing_time(
-                sum(processing_times) / len(processing_times) if processing_times else None
+            "average_import_duration": _format_duration(
+                sum(import_durations) / len(import_durations) if import_durations else None
             ),
             "latest_institution_run": InstitutionImportRun.objects.first(),
             "latest_ncbr_run": NCBRImportRun.objects.first(),

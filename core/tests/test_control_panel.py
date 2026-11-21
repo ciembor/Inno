@@ -19,7 +19,7 @@ from core.control_forms import (
     InstitutionPanelForm,
     PartnerOrganizationForm,
 )
-from core.control_views import _format_processing_time, _locality_label
+from core.control_views import _format_duration, _locality_label
 from core.models import (
     CrawlSchedule,
     DevelopmentRecommendation,
@@ -108,7 +108,7 @@ def test_csv_export_is_authenticated_and_excludes_submitter_data(admin_client):
 
 
 @pytest.mark.django_db
-def test_metrics_panel_shows_operational_counts_and_processing_time(admin_client):
+def test_metrics_panel_shows_operational_counts_and_import_duration(admin_client):
     institution = Institution.objects.create(
         name="Instytucja z aktualnościami",
         address="Rzeszów",
@@ -130,8 +130,7 @@ def test_metrics_panel_shows_operational_counts_and_processing_time(admin_client
         content="Opis",
     )
     idea.partner_needs.add(tag)
-    created_at = timezone.now() - timedelta(minutes=2)
-    Idea.objects.filter(pk=idea.pk).update(created_at=created_at, scored_at=timezone.now())
+    Idea.objects.filter(pk=idea.pk).update(scored_at=timezone.now())
     DevelopmentRecommendation.objects.create(
         idea=idea,
         stage="pilot",
@@ -141,8 +140,11 @@ def test_metrics_panel_shows_operational_counts_and_processing_time(admin_client
         risk="Ryzyko.",
         status="approved",
     )
-    InstitutionImportRun.objects.create(ideas_created=3, ideas_skipped=2)
-    NCBRImportRun.objects.create(ideas_created=4, ideas_skipped=1)
+    InstitutionImportRun.objects.create(ideas_created=3, ideas_skipped=2, duration_seconds=120)
+    ncbr_run = NCBRImportRun.objects.create(ideas_created=4, ideas_skipped=1)
+    NCBRImportRun.objects.filter(pk=ncbr_run.pk).update(
+        started_at=timezone.now() - timedelta(minutes=3), finished_at=timezone.now()
+    )
 
     response = admin_client.get(reverse("control_metrics"))
 
@@ -153,15 +155,17 @@ def test_metrics_panel_shows_operational_counts_and_processing_time(admin_client
     assert ">2<" in content
     assert ">10<" in content
     assert ">1<" in content
+    assert "Średni czas importu" in content
+    assert "min</dd>" in content
     assert "Ostatnie importy" in content
 
 
-def test_processing_time_formatter_covers_all_display_forms():
-    assert _format_processing_time(None) == "Brak danych"
-    assert _format_processing_time(0) == "poniżej 1 min"
-    assert _format_processing_time(60) == "1 min"
-    assert _format_processing_time(3600) == "1 godz."
-    assert _format_processing_time(3660) == "1 godz. 1 min"
+def test_duration_formatter_covers_all_display_forms():
+    assert _format_duration(None) == "Brak danych"
+    assert _format_duration(0) == "poniżej 1 min"
+    assert _format_duration(60) == "1 min"
+    assert _format_duration(3600) == "1 godz."
+    assert _format_duration(3660) == "1 godz. 1 min"
 
 
 @pytest.mark.django_db
