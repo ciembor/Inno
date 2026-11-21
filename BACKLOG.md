@@ -65,9 +65,9 @@ lokalnie:** przykłady demonstracyjne są skonfigurowane dla inicjatyw `465` i
 
 - [x] Rozszerzyć ekstrakcję LLM o tagi: problem, odbiorcy, branża, mechanizm,
   typ rozwiązania, etap i obszar terytorialny.
-- [ ] Zapisać tagi dla istniejących i nowych inicjatyw. Nowe rekordy są tagowane
-  podczas importu lub po ocenie zgłoszenia; istniejące wymagają jednorazowego
-  uruchomienia polecenia po ustawieniu `OPENAI_API_KEY`.
+- [x] Zapisać tagi dla istniejących i nowych inicjatyw. Nowe rekordy są tagowane
+  podczas importu lub po ocenie zgłoszenia; historyczne rekordy zostały
+  jednorazowo domknięte na produkcji poleceniem `tag_idea_similarity` (576/576).
 - [x] Zaimplementować ranking podobieństwa na podstawie wspólnych tagów.
 - [x] Oznaczać relację: dublowanie, adaptacja, uzupełnienie lub współpraca.
 - [x] Pokazać podobne inicjatywy i wyjaśnienie relacji na stronie szczegółu.
