@@ -84,6 +84,29 @@ def test_control_login_logout_and_dashboard(client):
 
 
 @pytest.mark.django_db
+def test_csv_export_is_authenticated_and_excludes_submitter_data(admin_client):
+    locality = create_locality()
+    idea = Idea.objects.create(
+        name="Eksportowana innowacja",
+        submitter_name="Prywatna osoba",
+        email="private@example.org",
+        locality=locality,
+        content="Opis do eksportu.",
+        innovation_score=72,
+    )
+    response = admin_client.get(reverse("control_csv_export"))
+
+    content = response.content.decode("utf-8-sig")
+    assert response.status_code == 200
+    assert response["Content-Type"] == "text/csv; charset=utf-8"
+    assert "attachment; filename=\"innoradar-innowacje.csv\"" in response["Content-Disposition"]
+    assert "Eksportowana innowacja" in content
+    assert "private@example.org" not in content
+    assert "Prywatna osoba" not in content
+    assert str(idea.pk) in content
+
+
+@pytest.mark.django_db
 def test_login_is_rate_limited_and_default_production_password_is_forced_to_change(client):
     cache.clear()
     call_command("bootstrap_admin")

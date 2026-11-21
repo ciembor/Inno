@@ -5,7 +5,17 @@ import pytest
 from django.core.cache import cache
 from django.urls import reverse
 
-from core.models import Idea, Locality
+from core.models import (
+    DevelopmentRecommendation,
+    Idea,
+    IdeaIndicatorScore,
+    InnovationIndicator,
+    Institution,
+    Locality,
+    PartnerOrganization,
+    PartnerTag,
+    SimilarityTag,
+)
 from core.security import consume_attempt
 
 
@@ -42,6 +52,104 @@ def test_browser_auxiliary_resources_are_available(client):
 
     assert favicon.status_code == 302
     assert devtools_config.json() == {}
+
+
+@pytest.mark.django_db
+def test_read_only_api_documents_and_exposes_public_innovations(client):
+    locality = Locality.objects.create(
+        simc_code="0654323",
+        name="Rzeszów",
+        county_code="63",
+        municipality_code="01",
+        municipality_type_code="1",
+        locality_type_code="96",
+        registry_date="2026-01-01",
+    )
+    institution = Institution.objects.create(
+        name="Uczelnia testowa",
+        address="Rzeszów",
+        institution_type=Institution.Type.UNIVERSITY,
+        locality=locality,
+    )
+    partner_tag = PartnerTag.objects.get(name="Pilotaż")
+    partner = PartnerOrganization.objects.create(
+        name="Partner testowy",
+        organization_type=PartnerOrganization.Type.IMPLEMENTATION,
+        description="Pomaga we wdrożeniu.",
+        contact="kontakt@example.org",
+    )
+    partner.tags.add(partner_tag)
+    idea = Idea.objects.create(
+        name="Innowacja API",
+        submitter_name="Osoba zgłaszająca",
+        email="prywatny@example.org",
+        creator_name="Twórczyni",
+        locality=locality,
+        institution=institution,
+        implementing_institution=institution,
+        institution_role=Idea.InstitutionRole.CREATOR,
+        source_url="https://example.org/innowacja-api",
+        source_label="Aktualności uczelni",
+        content="Opis publicznej innowacji.",
+        published_at="2026-01-01",
+        innovation_score=88,
+    )
+    idea.partner_needs.add(partner_tag)
+    idea.similarity_tags.add(
+        SimilarityTag.objects.create(
+            category=SimilarityTag.Category.PROBLEM,
+            key="dostepnosc",
+            name="Dostępność",
+        )
+    )
+    indicator = InnovationIndicator.objects.get(key="value")
+    IdeaIndicatorScore.objects.create(
+        idea=idea, indicator=indicator, score=90, rationale="Potwierdzona wartość."
+    )
+    DevelopmentRecommendation.objects.create(
+        idea=idea,
+        stage=DevelopmentRecommendation.Stage.PILOT,
+        development_path=DevelopmentRecommendation.Path.PILOT,
+        next_step="Przeprowadź pilotaż.",
+        rationale="Istnieje gotowy partner.",
+        risk="Wymaga potwierdzenia zasobów.",
+    )
+    unscored = Idea.objects.create(
+        name="Zgłoszenie bez oceny",
+        submitter_name="Inna osoba",
+        email="sekret@example.org",
+        content="Opis bez oceny.",
+    )
+
+    documentation = client.get(reverse("api_docs"))
+    first_page = client.get(reverse("api_innovations"), {"page_size": "99", "page": "x"})
+    invalid_page = client.get(reverse("api_innovations"), {"page": "0"})
+    second_page = client.get(reverse("api_innovations"), {"page_size": 1, "page": 2})
+    detail = client.get(reverse("api_innovation_detail", args=[idea.pk]))
+    unscored_detail = client.get(reverse("api_innovation_detail", args=[unscored.pk]))
+    missing = client.get(reverse("api_innovation_detail", args=[99999]))
+
+    assert documentation.json()["read_only"] is True
+    assert documentation.json()["endpoints"][1]["url"] == "/api/innowacje/{id}/"
+    assert client.post(reverse("api_innovations")).status_code == 405
+    assert first_page.json()["page"] == 1
+    assert first_page.json()["page_size"] == 50
+    assert first_page.json()["next"] is None
+    assert first_page.json()["previous"] is None
+    assert invalid_page.json()["page"] == 1
+    assert second_page.json()["previous"] == "/api/innowacje/?page=1&page_size=1"
+    assert second_page.json()["next"] is None
+    payload = detail.json()
+    assert payload["source"] == {
+        "label": "Aktualności uczelni",
+        "url": "https://example.org/innowacja-api",
+    }
+    assert payload["assessments"][0]["rationale"] == "Potwierdzona wartość."
+    assert payload["recommendation"]["next_step"] == "Przeprowadź pilotaż."
+    assert "Partner testowy" in {item["name"] for item in payload["partners"]}
+    assert unscored_detail.json()["recommendation"] is None
+    assert "prywatny@example.org" not in detail.content.decode()
+    assert missing.status_code == 404
 
 
 @pytest.mark.django_db

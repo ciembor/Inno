@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Count, Max
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -51,6 +51,7 @@ from core.security import clear_attempts, client_ip, consume_attempt, is_rate_li
 from core.services.crawl_schedule import reschedule_crawl
 from core.services.institution_csv import import_institutions_csv
 from core.services.partner_csv import import_partners_csv
+from core.services.partner_matching import recommended_partners
 from core.services.prompt_registry import PROMPT_DEFINITIONS, configured_prompt_values
 from core.tasks import import_institution_news, import_ncbr_projects, recommend_idea
 
@@ -96,6 +97,81 @@ def panel_dashboard(request):
             "latest_run": InstitutionImportRun.objects.first(),
         },
     )
+
+
+@login_required
+@require_http_methods(["GET"])
+def panel_csv_export(request):
+    """Eksportuje publiczne dane operacyjne bez danych zgłaszających."""
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = 'attachment; filename="innoradar-innowacje.csv"'
+    response.write("\ufeff")
+    writer = csv.writer(response)
+    writer.writerow(
+        [
+            "id",
+            "nazwa",
+            "opis",
+            "data_dodania",
+            "data_publikacji",
+            "miejscowosc",
+            "instytucja_zrodlowa",
+            "rola_instytucji",
+            "instytucja_wdrazajaca",
+            "adres_zrodla",
+            "wynik_innowacyjnosci",
+            "oceniono",
+            "oceny_i_uzasadnienia",
+            "etap_rozwoju",
+            "sciezka_rozwoju",
+            "najblizszy_krok",
+            "uzasadnienie_rekomendacji",
+            "ryzyko_lub_niewiadoma",
+            "potrzeby_partnerskie",
+            "polecani_partnerzy",
+        ]
+    )
+    ideas = (
+        Idea.objects.select_related(
+            "locality", "institution", "implementing_institution", "recommendation"
+        )
+        .prefetch_related("indicator_scores__indicator", "partner_needs")
+        .order_by("pk")
+    )
+    for idea in ideas:
+        recommendation = getattr(idea, "recommendation", None)
+        assessments = " | ".join(
+            f"{item.indicator.name}: {item.score or 'brak'} ({item.rationale})"
+            for item in idea.indicator_scores.all()
+        )
+        partners = " | ".join(
+            f"{match.organization.name}: {match.rationale}" for match in recommended_partners(idea)
+        )
+        writer.writerow(
+            [
+                idea.pk,
+                idea.name,
+                idea.content,
+                idea.created_at.isoformat(),
+                idea.published_at.isoformat() if idea.published_at else "",
+                idea.locality.name if idea.locality else "",
+                idea.institution.name if idea.institution else "",
+                idea.get_institution_role_display(),
+                idea.implementing_institution.name if idea.implementing_institution else "",
+                idea.source_url or "",
+                idea.innovation_score if idea.innovation_score is not None else "",
+                idea.scored_at.isoformat() if idea.scored_at else "",
+                assessments,
+                recommendation.get_stage_display() if recommendation else "",
+                recommendation.get_development_path_display() if recommendation else "",
+                recommendation.next_step if recommendation else "",
+                recommendation.rationale if recommendation else "",
+                recommendation.risk if recommendation else "",
+                " | ".join(need.name for need in idea.partner_needs.all()),
+                partners,
+            ]
+        )
+    return response
 
 
 @login_required

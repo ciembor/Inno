@@ -7,6 +7,7 @@ from core import api_views, control_views, geojson_views, page_views
 urlpatterns = [
     path("admin/", RedirectView.as_view(pattern_name="control_dashboard", permanent=False)),
     path("administracja/", control_views.panel_dashboard, name="control_dashboard"),
+    path("administracja/eksport/csv/", control_views.panel_csv_export, name="control_csv_export"),
     path("administracja/logowanie/", control_views.panel_login, name="control_login"),
     path("administracja/wyloguj/", control_views.panel_logout, name="control_logout"),
     path(
@@ -179,6 +180,13 @@ urlpatterns = [
     path("o-projekcie/", page_views.about, name="about"),
     path("prywatnosc/", page_views.privacy, name="privacy"),
     path("api/miejscowosci/", api_views.locality_search, name="locality_search"),
+    path("api/", api_views.api_docs, name="api_docs"),
+    path("api/innowacje/", api_views.innovations, name="api_innovations"),
+    path(
+        "api/innowacje/<int:idea_id>/",
+        api_views.innovation_detail,
+        name="api_innovation_detail",
+    ),
     path("api/mapa-innowacji/", api_views.innovation_map_data, name="innovation_map_data"),
     path(
         "api/mapa-innowacji/granica/",

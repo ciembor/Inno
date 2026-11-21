@@ -111,8 +111,8 @@ bezpiecznego wdrożenia bez czytania kodu.
 
 **Cel:** udowodnić, że rozwiązanie może być użyte przez wiele organizacji.
 
-- [ ] Udostępnić eksport CSV inicjatyw, ocen, rekomendacji i dopasowań.
-- [ ] Udostępnić udokumentowane API JSON tylko do odczytu.
+- [x] Udostępnić eksport CSV inicjatyw, ocen, rekomendacji i dopasowań.
+- [x] Udostępnić udokumentowane API JSON tylko do odczytu.
 - [ ] Dodać panel metryk: instytucje, źródła, artykuły, inicjatywy, duplikaty,
   oceny, rekomendacje, dopasowania i średni czas przetworzenia.
 - [ ] Dodać konfigurację regionu, typów instytucji i źródeł bez zmian w kodzie.
