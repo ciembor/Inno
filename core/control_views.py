@@ -11,7 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Sum
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -37,10 +37,12 @@ from core.control_forms import (
 from core.geojson_views import podkarpackie_county_names
 from core.models import (
     CrawlSchedule,
+    DevelopmentRecommendation,
     Idea,
     InnovationIndicator,
     Institution,
     InstitutionImportRun,
+    InstitutionNewsSource,
     NCBRImportRun,
     PartnerOrganization,
     PromptTemplate,
@@ -95,6 +97,74 @@ def panel_dashboard(request):
             "active_page": "control",
             "institution_count": Institution.objects.count(),
             "latest_run": InstitutionImportRun.objects.first(),
+        },
+    )
+
+
+def _format_processing_time(seconds):
+    """Zwraca krótki, czytelny czas od dodania inicjatywy do jej oceny."""
+    if seconds is None:
+        return "Brak danych"
+    total_minutes = round(seconds / 60)
+    if total_minutes < 1:
+        return "poniżej 1 min"
+    hours, minutes = divmod(total_minutes, 60)
+    if not hours:
+        return f"{minutes} min"
+    if not minutes:
+        return f"{hours} godz."
+    return f"{hours} godz. {minutes} min"
+
+
+@login_required
+def panel_metrics(request):
+    """Pokazuje administratorowi mierniki działania całego Innoradaru."""
+    institution_imports = InstitutionImportRun.objects.aggregate(
+        articles=Sum("ideas_created") + Sum("ideas_skipped"),
+        duplicates=Sum("ideas_skipped"),
+    )
+    ncbr_imports = NCBRImportRun.objects.aggregate(
+        articles=Sum("ideas_created") + Sum("ideas_skipped"),
+        duplicates=Sum("ideas_skipped"),
+    )
+    processing_times = [
+        (scored_at - created_at).total_seconds()
+        for created_at, scored_at in Idea.objects.exclude(scored_at__isnull=True).values_list(
+            "created_at", "scored_at"
+        )
+    ]
+    recommendation_count = DevelopmentRecommendation.objects.count()
+    approved_recommendation_count = DevelopmentRecommendation.objects.filter(
+        status=DevelopmentRecommendation.Status.APPROVED
+    ).count()
+    partner_match_count = (
+        Idea.objects.filter(partner_needs__organizations__is_active=True)
+        .values("pk", "partner_needs__organizations__pk")
+        .distinct()
+        .count()
+    )
+    return render(
+        request,
+        "core/control/metrics.html",
+        {
+            "active_page": "control",
+            "institution_count": Institution.objects.count(),
+            "source_count": InstitutionNewsSource.objects.count()
+            + Institution.objects.exclude(news_url="").count(),
+            "article_count": (institution_imports["articles"] or 0)
+            + (ncbr_imports["articles"] or 0),
+            "idea_count": Idea.objects.count(),
+            "duplicate_count": (institution_imports["duplicates"] or 0)
+            + (ncbr_imports["duplicates"] or 0),
+            "scored_idea_count": Idea.objects.filter(scored_at__isnull=False).count(),
+            "recommendation_count": recommendation_count,
+            "approved_recommendation_count": approved_recommendation_count,
+            "partner_match_count": partner_match_count,
+            "average_processing_time": _format_processing_time(
+                sum(processing_times) / len(processing_times) if processing_times else None
+            ),
+            "latest_institution_run": InstitutionImportRun.objects.first(),
+            "latest_ncbr_run": NCBRImportRun.objects.first(),
         },
     )
 

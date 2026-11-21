@@ -113,7 +113,7 @@ bezpiecznego wdrożenia bez czytania kodu.
 
 - [x] Udostępnić eksport CSV inicjatyw, ocen, rekomendacji i dopasowań.
 - [x] Udostępnić udokumentowane API JSON tylko do odczytu.
-- [ ] Dodać panel metryk: instytucje, źródła, artykuły, inicjatywy, duplikaty,
+- [x] Dodać panel metryk: instytucje, źródła, artykuły, inicjatywy, duplikaty,
   oceny, rekomendacje, dopasowania i średni czas przetworzenia.
 - [ ] Dodać konfigurację regionu, typów instytucji i źródeł bez zmian w kodzie.
 - [ ] Opisać koszt, limity i ograniczenia wywołań LLM.

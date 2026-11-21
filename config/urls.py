@@ -7,6 +7,7 @@ from core import api_views, control_views, geojson_views, page_views
 urlpatterns = [
     path("admin/", RedirectView.as_view(pattern_name="control_dashboard", permanent=False)),
     path("administracja/", control_views.panel_dashboard, name="control_dashboard"),
+    path("administracja/metryki/", control_views.panel_metrics, name="control_metrics"),
     path("administracja/eksport/csv/", control_views.panel_csv_export, name="control_csv_export"),
     path("administracja/logowanie/", control_views.panel_login, name="control_login"),
     path("administracja/wyloguj/", control_views.panel_logout, name="control_logout"),

@@ -1,0 +1,23 @@
+{% extends "core/control/base.html" %}
+{% block control_content %}
+  <h1>Metryki Innoradaru</h1>
+  <p>Stan danych i działania automatycznych procesów. Liczby aktualizują się po każdym imporcie i ocenie.</p>
+  <dl class="metrics-grid">
+    <div><dt>Instytucje</dt><dd>{{ institution_count }}</dd><small>organizacje w katalogu</small></div>
+    <div><dt>Źródła</dt><dd>{{ source_count }}</dd><small>skonfigurowane adresy aktualności</small></div>
+    <div><dt>Artykuły i projekty</dt><dd>{{ article_count }}</dd><small>pozycje przeanalizowane przez importy</small></div>
+    <div><dt>Inicjatywy</dt><dd>{{ idea_count }}</dd><small>unikalne rekordy w bazie</small></div>
+    <div><dt>Duplikaty</dt><dd>{{ duplicate_count }}</dd><small>pominięte w importach jako już znane</small></div>
+    <div><dt>Ocenione inicjatywy</dt><dd>{{ scored_idea_count }}</dd><small>z wynikiem innowacyjności</small></div>
+    <div><dt>Rekomendacje</dt><dd>{{ recommendation_count }}</dd><small>{% if recommendation_count %}zatwierdzone: {{ approved_recommendation_count }}{% else %}brak wygenerowanych rekomendacji{% endif %}</small></div>
+    <div><dt>Dopasowania partnerów</dt><dd>{{ partner_match_count }}</dd><small>pary inicjatywa–aktywny partner ze wspólnym tagiem</small></div>
+    <div><dt>Średni czas przetworzenia</dt><dd>{{ average_processing_time }}</dd><small>od dodania rekordu do jego oceny</small></div>
+  </dl>
+  <section class="control-card control-card--wide">
+    <h2>Ostatnie importy</h2>
+    <dl class="stats">
+      <div><dt>Instytucje</dt><dd>{% if latest_institution_run %}{{ latest_institution_run.get_status_display|default:latest_institution_run.status }}{% else %}Brak{% endif %}</dd></div>
+      <div><dt>NCBR</dt><dd>{% if latest_ncbr_run %}{{ latest_ncbr_run.get_status_display|default:latest_ncbr_run.status }}{% else %}Brak{% endif %}</dd></div>
+    </dl>
+  </section>
+{% endblock %}

@@ -19,7 +19,7 @@ from core.control_forms import (
     InstitutionPanelForm,
     PartnerOrganizationForm,
 )
-from core.control_views import _locality_label
+from core.control_views import _format_processing_time, _locality_label
 from core.models import (
     CrawlSchedule,
     DevelopmentRecommendation,
@@ -32,6 +32,7 @@ from core.models import (
     Locality,
     NCBRImportRun,
     PartnerOrganization,
+    PartnerTag,
     PromptTemplate,
     ScoringCalibration,
     ScoringCalibrationExample,
@@ -104,6 +105,63 @@ def test_csv_export_is_authenticated_and_excludes_submitter_data(admin_client):
     assert "private@example.org" not in content
     assert "Prywatna osoba" not in content
     assert str(idea.pk) in content
+
+
+@pytest.mark.django_db
+def test_metrics_panel_shows_operational_counts_and_processing_time(admin_client):
+    institution = Institution.objects.create(
+        name="Instytucja z aktualnościami",
+        address="Rzeszów",
+        news_url="https://example.org/aktualnosci/",
+        institution_type="school",
+    )
+    InstitutionNewsSource.objects.create(institution=institution, url="https://example.org/news/")
+    tag = PartnerTag.objects.get(name="Finansowanie")
+    partner = PartnerOrganization.objects.create(
+        name="Partner finansujący",
+        organization_type="funder",
+        description="Wsparcie",
+    )
+    partner.tags.add(tag)
+    idea = Idea.objects.create(
+        name="Oceniona inicjatywa",
+        submitter_name="Anna",
+        email="anna@example.org",
+        content="Opis",
+    )
+    idea.partner_needs.add(tag)
+    created_at = timezone.now() - timedelta(minutes=2)
+    Idea.objects.filter(pk=idea.pk).update(created_at=created_at, scored_at=timezone.now())
+    DevelopmentRecommendation.objects.create(
+        idea=idea,
+        stage="pilot",
+        development_path="partnership",
+        next_step="Test.",
+        rationale="Uzasadnienie.",
+        risk="Ryzyko.",
+        status="approved",
+    )
+    InstitutionImportRun.objects.create(ideas_created=3, ideas_skipped=2)
+    NCBRImportRun.objects.create(ideas_created=4, ideas_skipped=1)
+
+    response = admin_client.get(reverse("control_metrics"))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "Metryki Innoradaru" in content
+    assert "Instytucja z aktualnościami" not in content
+    assert ">2<" in content
+    assert ">10<" in content
+    assert ">1<" in content
+    assert "Ostatnie importy" in content
+
+
+def test_processing_time_formatter_covers_all_display_forms():
+    assert _format_processing_time(None) == "Brak danych"
+    assert _format_processing_time(0) == "poniżej 1 min"
+    assert _format_processing_time(60) == "1 min"
+    assert _format_processing_time(3600) == "1 godz."
+    assert _format_processing_time(3660) == "1 godz. 1 min"
 
 
 @pytest.mark.django_db
