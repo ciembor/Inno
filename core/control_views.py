@@ -50,7 +50,11 @@ from core.models import (
     ScoringCalibrationExample,
 )
 from core.security import clear_attempts, client_ip, consume_attempt, is_rate_limited
-from core.services.crawl_schedule import reschedule_crawl
+from core.services.crawl_schedule import (
+    configured_institution_types,
+    configured_institutions,
+    reschedule_crawl,
+)
 from core.services.institution_csv import import_institutions_csv
 from core.services.partner_csv import import_partners_csv
 from core.services.partner_matching import recommended_partners
@@ -146,6 +150,17 @@ def _metrics_response(request):
         .distinct()
         .count()
     )
+    completed_scenarios = {
+        "automatic": Idea.objects.exclude(source_url__isnull=True)
+        .exclude(source_url="")
+        .filter(scored_at__isnull=False, recommendation__isnull=False, partner_needs__isnull=False)
+        .distinct()
+        .count(),
+        "manual": Idea.objects.filter(source_url__isnull=True)
+        .filter(scored_at__isnull=False, recommendation__isnull=False, partner_needs__isnull=False)
+        .distinct()
+        .count(),
+    }
     return render(
         request,
         "core/control/metrics.html",
@@ -163,6 +178,7 @@ def _metrics_response(request):
             "recommendation_count": recommendation_count,
             "approved_recommendation_count": approved_recommendation_count,
             "partner_match_count": partner_match_count,
+            "completed_scenarios": completed_scenarios,
             "average_import_duration": _format_duration(
                 sum(import_durations) / len(import_durations) if import_durations else None
             ),
@@ -703,19 +719,19 @@ def panel_partners_csv(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def panel_crawling(request):
+    crawl_schedule, _ = CrawlSchedule.objects.get_or_create(pk=1, defaults={"run_at": time(3)})
     if request.method == "POST":
-        institution_types = request.POST.getlist("institution_types")
-        allowed = {value for value, _ in Institution.Type.choices}
-        institution_types = [value for value in institution_types if value in allowed]
-        if not institution_types:
-            messages.error(request, "Wybierz przynajmniej jeden typ instytucji.")
-        elif InstitutionImportRun.objects.filter(status__in=["pending", "running"]).exists():
+        institution_types = configured_institution_types(crawl_schedule)
+        if InstitutionImportRun.objects.filter(status__in=["pending", "running"]).exists():
             messages.error(request, "Crawling już trwa.")
         else:
-            total = Institution.objects.filter(institution_type__in=institution_types).count()
+            total = configured_institutions(
+                institution_types, crawl_schedule.voivodeship_code
+            ).count()
             run = InstitutionImportRun.objects.create(
                 status="pending",
                 institution_types=institution_types,
+                voivodeship_code=crawl_schedule.voivodeship_code,
                 institutions_total=total,
                 current_action="Oczekiwanie na uruchomienie zadania",
             )
@@ -723,12 +739,6 @@ def panel_crawling(request):
             messages.success(request, "Crawling został uruchomiony.")
             return redirect("control_crawling")
     latest_run = InstitutionImportRun.objects.first()
-    crawl_schedule, _ = CrawlSchedule.objects.get_or_create(pk=1, defaults={"run_at": time(3)})
-    selected_types = (
-        latest_run.institution_types
-        if latest_run
-        else [value for value, _ in Institution.Type.choices]
-    )
     return render(
         request,
         "core/control/crawling.html",
@@ -736,8 +746,6 @@ def panel_crawling(request):
             "active_page": "control",
             "latest_run": latest_run,
             "latest_ncbr_run": NCBRImportRun.objects.first(),
-            "selected_types": selected_types,
-            "types": Institution.Type.choices,
             "schedule_form": CrawlScheduleForm(instance=crawl_schedule),
             "crawl_schedule": crawl_schedule,
         },

@@ -8,6 +8,21 @@ from django.utils import timezone
 from core.models import CrawlSchedule, Institution, InstitutionImportEvent, InstitutionImportRun
 
 
+def configured_institution_types(schedule: CrawlSchedule) -> list[str]:
+    """Zwraca zapisany zakres, zachowując pełny zakres dla ustawień sprzed migracji."""
+    return schedule.institution_types or list(Institution.Type.values)
+
+
+def configured_institutions(institution_types: list[str], voivodeship_code: str):
+    """Buduje stabilny zbiór instytucji objętych konkretnym przebiegiem."""
+    institutions = Institution.objects.filter(
+        institution_type__in=institution_types, crawl_enabled=True
+    )
+    if voivodeship_code:
+        institutions = institutions.filter(locality__voivodeship_code=voivodeship_code)
+    return institutions
+
+
 def next_crawl_at(schedule: CrawlSchedule, now=None):
     """Zwraca najbliższą przyszłą godzinę uruchomienia w lokalnej strefie czasu."""
     now = now or timezone.now()
@@ -41,12 +56,13 @@ def start_due_crawl(now=None) -> InstitutionImportRun | None:
         if InstitutionImportRun.objects.filter(status__in=["pending", "running"]).exists():
             return None
 
-        institution_types = list(Institution.Type.values)
+        institution_types = configured_institution_types(schedule)
         run = InstitutionImportRun.objects.create(
             status="pending",
             institution_types=institution_types,
-            institutions_total=Institution.objects.filter(
-                institution_type__in=institution_types
+            voivodeship_code=schedule.voivodeship_code,
+            institutions_total=configured_institutions(
+                institution_types, schedule.voivodeship_code
             ).count(),
             current_action="Oczekiwanie na automatyczne uruchomienie zadania",
         )

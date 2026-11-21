@@ -156,6 +156,9 @@ def test_metrics_panel_shows_operational_counts_and_import_duration(admin_client
     assert ">10<" in content
     assert ">1<" in content
     assert "Średni czas importu" in content
+    assert "Mierniki dwóch scenariuszy demonstracyjnych" in content
+    assert "Automatyczne wykrycie" in content
+    assert "Ręczne zgłoszenie" in content
     assert "min</dd>" in content
     assert "Ostatnie importy" in content
     assert reverse("control_csv_export") in content
@@ -719,18 +722,16 @@ def test_crawling_page_starts_job_and_returns_live_status(admin_client, monkeypa
     monkeypatch.setattr("core.control_views.import_institution_news.delay", task_calls.append)
     url = reverse("control_crawling")
     assert admin_client.get(url).status_code == 200
-    assert admin_client.post(url, {}).status_code == 200
-    response = admin_client.post(url, {"institution_types": "school"})
+    CrawlSchedule.objects.filter(pk=1).update(institution_types=["school"])
+    response = admin_client.post(url)
     assert response.url == url
     run = InstitutionImportRun.objects.get()
     assert task_calls == [run.pk]
     assert run.institutions_total == 1
     page = admin_client.get(url).content.decode()
-    assert 'value="school" checked' in page
-    assert 'value="university" checked' not in page
-    assert 'value="local_government" checked' not in page
-    assert 'value="other" checked' not in page
-    assert admin_client.post(url, {"institution_types": "school"}).status_code == 200
+    assert "Zakres crawlowania" in page
+    assert "Źródła aktualności oraz ich włączenie" in page
+    assert admin_client.post(url).status_code == 200
     InstitutionImportEvent.objects.create(run=run, message="Skanowanie: Szkoła")
     run.status = "running"
     run.institutions_total = 2
@@ -792,23 +793,36 @@ def test_crawl_schedule_is_saved_in_the_panel_and_calculates_next_run(admin_clie
     url = reverse("control_crawling_schedule")
     response = admin_client.post(
         url,
-        {"enabled": "on", "interval_days": "3", "run_at": "04:15"},
+        {
+            "enabled": "on", "interval_days": "3", "run_at": "04:15",
+            "institution_types": ["school"], "voivodeship_code": "18",
+        },
     )
     assert response.url == reverse("control_crawling")
     schedule = CrawlSchedule.objects.get(pk=1)
     assert schedule.enabled is True
     assert schedule.interval_days == 3
     assert schedule.run_at == time(4, 15)
+    assert schedule.institution_types == ["school"]
+    assert schedule.voivodeship_code == "18"
     assert schedule.next_run_at > timezone.now()
     page = admin_client.get(reverse("control_crawling")).content.decode()
     assert "Automatyczny crawling" in page
     assert "Następne uruchomienie" in page
 
-    response = admin_client.post(url, {"enabled": "on", "interval_days": "0", "run_at": "04:15"})
+    response = admin_client.post(
+        url,
+        {"enabled": "on", "interval_days": "0", "run_at": "04:15", "institution_types": ["school"]},
+    )
     assert response.url == reverse("control_crawling")
-    assert CrawlScheduleForm({"interval_days": "366", "run_at": "04:15"}).is_valid() is False
+    assert CrawlScheduleForm(
+        {"interval_days": "366", "run_at": "04:15", "institution_types": ["school"]}
+    ).is_valid() is False
+    assert CrawlScheduleForm({"interval_days": "3", "run_at": "04:15"}).is_valid() is False
 
-    response = admin_client.post(url, {"interval_days": "3", "run_at": "04:15"})
+    response = admin_client.post(
+        url, {"interval_days": "3", "run_at": "04:15", "institution_types": ["school"]}
+    )
     assert response.url == reverse("control_crawling")
     schedule.refresh_from_db()
     assert schedule.enabled is False
@@ -852,6 +866,38 @@ def test_scheduled_crawl_starts_all_types_once_due_and_waits_for_active_run():
     schedule.enabled = False
     schedule.save(update_fields=["enabled"])
     assert start_due_crawl(now + timedelta(days=1)) is None
+
+
+@pytest.mark.django_db
+def test_crawl_configuration_limits_region_and_allows_disabling_a_source():
+    podkarpackie = create_locality()
+    mazowieckie = Locality.objects.create(
+        simc_code="1465432", name="Warszawa", voivodeship_code="14", county_code="65",
+        municipality_code="01", municipality_type_code="1", locality_type_code="96",
+        registry_date="2026-01-01",
+    )
+    Institution.objects.create(
+        name="Aktywna", address="Rzeszów", institution_type="school", locality=podkarpackie
+    )
+    Institution.objects.create(
+        name="Wyłączona", address="Krosno", institution_type="school", locality=podkarpackie,
+        crawl_enabled=False,
+    )
+    Institution.objects.create(
+        name="Poza regionem", address="Warszawa", institution_type="school", locality=mazowieckie
+    )
+    now = timezone.make_aware(datetime(2026, 11, 20, 10, 0))
+    CrawlSchedule.objects.create(
+        pk=1, enabled=True, run_at=time(9), next_run_at=now - timedelta(minutes=1),
+        institution_types=["school"], voivodeship_code="18",
+    )
+
+    run = start_due_crawl(now)
+
+    assert run is not None
+    assert run.institution_types == ["school"]
+    assert run.voivodeship_code == "18"
+    assert run.institutions_total == 1
 
 
 @pytest.mark.django_db

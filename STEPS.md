@@ -69,9 +69,9 @@ użycia.
 | [ ] | b. Zebranie lub uporządkowanie kluczowych informacji o innowacji. | |
 | [ ] | c. Ocena potencjału według zaproponowanych kryteriów. | |
 | [ ] | d. Wskazanie potencjalnych odbiorców, partnerów albo ścieżek dalszego rozwoju. | |
-| [ ] | e. Prezentacja uzasadnienia rekomendacji oraz oczekiwanych mierników skuteczności. | |
-| [ ] | Przypadek użycia 1: opis, przebieg i wynik. | |
-| [ ] | Przypadek użycia 2: opis, przebieg i wynik. | |
+| [x] | e. Prezentacja uzasadnienia rekomendacji oraz oczekiwanych mierników skuteczności. | Panel metryk liczy ukończony przepływ: ocena + rekomendacja + potrzeby partnerstwa. |
+| [x] | Przypadek użycia 1: opis, przebieg i wynik. | Automatyczne wykrycie: crawler → rekord → ocena → rekomendacja → partnerzy; wynik liczony w panelu. |
+| [x] | Przypadek użycia 2: opis, przebieg i wynik. | Ręczne zgłoszenie: formularz → job z retry → ocena → rekomendacja → partnerzy; wynik liczony w panelu. |
 
 ## 6. Kryteria oceny — 100 punktów
 

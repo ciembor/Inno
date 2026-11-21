@@ -4,7 +4,7 @@
   <h1>Crawling</h1>
   <section class="crawl-card crawl-schedule">
     <h2>Automatyczny crawling</h2>
-    <p>Pełny crawling wszystkich typów instytucji uruchomi się o wybranej godzinie. Aktywny przebieg nie zostanie przerwany ani zdublowany.</p>
+    <p>Ustaw zakres: region, typy instytucji i aktywne źródła. Te same ustawienia stosuje automatyczny oraz ręczny crawling. Aktywny przebieg nie zostanie przerwany ani zdublowany.</p>
     <form method="post" action="{% url 'control_crawling_schedule' %}" class="panel-form crawl-schedule__form">
       {% csrf_token %}
       {{ schedule_form.non_field_errors }}
@@ -24,22 +24,20 @@
           {{ schedule_form.run_at.errors }}
         </div>
       </div>
+      <fieldset>
+        <legend>Zakres crawlowania</legend>
+        <p><label for="{{ schedule_form.voivodeship_code.id_for_label }}">{{ schedule_form.voivodeship_code.label }}</label>{{ schedule_form.voivodeship_code }}{{ schedule_form.voivodeship_code.errors }}</p>
+        <div><span>Typy instytucji</span>{{ schedule_form.institution_types }}{{ schedule_form.institution_types.errors }}</div>
+      </fieldset>
+      <p>Źródła aktualności oraz ich włączenie ustawisz przy każdej <a href="{% url 'control_institutions' %}">instytucji</a>.</p>
       <div class="crawl-schedule__actions"><button type="submit">Zapisz harmonogram</button></div>
     </form>
     {% if crawl_schedule.enabled and crawl_schedule.next_run_at %}<p>Następne uruchomienie: <strong>{{ crawl_schedule.next_run_at|date:"d.m.Y, H:i" }}</strong>.</p>{% endif %}
   </section>
   <section class="crawl-card crawl-status" data-status-url="{% url 'control_crawling_status' %}">
     <h2>Ręczny crawling</h2>
-    <p>Import czyta aktualności wybranych instytucji, wyodrębnia inicjatywy i zleca ich ocenę.</p>
-    <form id="crawl-start" method="post" class="panel-form crawl-start">
-      {% csrf_token %}
-      <fieldset>
-        <legend>Typy instytucji</legend>
-        {% for value, label in types %}
-          <label><input type="checkbox" name="institution_types" value="{{ value }}"{% if value in selected_types %} checked{% endif %}> {{ label }}</label>
-        {% endfor %}
-      </fieldset>
-    </form>
+    <p>Import czyta aktualności instytucji zgodnych z zapisanym zakresem, wyodrębnia inicjatywy i zleca ich ocenę.</p>
+    <form id="crawl-start" method="post" class="panel-form crawl-start">{% csrf_token %}</form>
     <div class="crawl-actions">
       <button form="crawl-start" type="submit">Uruchom crawling</button>
       {% if latest_run.status == "pending" or latest_run.status == "running" %}

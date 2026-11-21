@@ -24,6 +24,7 @@ from core.models import (
     ScoringCalibrationExample,
 )
 from core.services.prompt_registry import PromptDefinition
+from core.services.teryt import VOIVODESHIP_NAMES
 
 
 class CredentialsForm(forms.Form):
@@ -72,7 +73,7 @@ class InstitutionPanelForm(forms.ModelForm):
 
     class Meta:
         model = Institution
-        fields = ["name", "address", "institution_type", "locality", "news_url"]
+        fields = ["name", "address", "institution_type", "locality", "news_url", "crawl_enabled"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -143,9 +144,29 @@ class InstitutionListFilterForm(forms.Form):
 class CrawlScheduleForm(forms.ModelForm):
     """Ustawienia okresowego pełnego przebiegu crawlera."""
 
+    institution_types = forms.MultipleChoiceField(
+        label="Typy instytucji",
+        choices=Institution.Type.choices,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+    voivodeship_code = forms.ChoiceField(
+        label="Region",
+        required=False,
+        choices=[
+            ("", "Cała Polska"),
+            *[(code, name.title()) for code, name in VOIVODESHIP_NAMES.items()],
+        ],
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.is_bound and not self.initial.get("institution_types"):
+            self.initial["institution_types"] = list(Institution.Type.values)
+
     class Meta:
         model = CrawlSchedule
-        fields = ["enabled", "interval_days", "run_at"]
+        fields = ["enabled", "interval_days", "run_at", "institution_types", "voivodeship_code"]
         labels = {
             "enabled": "Włącz automatyczny crawling",
             "interval_days": "Uruchamiaj co ile dni",
@@ -161,6 +182,12 @@ class CrawlScheduleForm(forms.ModelForm):
         if not 1 <= interval_days <= 365:
             raise ValidationError("Podaj liczbę dni od 1 do 365.")
         return interval_days
+
+    def clean_institution_types(self):
+        institution_types = self.cleaned_data["institution_types"]
+        if not institution_types:
+            raise ValidationError("Wybierz przynajmniej jeden typ instytucji.")
+        return institution_types
 
 
 class PromptTemplatesForm(forms.Form):

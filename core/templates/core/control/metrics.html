@@ -14,6 +14,14 @@
     <div><dt>Średni czas importu</dt><dd>{{ average_import_duration }}</dd><small>od uruchomienia do zakończenia crawlowania</small></div>
   </dl>
   <section class="control-card control-card--wide">
+    <h2>Mierniki dwóch scenariuszy demonstracyjnych</h2>
+    <p>Rekord jest zaliczony, gdy ma wynik oceny, rekomendację rozwoju i potrzeby partnerstwa — czyli przeszedł cały wymagany przepływ od sygnału do dalszego działania.</p>
+    <dl class="stats">
+      <div><dt>Automatyczne wykrycie</dt><dd>{{ completed_scenarios.automatic }}</dd><small>pobrane rekordy ukończone end-to-end</small></div>
+      <div><dt>Ręczne zgłoszenie</dt><dd>{{ completed_scenarios.manual }}</dd><small>zgłoszone rekordy ukończone end-to-end</small></div>
+    </dl>
+  </section>
+  <section class="control-card control-card--wide">
     <h2>Ostatnie importy</h2>
     <dl class="stats">
       <div><dt>Instytucje</dt><dd>{% if latest_institution_run %}{{ latest_institution_run.get_status_display|default:latest_institution_run.status }}{% else %}Brak{% endif %}</dd></div>

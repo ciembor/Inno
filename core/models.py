@@ -47,6 +47,7 @@ class Institution(models.Model):
         related_name="institutions",
         verbose_name="Miejscowość",
     )
+    crawl_enabled = models.BooleanField("Uwzględniaj w crawlowaniu", default=True)
 
     class Meta:
         ordering = ["name"]
@@ -314,6 +315,7 @@ class InstitutionImportRun(models.Model):
     finished_at = models.DateTimeField("Zakończono", blank=True, null=True)
     status = models.CharField(max_length=16, default="running")
     institution_types = models.JSONField(default=list)
+    voivodeship_code = models.CharField("Kod województwa", max_length=2, blank=True, default="")
     institutions_processed = models.PositiveIntegerField(default=0)
     ideas_created = models.PositiveIntegerField(default=0)
     ideas_skipped = models.PositiveIntegerField(default=0)
@@ -383,6 +385,8 @@ class CrawlSchedule(models.Model):
     last_started_at = models.DateTimeField(
         "Ostatnie automatyczne uruchomienie", blank=True, null=True
     )
+    institution_types = models.JSONField("Typy instytucji", default=list)
+    voivodeship_code = models.CharField("Kod województwa", max_length=2, blank=True, default="")
 
 
 class PromptTemplate(models.Model):

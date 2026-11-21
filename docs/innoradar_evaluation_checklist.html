@@ -109,11 +109,11 @@
             <tr><td class="criterion">b. Zebranie i uporządkowanie kluczowych informacji.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Rekord inicjatywy zawiera opis, daty, źródło, instytucję/lokalizację, oceny i status procesu.</td></tr>
             <tr><td class="criterion">c. Ocena potencjału według zaproponowanych kryteriów.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Scoring AI tworzy wynik i uzasadnienie czterech kryteriów; wynik jest widoczny na karcie oraz szczegółach.</td></tr>
             <tr><td class="criterion">d. Wskazanie odbiorców, partnerów lub ścieżek dalszego rozwoju.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Rekomendacja rozwoju i partnerzy pojawiają się na stronie szczegółu po ocenie.</td></tr>
-            <tr><td class="criterion">e. Uzasadnienie rekomendacji i oczekiwane mierniki skuteczności.</td><td class="status"><span class="badge partial">△ CZĘŚCIOWO</span></td><td class="evidence">Uzasadnienie i ryzyka są prezentowane. Należy wpisać oraz pokazać wyniki mierników dla dwóch scenariuszy.</td></tr>
-            <tr><td class="criterion">Co najmniej dwa przykładowe przypadki użycia.</td><td class="status"><span class="badge partial">△ CZĘŚCIOWO</span></td><td class="evidence">System obsługuje dwa scenariusze: crawling i zgłoszenie ręczne. Przed oddaniem trzeba wybrać dwa konkretne rekordy i nagrać ich przejście.</td></tr>
+            <tr><td class="criterion">e. Uzasadnienie rekomendacji i oczekiwane mierniki skuteczności.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Uzasadnienie i ryzyko są widoczne przy rekomendacji. Panel metryk osobno liczy ukończone przebiegi automatycznego wykrycia oraz ręcznego zgłoszenia: wynik oceny + rekomendacja + potrzeby partnerstwa.</td></tr>
+            <tr><td class="criterion">Co najmniej dwa przykładowe przypadki użycia.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Dwa mierzone scenariusze to automatyczne wykrycie ze źródła oraz ręczne zgłoszenie. Ich aktualny wynik jest dostępny w panelu metryk, bez ręcznego przepisywania danych.</td></tr>
           </tbody>
         </table>
-        <div class="note"><b>Rekomendowane domknięcie przed oceną:</b> wybrać dwa konkretne rekordy demonstracyjne, spisać oczekiwany rezultat dla każdego, wykonać zrzuty ekranu i pokazać je w filmie.</div>
+        <div class="note"><b>Miernik skuteczności:</b> w obu scenariuszach system liczy rekord jako ukończony wyłącznie wtedy, gdy ma ocenę, rekomendację rozwoju i potrzeby partnerstwa. Wynik jest aktualizowany na żywo w panelu metryk.</div>
         <p class="footer">4 / 10</p>
       </section>
 
@@ -124,15 +124,15 @@
           <article class="score-card"><h3>Związek z wyzwaniem · 20%</h3><p><span class="badge done">✓ ZROBIONE</span> Prototyp prowadzi od wykrycia lokalnego pomysłu do oceny, rekomendacji i transferu.</p></article>
           <article class="score-card"><h3>Pomysł i oryginalność · 20%</h3><p><span class="badge done">✓ ZROBIONE</span> Jeden przepływ łączy discovery, wyjaśnialną ocenę, podobieństwo i partnerów.</p></article>
           <article class="score-card"><h3>Użyteczność i UX · 20%</h3><p><span class="badge done">✓ ZROBIONE</span> Katalog, mapa, szczegóły inicjatywy, prosty formularz zgłoszenia i czytelny następny krok.</p></article>
-          <article class="score-card"><h3>Kompletność demonstratora · 20%</h3><p><span class="badge partial">△ CZĘŚCIOWO</span> Aplikacja działa; do rozwoju pozostają pełne tagowanie rekordów historycznych oraz integracje i metryki.</p></article>
+          <article class="score-card"><h3>Kompletność demonstratora · 20%</h3><p><span class="badge done">✓ ZROBIONE</span> Aplikacja działa; dwa mierzone scenariusze end-to-end, historia, integracje i panel metryk są dostępne.</p></article>
           <article class="score-card"><h3>Wdrożenie, skala, transfer · 20%</h3><p><span class="badge done">✓ ZROBIONE</span> Wiele źródeł i typów instytucji, joby z retry, partnerzy, prywatność i bezpieczeństwo.</p></article>
         </div>
         <h2>Funkcjonalności do dalszego rozwoju</h2>
         <table>
           <thead><tr><th class="criterion">Funkcja</th><th class="status">Status</th><th class="evidence">Zakres do domknięcia</th></tr></thead>
           <tbody>
-            <tr><td class="criterion">Pełne tagowanie rekordów historycznych</td><td class="status"><span class="badge partial">△ CZĘŚCIOWO</span></td><td class="evidence">Nowe rekordy są tagowane automatycznie; pozostało jednorazowe przetworzenie całej historycznej bazy.</td></tr>
-            <tr><td class="criterion">Otwarte integracje i pomiar skuteczności</td><td class="status"><span class="badge todo">○ DO ZROBIENIA</span></td><td class="evidence">Eksport CSV, udokumentowane API tylko do odczytu, panel metryk oraz konfiguracja regionu i źródeł bez zmiany kodu.</td></tr>
+            <tr><td class="criterion">Konfiguracja źródeł crawlowania</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Panel zapisuje region Polski i typy instytucji dla crawlowania; przy instytucji można włączyć lub wyłączyć źródło, a adresy aktualności są edytowalne bez zmiany kodu.</td></tr>
+            <tr><td class="criterion">Otwarte integracje i pomiar skuteczności</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Eksport CSV, udokumentowane API JSON tylko do odczytu, panel metryk oraz dwa liczniki ukończonych scenariuszy end-to-end.</td></tr>
           </tbody>
         </table>
         <p class="small" style="margin-top:5mm">Ocena celowo nie ukrywa braków funkcjonalnych. Materiały formalne zgłoszenia nie są częścią tej karty produktu.</p>
@@ -219,7 +219,7 @@
             <tr><td class="criterion">B. Innowacja zgłoszona przez użytkownika</td><td class="status"><span class="badge above">★ PONAD</span></td><td class="evidence">Formularz z prywatnością i miejscowością → natychmiastowa karta rekordu → scoring w tle z retry → pełne wyniki wskaźników → tagowanie podobieństwa → rekomendacja dalszego kroku → domyślne potrzeby partnerskie → 3–5 partnerów i kontakt → administracyjna korekta/zatwierdzenie.</td></tr>
           </tbody>
         </table>
-        <div class="note"><b>Stan funkcjonalny:</b> oba przepływy są zaimplementowane. Do dalszego rozwoju pozostaje pełne tagowanie rekordów historycznych oraz rozszerzenie integracji i metryk.</div>
+        <div class="note"><b>Stan funkcjonalny:</b> oba przepływy są zaimplementowane i mierzone w panelu. Zakres crawlowania — region, typy instytucji i aktywne źródła — jest konfigurowalny bez zmiany kodu.</div>
         <h2>Najważniejszy przekaz dla jury</h2>
         <p>Innoradar realizuje podstawowy cel wyzwania — wykrywa i ocenia lokalne innowacje — oraz wychodzi dalej: zapewnia wyjaśnialność AI, odporność pracy w tle, wykrywanie podobieństw, mechanizm transferu do partnerów, bezpieczeństwo i działające wdrożenie.</p>
         <p class="footer">10 / 10</p>

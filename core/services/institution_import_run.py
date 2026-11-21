@@ -7,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 
 from core.models import Institution, InstitutionImportRun
+from core.services.crawl_schedule import configured_institutions
 from core.services.institution_innovation_import import InstitutionInnovationImportService
 from core.services.news_llm import SelectedNewsArticle
 
@@ -24,8 +25,8 @@ def advance_import_run(
     ),
 ) -> None:
     """Przetwarza najwyżej jeden etap i trwałe zapisuje checkpoint następnego kroku."""
-    institutions = Institution.objects.filter(
-        institution_type__in=run.institution_types
+    institutions = configured_institutions(
+        run.institution_types, run.voivodeship_code
     ).order_by("name", "pk")
     institution = institutions[run.institutions_processed : run.institutions_processed + 1].first()
     if institution is None:
