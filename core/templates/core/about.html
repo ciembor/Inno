@@ -1,0 +1,96 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}O projekcie — innoradar{% endblock %}
+{% block description %}Jak Innoradar wyszukuje, ocenia i kieruje innowacje oraz jakie są granice działania systemu.{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/about.css' %}">{% endblock %}
+{% block content %}
+<main id="main-content" class="about-page" tabindex="-1">
+  <section class="about-hero">
+    <div class="container">
+      <p class="eyebrow">O projekcie</p>
+      <h1>Od lokalnego pomysłu<br>do kolejnego kroku.</h1>
+      <p class="about-hero__lead">Innoradar pomaga znajdować innowacje powstające w instytucjach publicznych, porządkować informacje o nich i kierować je do osób oraz organizacji, które mogą pomóc we wdrożeniu.</p>
+      <a class="about-hero__action" href="{% url 'innovations' %}">Zobacz innowacje <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="about-section about-process" aria-labelledby="process-title">
+    <div class="container">
+      <p class="eyebrow">Proces</p>
+      <h2 id="process-title">Jak działa Innoradar?</h2>
+      <ol class="about-steps">
+        <li><strong>Znajduje</strong><span>analizuje aktualności instytucji, projekty NCBR i zgłoszenia użytkowników.</span></li>
+        <li><strong>Porządkuje</strong><span>zapisuje opis, źródło, datę, lokalizację, twórcę i rolę instytucji, jeśli dane są dostępne.</span></li>
+        <li><strong>Ocenia</strong><span>przedstawia ocenę według widocznych kryteriów wraz z uzasadnieniem i niepewnością.</span></li>
+        <li><strong>Wskazuje drogę</strong><span>proponuje etap, następny krok i ścieżkę rozwoju, transferu, partnerstwa lub finansowania.</span></li>
+        <li><strong>Łączy</strong><span>wyszukuje podobne inicjatywy oraz partnerów odpowiadających na potrzeby pomysłu.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="about-section about-section--paper" aria-labelledby="data-title">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">Dane i źródła</p>
+        <h2 id="data-title">Skąd pochodzą informacje?</h2>
+      </div>
+      <div class="about-copy">
+        <p>System korzysta z publicznie dostępnych aktualności szkół, uczelni, samorządów i innych instytucji, danych o projektach NCBR oraz zgłoszeń przesyłanych przez użytkowników.</p>
+        <p>Przy pobranych rekordach zachowujemy adres źródłowy i datę publikacji, gdy można je ustalić. Nie zakładamy, że każdy materiał źródłowy jest kompletny lub aktualny.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section" aria-labelledby="ai-title">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">AI i rekomendacje</p>
+        <h2 id="ai-title">Pomoc w analizie, nie automatyczna decyzja.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Model językowy pomaga wybrać potencjalne innowacje z materiałów źródłowych, uporządkować opis, ocenić je według skonfigurowanych kryteriów i zaproponować dalszy krok. Wynik zawiera oceny cząstkowe, uzasadnienia i wskazane ryzyka.</p>
+        <p>Prompt, kryteria, ich wagi i przykłady kalibracyjne są kontrolowane w panelu administracyjnym. Rekomendacje można poprawić, ponownie wygenerować lub zatwierdzić.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section about-section--warning" aria-labelledby="limits-title">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">Granice systemu</p>
+        <h2 id="limits-title">Wynik trzeba zweryfikować.</h2>
+      </div>
+      <div class="about-copy">
+        <p>AI może błędnie zinterpretować niepełny, nieaktualny lub wieloznaczny tekst. Brak informacji w źródle nie oznacza braku pomysłu, twórcy ani możliwości wdrożenia.</p>
+        <p>Innoradar nie podejmuje decyzji finansowych, prawnych ani personalnych. Ocena, rekomendacja i dopasowanie partnera są materiałem pomocniczym do sprawdzenia przez człowieka oraz rozmowy z zainteresowanymi stronami.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section about-section--paper" aria-labelledby="scale-title">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">Skalowanie i integracje</p>
+        <h2 id="scale-title">Projektowany dla wielu organizacji.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Innoradar obsługuje szkoły, uczelnie, samorządy i inne instytucje. Dane instytucji oraz partnerów można uzupełniać przez panel i import CSV; niezależnym źródłem projektów jest także NCBR.</p>
+        <p>Przetwarzanie odbywa się w zadaniach w tle z ponawianiem przejściowych błędów, dzięki czemu analiza nie blokuje użytkownika. Dalszy rozwój obejmuje eksport danych i API tylko do odczytu, aby ułatwić integrację z innymi systemami.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section" aria-labelledby="security-title">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">Prywatność i bezpieczeństwo</p>
+        <h2 id="security-title">Tyle danych, ile potrzeba.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Kontakt osoby zgłaszającej nie jest publikowany razem z inicjatywą. Formularz wymaga potwierdzenia informacji o prywatności, a dane kontaktowe mają określony czas przechowywania i mogą zostać usunięte na żądanie.</p>
+        <p>Aplikacja stosuje ochronę formularzy i logowania, ograniczanie prób, nagłówki bezpieczeństwa oraz kopie zapasowe. Szczegóły zasad przetwarzania danych znajdują się w <a href="{% url 'privacy' %}">polityce prywatności</a>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

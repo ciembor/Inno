@@ -176,6 +176,7 @@ urlpatterns = [
     path("innowacje/<int:idea_id>/", page_views.innovation_detail, name="innovation_detail"),
     path("mapa-innowacji/", page_views.innovation_map, name="innovation_map"),
     path("zglos-pomysl/", page_views.submit_idea, name="submit_idea"),
+    path("o-projekcie/", page_views.about, name="about"),
     path("prywatnosc/", page_views.privacy, name="privacy"),
     path("api/miejscowosci/", api_views.locality_search, name="locality_search"),
     path("api/mapa-innowacji/", api_views.innovation_map_data, name="innovation_map_data"),

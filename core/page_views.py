@@ -73,6 +73,12 @@ def privacy(request):
 
 
 @never_cache
+def about(request):
+    """Wyjaśnia źródła danych, rolę AI i granice działania Innoradaru."""
+    return render(request, "core/about.html", {"active_page": "about"})
+
+
+@never_cache
 def innovation_map(request):
     map_ideas = (
         Idea.objects.select_related("locality")

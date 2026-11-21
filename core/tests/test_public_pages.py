@@ -70,6 +70,22 @@ def test_privacy_page_explains_retention_and_removal(client):
     assert "usunięcia zgłoszenia" in response.content.decode()
 
 
+def test_about_page_explains_data_ai_limits_and_security(client):
+    response = client.get(reverse("about"))
+
+    content = response.content.decode()
+    assert response.status_code == 200
+    assert "O projekcie" in content
+    assert "Dane i źródła" in content
+    assert "AI i rekomendacje" in content
+    assert "Granice systemu" in content
+    assert "Skalowanie i integracje" in content
+    assert "Prywatność i bezpieczeństwo" in content
+    assert reverse("privacy") in content
+    assert 'aria-current="page">O projekcie' in content
+    assert "core/css/pages/about.css" in content
+
+
 @pytest.mark.django_db
 def test_valid_idea_submission_is_queued_for_scoring_before_redirect(client, monkeypatch):
     scored_ids = []

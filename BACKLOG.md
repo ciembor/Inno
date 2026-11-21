@@ -117,7 +117,8 @@ bezpiecznego wdrożenia bez czytania kodu.
   oceny, rekomendacje, dopasowania i średni czas przetworzenia.
 - [ ] Dodać konfigurację regionu, typów instytucji i źródeł bez zmian w kodzie.
 - [ ] Opisać koszt, limity i ograniczenia wywołań LLM.
-- [ ] Dodać stronę „Jak działa Innoradar?” z opisem danych, AI i kryteriów.
+- [x] Dodać stronę „O projekcie” z opisem danych, AI, kryteriów, ograniczeń,
+  bezpieczeństwa, skalowania i integracji.
 
 **Kryterium odbioru:** administrator eksportuje dane, integruje odczyt przez API
 i ocenia skuteczność bez dostępu do bazy danych.
