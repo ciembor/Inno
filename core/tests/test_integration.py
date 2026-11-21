@@ -25,8 +25,8 @@ def create_locality():
     [
         ("home", "Start", "Pomysły, które zasługują na szansę."),
         ("submit_idea", "Zgłoś pomysł", "Zgłoś pomysł, który warto dostrzec."),
-        ("innovations", "Pobrane innowacje", "Pobrane innowacje."),
-        ("submitted_innovations", "Zgłoszone innowacje", "Zgłoszone innowacje."),
+        ("innovations", "Pobrane innowacje", "Pobrane innowacje:"),
+        ("submitted_innovations", "Zgłoszone innowacje", "Zgłoszone innowacje:"),
         ("innovation_map", "Mapa", "Mapa innowacji Polski"),
     ],
 )

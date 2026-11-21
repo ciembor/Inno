@@ -4,7 +4,7 @@
 {% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/innovations.css' %}?v=14">{% endblock %}
 {% block content %}
 <main id="main-content" class="container innovations" tabindex="-1">
-  <h1>{{ catalog_title }}. <span>{{ page.paginator.count }}</span></h1>
+  <h1>{{ catalog_title }}: <span>{{ page.paginator.count }}</span></h1>
   {% if page.object_list %}
     <div class="toolbar">
       <form class="sort" method="get">
