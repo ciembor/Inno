@@ -77,6 +77,7 @@ def test_about_page_explains_data_ai_limits_and_security(client):
     assert response.status_code == 200
     assert "O projekcie" in content
     assert "Dane i źródła" in content
+    assert "ChatGPT" in content
     assert "AI i rekomendacje" in content
     assert "Granice systemu" in content
     assert "Skalowanie i integracje" in content
