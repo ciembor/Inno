@@ -194,6 +194,7 @@ def test_about_page_explains_data_ai_limits_and_security(client):
     assert "Dane i źródła" in content
     assert "ChatGPT" in content
     assert "AI i rekomendacje" in content
+    assert "API OpenAI i modelu GPT-6 Luna" in content
     assert "Granice systemu" in content
     assert "Skalowanie i integracje" in content
     assert "Prywatność i bezpieczeństwo" in content

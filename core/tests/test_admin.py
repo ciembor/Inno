@@ -64,10 +64,9 @@ def test_bootstrap_replaces_the_old_public_password_and_requires_a_configured_se
 
 
 @pytest.mark.django_db
-def test_legacy_django_admin_address_redirects_to_custom_panel(client):
+def test_django_admin_address_is_disabled(client):
     response = client.get("/admin/")
-    assert response.status_code == 302
-    assert response.url == reverse("control_dashboard")
+    assert response.status_code == 404
 
 
 @pytest.mark.django_db

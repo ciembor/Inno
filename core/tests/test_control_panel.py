@@ -85,6 +85,21 @@ def test_control_login_logout_and_dashboard(client):
 
 
 @pytest.mark.django_db
+def test_non_staff_user_cannot_log_in_or_access_the_control_panel(client):
+    user = get_user_model().objects.create_user("reader", password="ReaderPass-123")
+
+    login = client.post(
+        reverse("control_login"), {"username": user.username, "password": "ReaderPass-123"}
+    )
+    assert "nie ma dostępu" in login.content.decode()
+    assert not client.session.get("_auth_user_id")
+
+    client.force_login(user)
+    assert client.get(reverse("control_dashboard")).status_code == 403
+    assert client.get(reverse("control_prompts")).status_code == 403
+
+
+@pytest.mark.django_db
 def test_csv_export_is_authenticated_and_excludes_submitter_data(admin_client):
     locality = create_locality()
     idea = Idea.objects.create(

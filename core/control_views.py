@@ -2,13 +2,14 @@
 
 import csv
 from datetime import time
+from functools import wraps
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Count, Max, Sum
@@ -68,6 +69,19 @@ from core.services.prompt_registry import PROMPT_DEFINITIONS, configured_prompt_
 from core.tasks import import_institution_news, import_ncbr_projects, recommend_idea
 
 
+def staff_required(view):
+    """Dopuszcza do własnego panelu wyłącznie aktywny personel."""
+
+    @login_required
+    @wraps(view)
+    def wrapped(request, *args, **kwargs):
+        if not request.user.is_staff:
+            raise PermissionDenied
+        return view(request, *args, **kwargs)
+
+    return wrapped
+
+
 def panel_login(request):
     if request.user.is_authenticated:
         return redirect("control_dashboard")
@@ -76,6 +90,13 @@ def panel_login(request):
     if request.method == "POST" and is_rate_limited("control-login", ip_address, limit=5):
         form.add_error(None, "Zbyt wiele nieudanych prób. Spróbuj ponownie za 15 minut.")
     elif request.method == "POST" and form.is_valid():
+        if not form.get_user().is_staff:
+            form.add_error(None, "To konto nie ma dostępu do panelu administracyjnego.")
+            return render(
+                request,
+                "core/control/login.html",
+                {"form": form, "active_page": "control"},
+            )
         login(request, form.get_user())
         clear_attempts("control-login", ip_address)
         if (
@@ -91,13 +112,13 @@ def panel_login(request):
 
 
 @require_POST
-@login_required
+@staff_required
 def panel_logout(request):
     logout(request)
     return redirect("control_login")
 
 
-@login_required
+@staff_required
 def panel_dashboard(request):
     """Główna strona administracji prezentuje bieżące metryki systemu."""
     return _metrics_response(request)
@@ -118,7 +139,7 @@ def _format_duration(seconds):
     return f"{hours} godz. {minutes} min"
 
 
-@login_required
+@staff_required
 def panel_metrics(request):
     """Zachowuje dotychczasowy adres metryk i kieruje do głównego panelu."""
     return redirect("control_dashboard")
@@ -193,7 +214,7 @@ def _metrics_response(request):
     )
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET"])
 def panel_csv_export(request):
     """Eksportuje publiczne dane operacyjne bez danych zgłaszających."""
@@ -268,7 +289,7 @@ def panel_csv_export(request):
     return response
 
 
-@login_required
+@staff_required
 def panel_credentials(request):
     form = CredentialsForm(request.user, request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -281,7 +302,7 @@ def panel_credentials(request):
     )
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET"])
 def panel_prompts(request):
     values = configured_prompt_values()
@@ -307,7 +328,7 @@ def panel_prompts(request):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_prompt_update(request, prompt_key):
     """Zapisuje pojedynczy prompt bez odświeżania panelu."""
@@ -330,7 +351,7 @@ def panel_prompt_update(request, prompt_key):
     )
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET"])
 def panel_calibration(request):
     """Wyświetla konfigurację oraz przykłady kalibracji ocen."""
@@ -356,7 +377,7 @@ def panel_calibration(request):
     )
 
 
-@login_required
+@staff_required
 def panel_recommendations(request):
     """Lista ocenionych inicjatyw i ich rekomendacji rozwojowych."""
     ideas = Idea.objects.filter(scored_at__isnull=False).select_related("recommendation")
@@ -368,7 +389,7 @@ def panel_recommendations(request):
     )
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_recommendation_form(request, idea_id):
     """Pozwala zatwierdzić lub ręcznie skorygować rekomendację danej inicjatywy."""
@@ -410,7 +431,7 @@ def panel_recommendation_form(request, idea_id):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_recommendation_regenerate(request, idea_id):
     """Kolejkuje ponowne wygenerowanie rekomendacji bez blokowania panelu."""
@@ -420,7 +441,7 @@ def panel_recommendation_regenerate(request, idea_id):
     return redirect("control_recommendation_edit", idea_id=idea.pk)
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_indicators(request):
     """Wyświetla dynamiczne wskaźniki w kolejności używanej przez oceniacz."""
@@ -445,7 +466,7 @@ def panel_indicators(request):
     )
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_indicator_form(request, indicator_id=None):
     """Dodaje albo edytuje pojedynczy wskaźnik."""
@@ -469,7 +490,7 @@ def panel_indicator_form(request, indicator_id=None):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_indicator_delete(request, indicator_id):
     """Usuwa wskaźnik, który nie jest już potrzebny w kolejnych ocenach."""
@@ -478,7 +499,7 @@ def panel_indicator_delete(request, indicator_id):
     return redirect("control_indicators")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_indicator_configuration_update(request):
     """Zapisuje równocześnie wagi i aktywność wskaźników."""
@@ -505,7 +526,7 @@ def panel_indicator_configuration_update(request):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_indicator_move(request, indicator_id, direction):
     """Przesuwa wskaźnik o jedną pozycję, bez ręcznego wpisywania numerów."""
@@ -534,7 +555,7 @@ def panel_indicator_move(request, indicator_id, direction):
     return redirect("control_indicators")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_calibration_update(request):
     """Zapisuje, czy oceniacz ma dołączać przykłady kalibracyjne."""
@@ -546,7 +567,7 @@ def panel_calibration_update(request):
     return redirect("control_calibration")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_calibration_example_add(request):
     """Dodaje przykład wykorzystywany przez aktywną kalibrację."""
@@ -568,7 +589,7 @@ def panel_calibration_example_add(request):
     return redirect("control_calibration")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_calibration_example_update(request, example_id):
     """Aktualizuje pojedynczy przykład kalibracyjny."""
@@ -584,7 +605,7 @@ def panel_calibration_example_update(request, example_id):
     return redirect("control_calibration")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_calibration_example_delete(request, example_id):
     """Usuwa przykład kalibracyjny z bazy."""
@@ -593,7 +614,7 @@ def panel_calibration_example_delete(request, example_id):
     return redirect("control_calibration")
 
 
-@login_required
+@staff_required
 def panel_institutions(request):
     filters = InstitutionListFilterForm(request.GET or None)
     institutions = Institution.objects.select_related("locality")
@@ -631,7 +652,7 @@ def panel_institutions(request):
     )
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_institution_form(request, institution_id=None):
     institution = get_object_or_404(Institution, pk=institution_id) if institution_id else None
@@ -652,7 +673,7 @@ def panel_institution_form(request, institution_id=None):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_institution_delete(request, institution_id):
     get_object_or_404(Institution, pk=institution_id).delete()
@@ -660,7 +681,7 @@ def panel_institution_delete(request, institution_id):
     return redirect("control_institutions")
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_institutions_csv(request):
     if request.method == "POST":
@@ -674,7 +695,7 @@ def panel_institutions_csv(request):
     return render(request, "core/control/institutions_csv.html", {"active_page": "control"})
 
 
-@login_required
+@staff_required
 def panel_partners(request):
     """Lista organizacji dostępnych do dalszego rozwoju inicjatyw."""
     partners = PartnerOrganization.objects.select_related("locality").prefetch_related("tags")
@@ -682,7 +703,7 @@ def panel_partners(request):
     return render(request, "core/control/partners.html", {"active_page": "control", "page": page})
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_partner_form(request, partner_id=None):
     """Dodaje lub aktualizuje organizację partnerską."""
@@ -699,7 +720,7 @@ def panel_partner_form(request, partner_id=None):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_partner_delete(request, partner_id):
     get_object_or_404(PartnerOrganization, pk=partner_id).delete()
@@ -707,7 +728,7 @@ def panel_partner_delete(request, partner_id):
     return redirect("control_partners")
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_partners_csv(request):
     if request.method == "POST":
@@ -721,7 +742,7 @@ def panel_partners_csv(request):
     return render(request, "core/control/partners_csv.html", {"active_page": "control"})
 
 
-@login_required
+@staff_required
 @require_http_methods(["GET", "POST"])
 def panel_crawling(request):
     crawl_schedule, _ = CrawlSchedule.objects.get_or_create(pk=1, defaults={"run_at": time(3)})
@@ -757,7 +778,7 @@ def panel_crawling(request):
     )
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_crawling_schedule(request):
     """Zapisuje harmonogram automatycznego, pełnego crawlowania."""
@@ -772,7 +793,7 @@ def panel_crawling_schedule(request):
     return redirect("control_crawling")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_crawling_stop(request):
     run = InstitutionImportRun.objects.filter(status__in=["pending", "running"]).first()
@@ -789,7 +810,7 @@ def panel_crawling_stop(request):
     return redirect("control_crawling")
 
 
-@login_required
+@staff_required
 @require_POST
 def panel_ncbr_crawling(request):
     """Uruchamia osobny import publicznego katalogu NCBR."""
@@ -805,7 +826,7 @@ def panel_ncbr_crawling(request):
     return redirect("control_crawling")
 
 
-@login_required
+@staff_required
 def panel_crawling_status(request):
     run = InstitutionImportRun.objects.prefetch_related("events").first()
     if run is None:
@@ -835,7 +856,7 @@ def panel_crawling_status(request):
     )
 
 
-@login_required
+@staff_required
 def panel_ncbr_crawling_status(request):
     run = NCBRImportRun.objects.prefetch_related("events").first()
     if run is None:
