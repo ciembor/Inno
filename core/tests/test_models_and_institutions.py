@@ -4,13 +4,15 @@
 import pytest
 from django.core.management import call_command
 
+from core.forms import IdeaForm
 from core.management.commands import (
     seed_institutions,
 )
-from core.models import Idea, Institution, InstitutionNewsSource
+from core.models import Idea, Institution, InstitutionNewsSource, Locality
 from core.services.institution_news import (
     InstitutionNewsDiscoveryService,
 )
+from core.services.plain_text import plain_text
 from core.tests.support import FakeClient
 
 
@@ -26,6 +28,42 @@ def test_idea_string_representation():
     assert str(idea) == "Miejska czytelnia"
 
 
+def test_plain_text_removes_html_and_preserves_content_structure():
+    markup = "<p>Opis <strong>pomysłu</strong>.</p><ul><li>Punkt 1</li><li>Punkt 2</li></ul>"
+
+    assert plain_text(markup) == (
+        "Opis pomysłu.\nPunkt 1\nPunkt 2"
+    )
+
+
+@pytest.mark.django_db
+def test_manual_idea_form_assigns_submitter_as_creator_before_persistence():
+    locality = Locality.objects.create(
+        simc_code="0654321",
+        name="Rzeszów",
+        county_code="63",
+        municipality_code="01",
+        municipality_type_code="1",
+        locality_type_code="96",
+        registry_date="2026-01-01",
+    )
+    form = IdeaForm(
+        {
+            "name": "Pomysł",
+            "submitter_name": "Anna Kowalska",
+            "email": "anna@example.org",
+            "locality": locality.pk,
+            "content": "Opis",
+            "privacy_accepted": "on",
+        }
+    )
+
+    assert form.is_valid()
+    idea = form.save(commit=False)
+    assert idea.creator_name == "Anna Kowalska"
+    assert idea.pk is None
+
+
 @pytest.mark.django_db
 def test_institution_persists_contact_and_type_data():
     institution = Institution.objects.create(
@@ -36,6 +74,7 @@ def test_institution_persists_contact_and_type_data():
     )
 
     assert Institution.objects.get(pk=institution.pk).news_url.endswith("/aktualnosci/")
+    assert str(institution) == "Biblioteka Publiczna"
 
 
 @pytest.mark.django_db

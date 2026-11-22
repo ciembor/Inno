@@ -166,7 +166,9 @@ input:focus,
   font-weight: 650;
 }
 .workflow {
-  padding: 4px 0;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
 }
 .workflow h2 {
   margin: 0 0 20px;

@@ -192,9 +192,11 @@
 .partner-needs { display: grid; gap: 12px; margin: 28px 0 0; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--control-inset-background); }
 .partner-needs legend { padding: 0 6px; font-weight: 750; }
 .partner-needs > p { margin: 0; color: var(--control-muted); }
+.partner-needs > .provenance-field { display: grid; gap: 7px; color: inherit; }
+.partner-needs > .provenance-field label { display: block; }
 .partner-needs > div { display: grid; gap: 8px; }
 .partner-needs label { display: flex; align-items: center; gap: 8px; }
-.partner-needs input { width: 20px; height: 20px; }
+.partner-needs input[type="checkbox"] { width: 20px; height: 20px; }
 
 .crawl-start fieldset { display: grid; gap: 8px; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--control-inset-background); }
 .crawl-start legend { padding: 0 6px; font-weight: 750; }

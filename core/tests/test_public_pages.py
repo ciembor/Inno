@@ -121,6 +121,7 @@ def test_read_only_api_documents_and_exposes_public_innovations(client):
     )
 
     documentation = client.get(reverse("api_docs"))
+    documentation_page = client.get(reverse("api_documentation"))
     first_page = client.get(reverse("api_innovations"), {"page_size": "99", "page": "x"})
     invalid_page = client.get(reverse("api_innovations"), {"page": "0"})
     second_page = client.get(reverse("api_innovations"), {"page_size": 1, "page": 2})
@@ -130,6 +131,9 @@ def test_read_only_api_documents_and_exposes_public_innovations(client):
 
     assert documentation.json()["read_only"] is True
     assert documentation.json()["endpoints"][1]["url"] == "/api/innowacje/{id}/"
+    assert documentation_page.status_code == 200
+    assert "Dokumentacja API" in documentation_page.content.decode()
+    assert reverse("api_innovations") in documentation_page.content.decode()
     assert client.post(reverse("api_innovations")).status_code == 405
     assert first_page.json()["page"] == 1
     assert first_page.json()["page_size"] == 50
@@ -154,19 +158,23 @@ def test_read_only_api_documents_and_exposes_public_innovations(client):
 @pytest.mark.django_db
 def test_idea_form_page_is_available(client):
     response = client.get(reverse("submit_idea"))
+    content = response.content.decode()
 
     assert response.status_code == 200
-    assert "core/js/submit_idea.js" in response.content.decode()
-    assert 'aria-current="page">Zgłoś pomysł' in response.content.decode()
-    assert "core/css/pages/submit_idea.css" in response.content.decode()
-    assert 'v-cloak v-if="submitting"' in response.content.decode()
-    assert 'autocomplete="name"' in response.content.decode()
-    assert 'autocomplete="email"' in response.content.decode()
-    assert 'role="combobox"' in response.content.decode()
-    assert 'role="listbox"' in response.content.decode()
-    assert 'aria-labelledby="idea-editor-label"' in response.content.decode()
-    assert "core/images/bulb.webp" in response.content.decode()
-    assert reverse("privacy") in response.content.decode()
+    assert "core/js/submit_idea.js" in content
+    assert "vue@3/dist/vue.global.prod.js" in content
+    assert 'aria-current="page">Zgłoś pomysł' in content
+    assert "core/css/pages/submit_idea.css" in content
+    assert '<form @submit.prevent="submitIdea" :aria-busy="String(submitting)">' in content
+    assert ':disabled="submitting"' in content
+    assert 'v-cloak v-if="submitting" class="workflow"' in content
+    assert 'autocomplete="name"' in content
+    assert 'autocomplete="email"' in content
+    assert 'role="combobox"' in content
+    assert 'role="listbox"' in content
+    assert 'aria-labelledby="idea-editor-label"' in content
+    assert "core/images/bulb.webp" in content
+    assert reverse("privacy") in content
 
 
 def test_privacy_page_explains_retention_and_removal(client):
@@ -224,6 +232,7 @@ def test_valid_idea_submission_runs_each_blocking_workflow_step(client, monkeypa
     assert response.json()["redirect_url"] == reverse("innovation_detail", args=[idea.pk])
     token = response.json()["workflow_token"]
     assert idea.name == "Biblioteka sąsiedzka"
+    assert idea.creator_name == "Anna Kowalska"
     assert idea.locality == locality
     step_url = reverse("submit_idea_step", args=[idea.pk])
     scored_ids, classified_ids = [], []

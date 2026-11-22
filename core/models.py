@@ -4,6 +4,8 @@ from decimal import Decimal
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from core.services.plain_text import plain_text
+
 
 class Locality(models.Model):
     """Miejscowość z urzędowego rejestru SIMC."""
@@ -24,7 +26,6 @@ class Locality(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Institution(models.Model):
     """Instytucja, która może zgłaszać lub prowadzić lokalne inicjatywy."""
@@ -51,6 +52,9 @@ class Institution(models.Model):
 
     class Meta:
         ordering = ["name"]
+
+    def __str__(self):
+        return self.name
 
 
 class InstitutionNewsSource(models.Model):
@@ -150,6 +154,10 @@ class Idea(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.content = plain_text(self.content)
+        super().save(*args, **kwargs)
 
 
 class InnovationIndicator(models.Model):

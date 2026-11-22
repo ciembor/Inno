@@ -45,7 +45,8 @@ statusPanels.forEach((statusPanel) => {
       const response = await fetch(statusPanel.dataset.statusUrl, {
         headers: { Accept: "application/json" },
       });
-      if (response.ok) updateStatus((await response.json()).run);
+      if (!response.ok) throw new Error("Nie udało się pobrać stanu crawlera.");
+      updateStatus((await response.json()).run);
     } catch {
       updateText(
         statusPanel.querySelector("[data-status]"),

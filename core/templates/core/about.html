@@ -5,15 +5,6 @@
 {% block page_css %}<link rel="stylesheet" href="{% static 'core/css/pages/about.css' %}">{% endblock %}
 {% block content %}
 <main id="main-content" class="about-page" tabindex="-1">
-  <section class="about-hero">
-    <div class="container">
-      <p class="eyebrow">O projekcie</p>
-      <h1>Od lokalnego pomysłu<br>do kolejnego kroku.</h1>
-      <p class="about-hero__lead">Innoradar pomaga znajdować innowacje powstające w instytucjach publicznych, porządkować informacje o nich i kierować je do osób oraz organizacji, które mogą pomóc we wdrożeniu.</p>
-      <a class="about-hero__action" href="{% url 'innovations' %}">Zobacz innowacje <span aria-hidden="true">→</span></a>
-    </div>
-  </section>
-
   <section class="about-section about-process" aria-labelledby="process-title">
     <div class="container">
       <p class="eyebrow">Proces</p>
@@ -76,7 +67,7 @@
       </div>
       <div class="about-copy">
         <p>Innoradar obsługuje szkoły, uczelnie, samorządy i inne instytucje. Dane instytucji oraz partnerów można uzupełniać przez panel i import CSV; niezależnym źródłem projektów jest także NCBR.</p>
-        <p>Przetwarzanie odbywa się w zadaniach w tle z ponawianiem przejściowych błędów, dzięki czemu analiza nie blokuje użytkownika. Administrator może pobrać eksport CSV, a integracje z innymi systemami wspiera <a href="{% url 'api_docs' %}">publiczne API JSON tylko do odczytu</a>.</p>
+        <p>Przetwarzanie odbywa się w zadaniach w tle z ponawianiem przejściowych błędów, dzięki czemu analiza nie blokuje użytkownika. Administrator może pobrać eksport CSV, a integracje z innymi systemami wspiera <a href="{% url 'api_documentation' %}">publiczne API JSON tylko do odczytu</a>.</p>
       </div>
     </div>
   </section>

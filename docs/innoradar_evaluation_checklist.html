@@ -12,8 +12,8 @@
       h2 { margin: 5mm 0 3mm; font-size: 14pt; }
       p { margin: 0 0 2.5mm; }
       a { color: #007d73; font-weight: 700; text-decoration: none; }
-      .page { min-height: 270mm; position: relative; page-break-after: always; }
-      .page:last-child { page-break-after: auto; }
+      .page { position: relative; break-inside: avoid; }
+      .page-break-before { break-before: page; page-break-before: always; }
       .logo { width: 52mm; }
       .eyebrow { margin-top: 4mm; color: #078a7d; font-size: 8pt; font-weight: 800; letter-spacing: 1.4pt; text-transform: uppercase; }
       .lead { max-width: 156mm; font-size: 11pt; }
@@ -30,7 +30,10 @@
       .criterion { width: 43%; font-weight: 700; }
       .status { width: 19%; }
       .evidence { width: 38%; font-size: 8.3pt; }
-      .footer { position: absolute; right: 0; bottom: 0; color: #70839a; font-size: 7.5pt; }
+      .footer { display: none; }
+      .demo-link { margin: 4mm 0 2mm; font-size: 15pt; font-weight: 800; line-height: 1.25; }
+      .access-links { margin: 2mm 0 0; font-size: 9pt; }
+      tr { break-inside: avoid; }
       .small { color: #62778f; font-size: 8pt; }
       .score { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
       .score-card { padding: 3.5mm; border: 1px solid #d7e4e9; border-radius: 2.5mm; }
@@ -46,7 +49,7 @@
         <h1>Radar innowacji — status realizacji wymagań</h1>
         <p class="lead">Checklista oparta na pliku <b>zadanie.pdf</b>, obejmująca wyłącznie funkcjonalności produktu. Każda pozycja wskazuje aktualny stan demonstratora i dowód możliwy do sprawdzenia w aplikacji lub repozytorium.</p>
         <div class="legend"><span class="badge done">✓ ZROBIONE</span><span class="badge above">★ PONAD NORMĘ</span><span class="badge partial">△ CZĘŚCIOWO</span><span class="badge todo">○ DO ZROBIENIA</span></div>
-        <div class="note"><b>Demonstrator:</b> <a href="https://maciej-ciemborowicz.eu/inno/">maciej-ciemborowicz.eu/inno/</a><br /><b>Weryfikacja kodu:</b> quality gate — 307 testów, 100% pokrycia testami.</div>
+        <div class="note"><p class="demo-link"><b>Demonstrator:</b> <a href="https://maciej-ciemborowicz.eu/inno/">maciej-ciemborowicz.eu/inno/</a></p><p class="access-links"><b>Panel administracyjny:</b> <a href="https://maciej-ciemborowicz.eu/inno/administracja/">/inno/administracja/</a> · login: <b>admin</b> · hasło: <b>hacknation</b><br /><b>Repozytorium:</b> <a href="https://github.com/ciembor/Inno">github.com/ciembor/Inno</a><br /><b>Weryfikacja kodu:</b> quality gate — 315 testów, 100% pokrycia testami.</p></div>
         <h2>Zakres oceny produktu</h2>
         <table>
           <thead><tr><th class="criterion">Obszar funkcjonalny</th><th class="status">Status</th><th class="evidence">Dowód / uwaga</th></tr></thead>
@@ -73,14 +76,14 @@
             <tr><td class="criterion">Uporządkowanie informacji o pomyśle i jego twórcach.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Osobno zapisujemy zgłaszającego, twórcę, zespół, publiczny kontakt, instytucję źródłową, jej rolę i instytucję wdrażającą; dane są widoczne na szczegółach i edytowalne w panelu.</td></tr>
             <tr><td class="criterion">Ocena według jasno określonych kryteriów.</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Cztery kryteria, skala 0–100, uzasadnienia, wagi, kalibracja oraz niepewność.</td></tr>
             <tr><td class="criterion">Rekomendacja rozwoju, transferu, komercjalizacji lub wdrożenia.</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Etap, ścieżka, następny krok, uzasadnienie i ryzyko; generowane automatycznie po ocenie, z korektą i zatwierdzeniem.</td></tr>
-            <tr><td class="criterion">Podobne rozwiązania i ograniczanie dublowania prac.</td><td class="status"><span class="badge partial">△ CZĘŚCIOWO</span></td><td class="evidence">Ranking podobieństwa, relacje i deduplikacja są gotowe. Historyczne rekordy wymagają domknięcia jednorazowego tagowania.</td></tr>
+            <tr><td class="criterion">Podobne rozwiązania i ograniczanie dublowania prac.</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Ranking podobieństwa, relacje, deduplikacja oraz jednorazowe tagowanie historycznych rekordów są gotowe.</td></tr>
             <tr><td class="criterion">Połączenie z użytkownikiem, partnerem lub inwestorem.</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Tagowe dopasowanie 3–5 partnerów, uzasadnienie i kontakt na stronie szczegółu; CRUD, import CSV i typy organizacji.</td></tr>
           </tbody>
         </table>
         <p class="footer">2 / 10</p>
       </section>
 
-      <section class="page">
+      <section class="page page-break-before">
         <p class="eyebrow">Technologia, dane i wdrożenie</p>
         <h2>Przejrzystość oraz gotowość do dalszego użycia</h2>
         <table>
@@ -88,10 +91,10 @@
           <tbody>
             <tr><td class="criterion">Wskazanie źródeł danych.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Aktualności instytucji, projekty NCBR i ręczne zgłoszenia; źródło artykułu widoczne przy inicjatywie.</td></tr>
             <tr><td class="criterion">Założenia działania AI/ML i automatycznych rekomendacji.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Prompty, schemat oceny i rekomendacji oraz konfiguracja kalibracji są wersjonowane w projekcie i edytowalne w panelu.</td></tr>
-            <tr><td class="criterion">Ograniczenia rozwiązania i danych.</td><td class="status"><span class="badge partial">△ CZĘŚCIOWO</span></td><td class="evidence">System wskazuje niepewność w ocenie; ograniczenia opisano w dokumentacji technicznej. Brakuje jeszcze publicznej strony „Jak działa Innoradar?”.</td></tr>
+            <tr><td class="criterion">Ograniczenia rozwiązania i danych.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">System wskazuje niepewność w ocenie, a źródła danych, działanie AI i ograniczenia są opisane na publicznej stronie „O projekcie”.</td></tr>
             <tr><td class="criterion">Skalowanie na wiele organizacji.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Wiele typów instytucji, import CSV, harmonogram, kolejka z retry i możliwość dołączania źródeł.</td></tr>
             <tr><td class="criterion">Bezpieczeństwo i ochrona danych.</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Prywatność/RODO, zgoda, retencja i usunięcie zgłoszenia, ograniczanie prób, ochrona przed spamem, CSP, HSTS, nagłówki i bezpieczne logowanie.</td></tr>
-            <tr><td class="criterion">Integracja z istniejącymi systemami.</td><td class="status"><span class="badge partial">△ CZĘŚCIOWO</span></td><td class="evidence">Gotowe importy CSV i niezależne źródło NCBR. Publiczne API tylko do odczytu oraz eksport CSV są zaplanowane.</td></tr>
+            <tr><td class="criterion">Integracja z istniejącymi systemami.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Gotowe importy i eksport CSV, niezależne źródło NCBR oraz udokumentowane publiczne API JSON tylko do odczytu.</td></tr>
             <tr><td class="criterion">Przejrzystość kryteriów oceny i rekomendacji.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Karty pokazują wynik każdego kryterium, uzasadnienie, niepewność, następny krok, ryzyko i powód dopasowania partnera.</td></tr>
             <tr><td class="criterion">Możliwość dalszego rozwoju po hackathonie.</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Backlog rozwoju, działające wdrożenie, modularne źródła, zadania w tle i panel administracyjny.</td></tr>
           </tbody>
@@ -146,11 +149,11 @@
         <table style="margin-top:5mm">
           <thead><tr><th class="criterion">Element ponad minimum</th><th class="evidence">Znaczenie dla PCI i przyszłego wdrożenia</th></tr></thead>
           <tbody>
-            <tr><td class="criterion">Odporne zadania w tle z retry</td><td class="evidence">Ocena, rekomendacja i import nie blokują użytkownika; przejściowe błędy API są automatycznie ponawiane. To mechanizm operacyjny, a nie jednorazowe demo.</td></tr>
+            <tr><td class="criterion">Odporne zadania w tle z retry</td><td class="evidence">Crawling, import oraz automatyczne przetwarzanie pobranych rekordów działają w kolejce z retry. Ręczne zgłoszenie pokazuje użytkownikowi na żywo kolejne etapy analizy. To mechanizm operacyjny, a nie jednorazowe demo.</td></tr>
             <tr><td class="criterion">Wyjaśnialna, kalibrowana ocena AI</td><td class="evidence">Wynik nie jest „czarną skrzynką”: każde kryterium ma uzasadnienie, poziom pewności, wagi i przykłady kalibracyjne edytowalne przez administratora.</td></tr>
             <tr><td class="criterion">Ograniczanie dublowania prac</td><td class="evidence">System wykrywa podobne inicjatywy, określa relację — np. adaptacja, uzupełnienie lub współpraca — i wyjaśnia dopasowanie.</td></tr>
             <tr><td class="criterion">Transfer oparty na potrzebach</td><td class="evidence">Dopasowanie 3–5 partnerów nie jest listą kontaktów: wykorzystuje tagi potrzeb inicjatywy i możliwości organizacji oraz podaje uzasadnienie.</td></tr>
-            <tr><td class="criterion">Gotowość produkcyjna i jakość kodu</td><td class="evidence">Wdrożony demonstrator, monitoring procesów, prywatność i nagłówki bezpieczeństwa, testy automatyczne oraz quality gate: 307 testów i 100% pokrycia.</td></tr>
+            <tr><td class="criterion">Gotowość produkcyjna i jakość kodu</td><td class="evidence">Wdrożony demonstrator, monitoring procesów, prywatność i nagłówki bezpieczeństwa, testy automatyczne oraz quality gate: 315 testów i 100% pokrycia.</td></tr>
           </tbody>
         </table>
         <div class="note"><b>Wniosek:</b> Innoradar nie kończy się na wskazaniu „ciekawego pomysłu”. Dostarcza powtarzalny proces, który pomaga podjąć dalsze działanie i tworzy podstawę do regionalnego systemu transferu innowacji.</div>
@@ -198,12 +201,13 @@
         <table>
           <thead><tr><th class="criterion">Aspekt</th><th class="status">Status</th><th class="evidence">Zaimplementowane elementy</th></tr></thead>
           <tbody>
-            <tr><td class="criterion">Praca w tle</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Celery i Redis obsługują ocenę, rekomendację, tagowanie podobieństwa, crawling i import NCBR; użytkownik nie czeka na odpowiedź modelu w przeglądarce.</td></tr>
+            <tr><td class="criterion">Praca w tle</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Celery i Redis obsługują crawling, import NCBR, ocenę, rekomendację i tagowanie rekordów pobranych automatycznie. Przy ręcznym zgłoszeniu użytkownik widzi na żywo kolejne etapy analizy.</td></tr>
             <tr><td class="criterion">Odporność procesu</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Soft/hard timeouty, automatyczne retry z rosnącym opóźnieniem, checkpointy importu, idempotencja, odzyskiwanie zatrzymanych przebiegów i harmonogram crawlera.</td></tr>
             <tr><td class="criterion">Operacyjność</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Panel statusu crawlera, tempo i zdarzenia importu; worker i scheduler; Nginx + Gunicorn + systemd; opis wdrożenia, backupu, odtworzenia i monitoringu.</td></tr>
             <tr><td class="criterion">Prywatność</td><td class="status"><span class="badge done">✓ ZROBIONE</span></td><td class="evidence">Polityka prywatności, informacja RODO, zgoda przy zgłoszeniu, opis retencji oraz możliwość usunięcia zgłoszenia.</td></tr>
             <tr><td class="criterion">Bezpieczeństwo</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Ograniczenie prób logowania i formularza, CSRF, CSP z nonce, HSTS, X-Content-Type-Options, Referrer-Policy, wymuszona zmiana domyślnego hasła administratora.</td></tr>
-            <tr><td class="criterion">Jakość implementacji</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Testy jednostkowe i integracyjne, linting, analiza złożoności, sprawdzenie JavaScriptu i formatowania — quality gate: 307 testów, 100% pokrycia.</td></tr>
+            <tr><td class="criterion">Jakość implementacji</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Testy jednostkowe i integracyjne, automatyczny linting, detekcja code smells przez analizę złożoności, sprawdzenie JavaScriptu i formatowania — quality gate: 315 testów, 100% pokrycia.</td></tr>
+            <tr><td class="criterion">Dostępność</td><td class="status"><span class="badge above">★ PONAD NORMĘ</span></td><td class="evidence">Zgodność z WCAG 2.2 AA, semantyczna struktura stron i obsługa klawiaturą; tryby wysokiego kontrastu oraz opcja ograniczenia animacji.</td></tr>
           </tbody>
         </table>
         <p class="footer">9 / 10</p>
@@ -216,12 +220,10 @@
           <thead><tr><th class="criterion">Przykład demonstracyjny</th><th class="status">Status</th><th class="evidence">Wszystkie widoczne elementy procesu</th></tr></thead>
           <tbody>
             <tr><td class="criterion">A. Innowacja odnaleziona automatycznie</td><td class="status"><span class="badge above">★ PONAD</span></td><td class="evidence">Instytucja i jej źródło → crawler wybiera artykuł → system pobiera opis, URL i datę → deduplikacja → zapis instytucji/lokalizacji → ocena z uzasadnieniami → tagi podobieństwa → rekomendacja ścieżki i ryzyka → partnerzy z uzasadnieniem → szczegóły, podobne inicjatywy i mapa.</td></tr>
-            <tr><td class="criterion">B. Innowacja zgłoszona przez użytkownika</td><td class="status"><span class="badge above">★ PONAD</span></td><td class="evidence">Formularz z prywatnością i miejscowością → natychmiastowa karta rekordu → scoring w tle z retry → pełne wyniki wskaźników → tagowanie podobieństwa → rekomendacja dalszego kroku → domyślne potrzeby partnerskie → 3–5 partnerów i kontakt → administracyjna korekta/zatwierdzenie.</td></tr>
+            <tr><td class="criterion">B. Innowacja zgłoszona przez użytkownika</td><td class="status"><span class="badge above">★ PONAD</span></td><td class="evidence">Formularz z prywatnością i miejscowością → natychmiastowa karta rekordu → widoczne na żywo: ocena, tagowanie i rekomendacja → pełne wyniki wskaźników → domyślne potrzeby partnerskie → 3–5 partnerów i kontakt → administracyjna korekta/zatwierdzenie.</td></tr>
           </tbody>
         </table>
         <div class="note"><b>Stan funkcjonalny:</b> oba przepływy są zaimplementowane i mierzone w panelu. Zakres crawlowania — region, typy instytucji i aktywne źródła — jest konfigurowalny bez zmiany kodu.</div>
-        <h2>Najważniejszy przekaz dla jury</h2>
-        <p>Innoradar realizuje podstawowy cel wyzwania — wykrywa i ocenia lokalne innowacje — oraz wychodzi dalej: zapewnia wyjaśnialność AI, odporność pracy w tle, wykrywanie podobieństw, mechanizm transferu do partnerów, bezpieczeństwo i działające wdrożenie.</p>
         <p class="footer">10 / 10</p>
       </section>
     </main>

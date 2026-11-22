@@ -18,7 +18,7 @@ def load_podkarpackie_boundary():
 
 @lru_cache(maxsize=1)
 def load_poland_boundary():
-    """Wczytuje uproszczoną granicę Polski bez zewnętrznego API."""
+    """Wczytuje lokalną migawkę granicy lądowej Polski wraz z linią brzegową."""
     with (DATA_DIR / "poland-boundary.geojson").open(encoding="utf-8") as source:
         return json.load(source)
 

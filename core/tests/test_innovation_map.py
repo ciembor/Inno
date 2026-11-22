@@ -46,7 +46,10 @@ def test_innovation_map_page_and_data_display_geolocated_ideas(client):
     assert "core/js/innovation_map.js" in page.content.decode()
     assert 'aria-current="page">Mapa' in page.content.decode()
     assert boundary.json()["features"][0]["id"] == "POL"
-    assert boundary.json()["features"][0]["geometry"]["type"] == "Polygon"
+    assert boundary.json()["features"][0]["geometry"]["type"] == "MultiPolygon"
+    assert boundary.json()["features"][0]["properties"]["source"] == (
+        "GADM 4.1 — granica lądowa Polski"
+    )
     assert regional_boundary.json()["properties"]["kod"] == "18"
     assert len(counties.json()["features"]) == 25
     assert data.json()["innovations"] == [

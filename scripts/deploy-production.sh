@@ -26,6 +26,7 @@ rsync -az --delete \
   --exclude '/data/' \
   --exclude 'db.sqlite3' \
   --exclude 'staticfiles/' \
+  --exclude 'innoradar-logo.svg' \
   ./ "${REMOTE_HOST}:${REMOTE_DIR}/"
 
 ssh "$REMOTE_HOST" "APP_DIR='$REMOTE_DIR' NGINX_SITE='$NGINX_SITE' bash -s" <<'REMOTE'

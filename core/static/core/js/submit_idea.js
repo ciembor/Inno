@@ -82,6 +82,7 @@ window.addEventListener("DOMContentLoaded", () => {
         this.closeLocalities();
       },
       async submitIdea() {
+        if (this.submitting) return;
         this.error = "";
         if (
           !this.name ||

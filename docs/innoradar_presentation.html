@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Innoradar — prezentacja</title>
+    <style>
+      @page { size: A4 landscape; margin: 0; }
+      * { box-sizing: border-box; }
+      body { margin: 0; color: #102d50; font-family: Arial, Helvetica, sans-serif; }
+      .slide { position: relative; width: 297mm; height: 210mm; padding: 19mm 21mm; overflow: hidden; page-break-after: always; background: #f7fbfc; }
+      .slide:last-child { page-break-after: auto; }
+      .dark { color: #fff; background: #0d2848; }
+      .mint { background: #e9f8f5; }
+      .eyebrow { margin: 0 0 5mm; color: #078a7d; font-size: 10pt; font-weight: 800; letter-spacing: 1.7pt; text-transform: uppercase; }
+      .dark .eyebrow { color: #4cdbc8; }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { max-width: 210mm; margin-bottom: 8mm; font-size: 42pt; line-height: .98; letter-spacing: -1.6pt; }
+      h2 { max-width: 210mm; margin-bottom: 8mm; font-size: 31pt; line-height: 1.02; letter-spacing: -1.1pt; }
+      h3 { margin-bottom: 3mm; font-size: 15pt; }
+      p, li { font-size: 13pt; line-height: 1.38; }
+      .lead { max-width: 195mm; color: #587087; font-size: 19pt; line-height: 1.35; }
+      .dark .lead { color: #d4e5ec; }
+      /* Table layout is deliberately used here: wkhtmltopdf's legacy engine renders it reliably. */
+      .grid { display: table; width: 100%; border-spacing: 6mm 0; table-layout: fixed; }
+      .grid .card { display: table-cell; vertical-align: top; }
+      .card { min-height: 48mm; padding: 6mm; border: 1px solid #d4e5e9; border-radius: 4mm; background: #fff; }
+      .card p { margin-bottom: 0; color: #526d83; font-size: 11.5pt; }
+      .dark .card { border-color: #345675; background: #143657; }
+      .dark .card p { color: #d8e7ed; }
+      .tag { display: inline-block; margin-bottom: 3mm; padding: 1.6mm 3mm; border-radius: 5mm; color: #05685f; background: #d9f5ee; font-size: 8.5pt; font-weight: 800; letter-spacing: .6pt; }
+      .tag.blue { color: #3056a0; background: #e0e8ff; }
+      .step { display: flex; gap: 4mm; align-items: flex-start; padding: 4mm 0; border-top: 1px solid #cbdfe3; }
+      .step:first-child { border-top: 0; }
+      .number { display: block; flex: 0 0 10mm; width: 10mm; height: 10mm; border-radius: 50%; color: #fff; background: #078a7d; font-size: 12pt; font-weight: 800; line-height: 10mm; text-align: center; }
+      .step strong { display: block; margin-bottom: 1mm; font-size: 15pt; }
+      .step span { color: #526d83; font-size: 11.5pt; line-height: 1.35; }
+      .dark .step { border-color: #345675; }
+      .dark .step span { color: #d4e5ec; }
+      .metric { padding: 6mm; border-radius: 4mm; color: #fff; background: #0d7c70; }
+      .metric b { display: block; margin-bottom: 2mm; font-size: 25pt; }
+      .metric span { font-size: 11pt; line-height: 1.3; }
+      .footer { position: absolute; right: 21mm; bottom: 11mm; color: #668196; font-size: 9pt; }
+      .dark .footer { color: #a9c3d0; }
+      .links { position: absolute; left: 21mm; bottom: 18mm; color: #cde9e4; font-size: 11pt; }
+      .links b { color: #fff; }
+      .check { margin: 0; padding: 0; list-style: none; }
+      .check li { position: relative; padding: 2mm 0 2mm 9mm; font-size: 12pt; }
+      .check li::before { position: absolute; left: 0; color: #078a7d; content: "✓"; font-weight: 800; }
+      .score { display: table; width: 100%; margin-top: 8mm; border-spacing: 3mm 0; table-layout: fixed; }
+      .score div { display: table-cell; min-height: 39mm; padding: 4mm; border-radius: 3mm; background: #fff; vertical-align: top; }
+      .dark .score div { color: #102d50; }
+      .score b { display: block; margin-bottom: 2mm; color: #078a7d; font-size: 18pt; }
+      .score span { font-size: 10.5pt; line-height: 1.25; }
+      code { padding: .5mm 1mm; border-radius: 1mm; background: #e1f2ef; color: #07574f; font-size: 10.5pt; }
+    </style>
+  </head>
+  <body>
+    <section class="slide dark">
+      <img src="../core/static/core/images/innoradar-logo-high-contrast.svg" alt="Innoradar" style="width:58mm" />
+      <p class="eyebrow" style="margin-top:13mm">Radar innowacji</p>
+      <h1>Od ukrytego lokalnego pomysłu do konkretnego następnego kroku.</h1>
+      <p class="lead">Innoradar systematycznie znajduje innowacje w instytucjach publicznych, wyjaśnialnie ocenia ich potencjał i łączy je z drogą rozwoju oraz partnerami.</p>
+      <p class="links"><b>Demonstrator:</b> maciej-ciemborowicz.eu/inno/ &nbsp;·&nbsp; <b>Repozytorium:</b> github.com/ciembor/Inno</p>
+      <p class="footer">1 / 10</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Wyzwanie</p>
+      <h2>Wartościowe rozwiązania powstają lokalnie — ale nie zawsze wychodzą poza organizację.</h2>
+      <div class="grid three">
+        <article class="card"><span class="tag">PROBLEM</span><h3>Rozproszone sygnały</h3><p>Pomysły z uczelni, szkół, JST i innych instytucji są ukryte w aktualnościach, projektach oraz wiedzy ludzi.</p></article>
+        <article class="card"><span class="tag">RYZYKO</span><h3>Brak wspólnej oceny</h3><p>Trudno porównać potencjał inicjatyw, rozpoznać podobne rozwiązania i ograniczyć dublowanie pracy.</p></article>
+        <article class="card"><span class="tag">CEL</span><h3>Brak dalszego kroku</h3><p>Nawet dobry pomysł często nie trafia do użytkownika, partnera wdrożeniowego ani źródła finansowania.</p></article>
+      </div>
+      <div class="metric" style="margin-top:11mm"><b>Jedno narzędzie, cały proces</b><span>Wykrycie → uporządkowanie → ocena → rekomendacja → transfer do właściwego partnera.</span></div>
+      <p class="footer">2 / 10</p>
+    </section>
+
+    <section class="slide mint">
+      <p class="eyebrow">Rozwiązanie</p>
+      <h2>Innoradar prowadzi inicjatywę od sygnału do decyzji, którą można sprawdzić.</h2>
+      <div class="grid two" style="margin-top:7mm">
+        <div>
+          <div class="step"><b class="number">1</b><div><strong>Znajduje</strong><span>Crawler aktualności, importer projektów NCBR i formularz ręcznego zgłoszenia.</span></div></div>
+          <div class="step"><b class="number">2</b><div><strong>Porządkuje</strong><span>Opis, źródło, daty, lokalizacja, twórca, zespół i role instytucji.</span></div></div>
+          <div class="step"><b class="number">3</b><div><strong>Ocenia</strong><span>Widoczne kryteria, wyniki cząstkowe, uzasadnienia i poziom niepewności.</span></div></div>
+        </div>
+        <div>
+          <div class="step"><b class="number">4</b><div><strong>Wskazuje drogę</strong><span>Etap rozwoju, ścieżka, najbliższy krok, ryzyko oraz możliwość korekty przez administratora.</span></div></div>
+          <div class="step"><b class="number">5</b><div><strong>Łączy</strong><span>Podobne inicjatywy oraz 3–5 partnerów dobranych po potrzebach i możliwościach wsparcia.</span></div></div>
+        </div>
+      </div>
+      <p class="footer">3 / 10</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">1. Wykrywanie</p>
+      <h2>Trzy kanały pozyskiwania innowacji — automatyczne i ręczne.</h2>
+      <div class="grid three" style="margin-top:9mm">
+        <article class="card"><span class="tag blue">CRAWLER</span><h3>Aktualności instytucji</h3><p>Szkoły, uczelnie, samorządy i inne instytucje. Wiele źródeł na instytucję, harmonogram, status i retry.</p></article>
+        <article class="card"><span class="tag blue">ŹRÓDŁO KRAJOWE</span><h3>Projekty NCBR</h3><p>Niezależny importer projektów jako dodatkowy kanał discovery z zachowaniem materiału źródłowego.</p></article>
+        <article class="card"><span class="tag blue">ZGŁOSZENIE</span><h3>Pomysł użytkownika</h3><p>Formularz z miejscowością z całej Polski i ochroną prywatności. Użytkownik widzi na żywo etapy analizy.</p></article>
+      </div>
+      <ul class="check" style="margin-top:8mm"><li>Deduplikacja po adresie źródła i kanonicznej nazwie.</li><li>Data publikacji dla pobranych rekordów, data dodania dla zgłoszeń ręcznych.</li></ul>
+      <p class="footer">4 / 10</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">2. Dane i przejrzystość</p>
+      <h2>Rekord nie jest tylko tytułem i wynikiem — zachowuje kontekst potrzebny do wdrożenia.</h2>
+      <div class="grid two" style="margin-top:7mm">
+        <article class="card"><h3>Co zapisujemy</h3><ul class="check"><li>Opis, adres źródła i daty.</li><li>Miejscowość oraz instytucję źródłową.</li><li>Twórcę, zespół i publiczny kontakt.</li><li>Rolę instytucji oraz organizację wdrażającą.</li></ul></article>
+        <article class="card"><h3>Co widzi użytkownik</h3><ul class="check"><li>Oddzielne katalogi pobranych i zgłoszonych inicjatyw.</li><li>Sortowanie, filtry, kafle/lista, paginacja i szczegóły.</li><li>Mapa Polski z lokalizacjami inicjatyw.</li><li>Źródło i uzasadnienie każdej decyzji AI.</li></ul></article>
+      </div>
+      <div class="metric" style="margin-top:5mm"><b>Weryfikowalność zamiast „czarnej skrzynki”</b><span>Każdy rekord ma ślad źródła, a dane kontaktowe osoby zgłaszającej nie są publiczne.</span></div>
+      <p class="footer">5 / 10</p>
+    </section>
+
+    <section class="slide dark">
+      <p class="eyebrow">3. Ocena potencjału</p>
+      <h2>Wyjaśnialna ocena AI, którą administrator może kalibrować i kontrolować.</h2>
+      <div class="grid" style="margin-top:8mm">
+        <article class="card"><span class="tag">KRYTERIA</span><h3>4 mierniki</h3><p>Nowatorstwo, wartość, replikowalność i potencjał oddziaływania — skala 0–100 oraz wynik łączny.</p></article>
+        <article class="card"><span class="tag">WYJAŚNIENIE</span><h3>Uzasadnienie i niepewność</h3><p>Każdy wynik cząstkowy zawiera powód oceny; użytkownik wie, co wymaga weryfikacji.</p></article>
+        <article class="card"><span class="tag">KONTROLA</span><h3>Kalibracja</h3><p>Edytowalne prompty, wagi, schemat odpowiedzi i przykłady kalibracyjne w panelu administracyjnym.</p></article>
+      </div>
+      <p class="lead" style="margin-top:13mm">AI wspiera ocenę — nie podejmuje za człowieka decyzji finansowej, prawnej ani wdrożeniowej.</p>
+      <p class="footer">6 / 10</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">4. Od oceny do wdrożenia</p>
+      <h2>System nie kończy się na wyniku: wskazuje dalszy krok i organizacje, które mogą go wykonać.</h2>
+      <div class="grid two" style="margin-top:8mm">
+        <article class="card"><span class="tag">REKOMENDACJA ROZWOJU</span><h3>Co dalej?</h3><p>Automatycznie po ocenie: etap, ścieżka (pilotaż, transfer, partnerstwo, finansowanie, komercjalizacja, wdrożenie), następny krok, uzasadnienie i ryzyko.</p><p>Administrator może poprawić, wygenerować ponownie i zatwierdzić wynik.</p></article>
+        <article class="card"><span class="tag">PARTNERZY</span><h3>Kto może pomóc?</h3><p>3–5 aktywnych organizacji dobranych po tagach potrzeb inicjatywy i możliwościach wsparcia: użytkownik rozwiązania, wdrożeniowiec, ekspert lub finansujący.</p><p>Wynik zawiera kontakt i uzasadnienie dopasowania.</p></article>
+      </div>
+      <p class="footer">7 / 10</p>
+    </section>
+
+    <section class="slide mint">
+      <p class="eyebrow">5. Ograniczanie dublowania</p>
+      <h2>Podobne rozwiązania są widoczne, zanim ktoś zacznie tworzyć to samo od nowa.</h2>
+      <div class="grid three" style="margin-top:9mm">
+        <article class="card"><h3>Tagi podobieństwa</h3><p>Problem, odbiorcy, branża, mechanizm, typ rozwiązania, etap i obszar działania.</p></article>
+        <article class="card"><h3>Ranking i relacja</h3><p>Wspólne tagi budują ranking. System określa: dublowanie, adaptacja, uzupełnienie albo współpraca.</p></article>
+        <article class="card"><h3>Jasny powód</h3><p>Na szczegółach inicjatywy użytkownik widzi podobne rekordy wraz z wyjaśnieniem dopasowania.</p></article>
+      </div>
+      <div class="metric" style="margin-top:12mm"><b>Historia też jest uwzględniona</b><span>Jednorazowe tagowanie objęło wcześniej zapisane rekordy, a nowe są klasyfikowane w procesie dodawania.</span></div>
+      <p class="footer">8 / 10</p>
+    </section>
+
+    <section class="slide">
+      <p class="eyebrow">Gotowość do użycia i rozwoju</p>
+      <h2>Prototyp działa publicznie i jest przygotowany do integracji oraz odpowiedzialnego użycia.</h2>
+      <div class="grid three" style="margin-top:7mm">
+        <article class="card"><span class="tag blue">NIEZAWODNOŚĆ</span><h3>Zadania i retry</h3><p>Kolejka, retry, timeouty, checkpointy importu, harmonogram oraz monitoring crawlera.</p></article>
+        <article class="card"><span class="tag blue">INTEGRACJE</span><h3>CSV i API</h3><p>Import i eksport CSV oraz udokumentowane, publiczne API JSON tylko do odczytu.</p><p><code>/inno/api/dokumentacja/</code></p></article>
+        <article class="card"><span class="tag blue">BEZPIECZEŃSTWO</span><h3>Prywatność i dostępność</h3><p>RODO, retencja, ochrona formularzy i logowania, WCAG 2.2 AA, wysoki kontrast oraz ograniczenie animacji.</p></article>
+      </div>
+      <p class="footer">9 / 10</p>
+    </section>
+
+    <section class="slide dark">
+      <p class="eyebrow">Walidacja i kryteria oceny</p>
+      <h2>Kompletny demonstrator dla maksymalnej oceny.</h2>
+      <div class="score">
+        <div><b>20%</b><span>Związek z wyzwaniem: pełny przepływ od wykrycia do transferu.</span></div>
+        <div><b>20%</b><span>Oryginalność: discovery + wyjaśnialna AI + podobieństwo + partnerzy.</span></div>
+        <div><b>20%</b><span>UX: katalog, mapa, szczegóły i czytelne zgłoszenie.</span></div>
+        <div><b>20%</b><span>Kompletność: dwa mierzone scenariusze end-to-end.</span></div>
+        <div><b>20%</b><span>Wdrożenie: skala, retry, API, prywatność i bezpieczeństwo.</span></div>
+      </div>
+      <div class="grid two" style="margin-top:12mm">
+        <article class="card"><h3>Scenariusz A — wykrycie automatyczne</h3><p>Crawler → opis i źródło → ocena → podobieństwa → rekomendacja → partnerzy → mapa.</p></article>
+        <article class="card"><h3>Scenariusz B — zgłoszenie ręczne</h3><p>Formularz → widoczne etapy analizy → ocena → rekomendacja → partnerzy → administracyjna korekta.</p></article>
+      </div>
+      <p class="links"><b>Demo:</b> maciej-ciemborowicz.eu/inno/ &nbsp;·&nbsp; <b>Panel:</b> admin / hacknation</p>
+      <p class="footer">10 / 10</p>
+    </section>
+  </body>
+</html>

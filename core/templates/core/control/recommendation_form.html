@@ -4,7 +4,7 @@
 <form method="post" class="control-card panel-form recommendation-form">
   {% csrf_token %}
   {% for field in form %}<p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>{% endfor %}
-  <fieldset class="partner-needs"><legend>Twórcy i relacje instytucjonalne</legend><p>Uzupełnij wyłącznie dane, które można publicznie pokazać przy inicjatywie.</p>{% for field in provenance_form %}<p>{{ field.label_tag }}{{ field }}{{ field.errors }}</p>{% endfor %}</fieldset>
+  <fieldset class="partner-needs"><legend>Twórcy i relacje instytucjonalne</legend><p>Uzupełnij wyłącznie dane, które można publicznie pokazać przy inicjatywie.</p>{% for field in provenance_form %}<p class="provenance-field">{{ field.label_tag }}{{ field }}{{ field.errors }}</p>{% endfor %}</fieldset>
   <fieldset class="partner-needs"><legend>Partnerzy i transfer</legend><p>Wybierz potrzeby inicjatywy. Na ich podstawie system pokaże dopasowane organizacje.</p>{{ needs_form.partner_needs }}{{ needs_form.partner_needs.errors }}</fieldset>
   <div class="panel-form__actions"><a class="button button--secondary" href="{% url 'control_recommendations' %}">Wróć do listy</a><button class="button" type="submit">Zapisz rekomendację</button></div>
 </form>

@@ -90,9 +90,7 @@ window.addEventListener("DOMContentLoaded", () => {
         this.map.setMinZoom(this.map.getZoom());
         this.map.setMaxBounds(bounds);
         this.map.options.maxBoundsViscosity = 1;
-        this.map.attributionControl.addAttribution(
-          "Granice Polski: Natural Earth",
-        );
+        this.map.attributionControl.addAttribution("Granice Polski: GADM 4.1");
         const clusters = L.markerClusterGroup({
           maxClusterRadius: 55,
           showCoverageOnHover: false,

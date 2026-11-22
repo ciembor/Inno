@@ -185,6 +185,7 @@ urlpatterns = [
     ),
     path("o-projekcie/", page_views.about, name="about"),
     path("prywatnosc/", page_views.privacy, name="privacy"),
+    path("api/dokumentacja/", page_views.api_documentation, name="api_documentation"),
     path("api/miejscowosci/", api_views.locality_search, name="locality_search"),
     path("api/", api_views.api_docs, name="api_docs"),
     path("api/innowacje/", api_views.innovations, name="api_innovations"),

@@ -129,6 +129,12 @@ def about(request):
 
 
 @never_cache
+def api_documentation(request):
+    """Wyświetla dokumentację publicznego API dla osób integrujących system."""
+    return render(request, "core/api_documentation.html")
+
+
+@never_cache
 def innovation_map(request):
     map_ideas = (
         Idea.objects.select_related("locality")

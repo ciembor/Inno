@@ -304,7 +304,7 @@ Nie edytuj go, aby zmienić działającą konfigurację.
 
 ## Panel administracyjny
 
-Panel: http://localhost:8000/admin/ — startowy login `admin`, hasło `admin`.
+Panel: http://localhost:8000/admin/ — login `admin`, hasło `hacknation`.
 Konto tworzy przy starcie Dockera polecenie `python manage.py bootstrap_admin`.
 Nie nadpisuje istniejącego konta ani zmienionego hasła. Hasło zmienia się przez
 „Zmień hasło” w górnym pasku panelu.

@@ -29,7 +29,6 @@
         <p><label for="{{ schedule_form.voivodeship_code.id_for_label }}">{{ schedule_form.voivodeship_code.label }}</label>{{ schedule_form.voivodeship_code }}{{ schedule_form.voivodeship_code.errors }}</p>
         <div><span>Typy instytucji</span>{{ schedule_form.institution_types }}{{ schedule_form.institution_types.errors }}</div>
       </fieldset>
-      <p>Źródła aktualności oraz ich włączenie ustawisz przy każdej <a href="{% url 'control_institutions' %}">instytucji</a>.</p>
       <div class="crawl-schedule__actions"><button type="submit">Zapisz harmonogram</button></div>
     </form>
     {% if crawl_schedule.enabled and crawl_schedule.next_run_at %}<p>Następne uruchomienie: <strong>{{ crawl_schedule.next_run_at|date:"d.m.Y, H:i" }}</strong>.</p>{% endif %}
@@ -45,7 +44,7 @@
       {% endif %}
     </div>
     <hr class="crawl-status__divider">
-    <p data-status role="status">Ładowanie stanu…</p>
+    <p data-status role="status">{% if latest_run %}Status: {{ latest_run.status }}.{% else %}Nie uruchomiono jeszcze crawlera.{% endif %}</p>
     <progress data-progress value="0" max="1" aria-label="Postęp crawlingu">0%</progress>
     <p data-current></p>
     <dl><div><dt>Przetworzone instytucje</dt><dd data-processed>—</dd></div><div><dt>Dodane innowacje</dt><dd data-created>—</dd></div></dl>
@@ -60,7 +59,7 @@
       <button type="submit">Uruchom crawling NCBR</button>
     </form>
     <hr class="crawl-status__divider">
-    <p data-status role="status">Ładowanie stanu…</p>
+    <p data-status role="status">{% if latest_ncbr_run %}Status: {{ latest_ncbr_run.status }}.{% else %}Nie uruchomiono jeszcze crawlera NCBR.{% endif %}</p>
     <progress data-progress value="0" max="1" aria-label="Postęp crawlowania NCBR">0%</progress>
     <p data-current></p>
     <dl><div><dt>Przetworzone projekty</dt><dd data-processed>—</dd></div><div><dt>Dodane innowacje</dt><dd data-created>—</dd></div></dl>
@@ -68,4 +67,4 @@
     <ul data-events class="crawl-events"></ul>
   </section>
 {% endblock %}
-{% block page_scripts %}<script src="{% static 'core/js/control_crawling.js' %}" defer></script>{% endblock %}
+{% block page_scripts %}<script src="{% static 'core/js/control_crawling.js' %}?v=2" defer></script>{% endblock %}

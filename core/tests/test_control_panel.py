@@ -317,6 +317,9 @@ def test_recommendations_panel_edits_approves_and_regenerates(admin_client, monk
     assert "Twórcy i pochodzenie" in detail
     assert "Instytucja źródłowa · Współtwórca" in detail
     assert "Instytucja wdrażająca" in detail
+    edit_page = admin_client.get(edit_url).content.decode()
+    assert "Institution object" not in edit_page
+    assert 'class="provenance-field"' in edit_page
     queued = []
     monkeypatch.setattr("core.control_views.recommend_idea.delay", queued.append)
     response = admin_client.post(reverse("control_recommendation_regenerate", args=[idea.pk]))
@@ -730,7 +733,7 @@ def test_crawling_page_starts_job_and_returns_live_status(admin_client, monkeypa
     assert run.institutions_total == 1
     page = admin_client.get(url).content.decode()
     assert "Zakres crawlowania" in page
-    assert "Źródła aktualności oraz ich włączenie" in page
+    assert "Źródła aktualności oraz ich włączenie" not in page
     assert admin_client.post(url).status_code == 200
     InstitutionImportEvent.objects.create(run=run, message="Skanowanie: Szkoła")
     run.status = "running"
@@ -764,6 +767,8 @@ def test_ncbr_crawling_has_an_independent_run_and_live_status(admin_client, monk
 
     page = admin_client.get(reverse("control_crawling")).content.decode()
     assert "Crawling NCBR" in page
+    assert "Nie uruchomiono jeszcze crawlera NCBR." in page
+    assert 'core/js/control_crawling.js?v=2' in page
     assert admin_client.get(reverse("control_ncbr_crawling_status")).json() == {"run": None}
 
     response = admin_client.post(reverse("control_ncbr_crawling"))

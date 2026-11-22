@@ -164,6 +164,7 @@ def test_idea_submission_journey_uses_locality_lookup_and_persists_the_idea(clie
     assert submission.json()["workflow_token"]
     idea = Idea.objects.get(name="Mobilna pracownia nauki")
     assert idea.locality == locality
+    assert idea.creator_name == "Anna Kowalska"
 
 
 @pytest.mark.django_db
@@ -254,4 +255,7 @@ def test_map_page_and_its_json_contract_render_geolocated_idea(client):
         }
     ]
     assert boundary.json()["features"][0]["id"] == "POL"
-    assert boundary.json()["features"][0]["geometry"]["type"] == "Polygon"
+    assert boundary.json()["features"][0]["geometry"]["type"] == "MultiPolygon"
+    assert boundary.json()["features"][0]["properties"]["source"] == (
+        "GADM 4.1 — granica lądowa Polski"
+    )
