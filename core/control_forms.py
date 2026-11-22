@@ -23,6 +23,7 @@ from core.models import (
     ScoringCalibration,
     ScoringCalibrationExample,
 )
+from core.security import uses_initial_admin_password
 from core.services.prompt_registry import PromptDefinition
 from core.services.teryt import VOIVODESHIP_NAMES
 
@@ -54,6 +55,8 @@ class CredentialsForm(forms.Form):
             self.add_error("password2", "Hasła muszą być takie same.")
         elif password1:
             validate_password(password1, self.user)
+        elif uses_initial_admin_password(self.user):
+            self.add_error("password1", "Ustaw nowe hasło przed zmianą danych logowania.")
         return cleaned
 
     def save(self):

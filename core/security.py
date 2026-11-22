@@ -11,9 +11,8 @@ from django.shortcuts import redirect
 
 
 def client_ip(request) -> str:
-    """Zwraca pierwszy adres klienta przekazany przez zaufany reverse proxy."""
-    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
-    return forwarded.split(",", 1)[0].strip() if forwarded else request.META.get("REMOTE_ADDR", "")
+    """Zwraca adres przekazany przez lokalny, zaufany reverse proxy."""
+    return request.META.get("HTTP_X_REAL_IP", request.META.get("REMOTE_ADDR", ""))
 
 
 def request_limit_key(scope: str, identifier: str) -> str:
@@ -74,7 +73,7 @@ class SecurityHeadersMiddleware:
 
 
 class EnforceInitialAdminPasswordChangeMiddleware:
-    """Nie pozwala używać panelu produkcyjnego z publicznym admin/admin."""
+    """Wymaga zmiany hasła inicjalnego niezależnie od nazwy użytkownika."""
 
     allowed_paths = {"/administracja/dane-logowania/", "/administracja/wyloguj/"}
 
@@ -85,9 +84,17 @@ class EnforceInitialAdminPasswordChangeMiddleware:
         if (
             settings.ENFORCE_INITIAL_ADMIN_PASSWORD_CHANGE
             and request.user.is_authenticated
-            and request.user.username == "admin"
-            and request.user.check_password("admin")
-            and request.path not in self.allowed_paths
+            and uses_initial_admin_password(request.user)
+            and request.path_info not in self.allowed_paths
         ):
             return redirect("control_credentials")
         return self.get_response(request)
+
+
+def uses_initial_admin_password(user) -> bool:
+    """Określa, czy konto nadal korzysta z sekretu startowego z otoczenia."""
+    return bool(
+        settings.INITIAL_ADMIN_PASSWORD
+        and user.is_superuser
+        and user.check_password(settings.INITIAL_ADMIN_PASSWORD)
+    )

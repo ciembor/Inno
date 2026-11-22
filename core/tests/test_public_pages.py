@@ -167,7 +167,7 @@ def test_idea_form_page_is_available(client):
     assert "core/css/pages/submit_idea.css" in content
     assert '<form @submit.prevent="submitIdea" :aria-busy="String(submitting)">' in content
     assert ':disabled="submitting"' in content
-    assert 'v-cloak v-if="submitting" class="workflow"' in content
+    assert 'v-cloak v-if="submitting || workflow" class="workflow"' in content
     assert 'autocomplete="name"' in content
     assert 'autocomplete="email"' in content
     assert 'role="combobox"' in content
@@ -276,9 +276,14 @@ def test_valid_idea_submission_runs_each_blocking_workflow_step(client, monkeypa
     monkeypatch.setattr(
         "core.page_views.classify_idea_tags", lambda _: (_ for _ in ()).throw(RuntimeError)
     )
-    assert client.post(
+    failed_step = client.post(
         step_url, {"action": "classify", "workflow_token": token}
-    ).status_code == 503
+    )
+    assert failed_step.status_code == 503
+    assert failed_step.json()["error"] == (
+        "Zgłoszenie jest zapisane, ale ten etap nie został ukończony. "
+        "Wznów ocenę, aby spróbować ponownie."
+    )
 
 
 @pytest.mark.django_db

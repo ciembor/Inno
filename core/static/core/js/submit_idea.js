@@ -14,22 +14,26 @@ window.addEventListener("DOMContentLoaded", () => {
       content: "",
       submitting: false,
       error: "",
+      workflow: null,
       privacyAccepted: false,
       steps: [
         {
           action: "score",
           label: "Oceniamy potencjał innowacji",
           status: "waiting",
+          message: "czeka",
         },
         {
           action: "recommend",
           label: "Przygotowujemy ścieżkę rozwoju i partnerów",
           status: "waiting",
+          message: "czeka",
         },
         {
           action: "classify",
           label: "Szukamy podobnych inicjatyw",
           status: "waiting",
+          message: "czeka",
         },
       ],
     }),
@@ -81,70 +85,97 @@ window.addEventListener("DOMContentLoaded", () => {
         this.localityQuery = `${locality.name}, ${locality.county}`;
         this.closeLocalities();
       },
+      wait(milliseconds) {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+      },
+      async completeStep(step, token) {
+        let lastError = "";
+        for (let attempt = 1; attempt <= 3; attempt += 1) {
+          step.status = "active";
+          step.message =
+            attempt === 1 ? "w toku…" : `ponawiamy — próba ${attempt} z 3…`;
+          try {
+            const response = await fetch(
+              `${root.dataset.submitUrl}${this.workflow.id}/etap/`,
+              {
+                method: "POST",
+                headers: { "X-CSRFToken": token, Accept: "application/json" },
+                body: new URLSearchParams({
+                  action: step.action,
+                  workflow_token: this.workflow.workflow_token,
+                }),
+              },
+            );
+            const data = await response.json();
+            if (response.ok) return true;
+            lastError = data.error || "Etap nie został ukończony.";
+          } catch {
+            lastError = "Połączenie z usługą przetwarzania zostało przerwane.";
+          }
+          if (attempt < 3) {
+            const delay = attempt * 2000;
+            step.message = `ponowimy za ${delay / 1000} s — próba ${attempt + 1} z 3`;
+            await this.wait(delay);
+          }
+        }
+        step.status = "waiting";
+        step.message = "wymaga wznowienia";
+        this.error = `${lastError} Możesz wznowić ocenę — gotowe etapy nie zostaną powtórzone.`;
+        return false;
+      },
       async submitIdea() {
         if (this.submitting) return;
         this.error = "";
         if (
-          !this.name ||
-          !this.submitterName ||
-          !this.email ||
-          !this.localityId ||
-          !this.content.trim() ||
-          !this.privacyAccepted
+          !this.workflow &&
+          (!this.name ||
+            !this.submitterName ||
+            !this.email ||
+            !this.localityId ||
+            !this.content.trim() ||
+            !this.privacyAccepted)
         ) {
           this.error =
             "Uzupełnij wszystkie wymagane pola i wybierz miejscowość z listy.";
           return;
         }
         this.submitting = true;
-        const body = new URLSearchParams({
-          name: this.name,
-          submitter_name: this.submitterName,
-          email: this.email,
-          locality: this.localityId,
-          content: this.content,
-          privacy_accepted: this.privacyAccepted ? "on" : "",
-        });
         const token = document.querySelector(
           "[name=csrfmiddlewaretoken]",
         ).value;
         try {
-          const response = await fetch(root.dataset.submitUrl, {
-            method: "POST",
-            headers: { "X-CSRFToken": token, Accept: "application/json" },
-            body,
-          });
-          const data = await response.json();
-          if (!response.ok) {
-            this.error = Object.values(data.errors).flat().join(" ");
-            this.submitting = false;
-            return;
-          }
-          for (const step of this.steps) {
-            step.status = "active";
-            const workflowResponse = await fetch(
-              `${root.dataset.submitUrl}${data.id}/etap/`,
-              {
-                method: "POST",
-                headers: { "X-CSRFToken": token, Accept: "application/json" },
-                body: new URLSearchParams({
-                  action: step.action,
-                  workflow_token: data.workflow_token,
-                }),
-              },
-            );
-            const workflowData = await workflowResponse.json();
-            if (!workflowResponse.ok) {
-              this.error = workflowData.error;
-              this.submitting = false;
+          if (!this.workflow) {
+            const response = await fetch(root.dataset.submitUrl, {
+              method: "POST",
+              headers: { "X-CSRFToken": token, Accept: "application/json" },
+              body: new URLSearchParams({
+                name: this.name,
+                submitter_name: this.submitterName,
+                email: this.email,
+                locality: this.localityId,
+                content: this.content,
+                privacy_accepted: this.privacyAccepted ? "on" : "",
+              }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+              this.error = Object.values(data.errors).flat().join(" ");
               return;
             }
-            step.status = "completed";
+            this.workflow = data;
           }
-          window.location.assign(data.redirect_url);
+          for (const step of this.steps) {
+            if (step.status === "completed") continue;
+            if (!(await this.completeStep(step, token))) return;
+            step.status = "completed";
+            step.message = "gotowe";
+          }
+          window.location.assign(this.workflow.redirect_url);
         } catch {
-          this.error =
-            "Nie udało się ocenić pomysłu. Spróbuj ponownie za chwilę.";
+          this.error = this.workflow
+            ? "Zgłoszenie zapisano, ale połączenie podczas przetwarzania zostało przerwane. Wznów ocenę, aby kontynuować od bieżącego etapu."
+            : "Nie można było zapisać zgłoszenia — sprawdź połączenie z internetem i wyślij formularz ponownie.";
+        } finally {
           this.submitting = false;
         }
       },

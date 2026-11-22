@@ -220,6 +220,17 @@ def test_credentials_form_and_view_changes_username_and_password(admin_client):
 
 
 @pytest.mark.django_db
+def test_credentials_form_requires_a_new_password_for_an_initial_admin():
+    user = get_user_model().objects.create_superuser("operator", password="initial-secret")
+
+    with override_settings(INITIAL_ADMIN_PASSWORD="initial-secret"):
+        form = CredentialsForm(user, {"username": "renamed", "password1": "", "password2": ""})
+        assert not form.is_valid()
+
+    assert "Ustaw nowe hasło" in str(form.errors)
+
+
+@pytest.mark.django_db
 def test_prompt_panel_lists_and_saves_each_prompt_individually(admin_client):
     url = reverse("control_prompts")
     initial_page = admin_client.get(url).content.decode()

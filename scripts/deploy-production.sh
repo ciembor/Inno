@@ -16,7 +16,8 @@ if [[ "$RUN_QUALITY" == "1" ]]; then
   make quality
 fi
 
-rsync -az --delete \
+# Do not remove remote files merely because they are absent from a dirty local tree.
+rsync -az \
   --exclude '.env' \
   --exclude '.git/' \
   --exclude '.venv/' \
@@ -75,6 +76,11 @@ fi
 
 if ! grep -q '^DJANGO_CACHE_URL=' "$APP_DIR/.env"; then
   printf '\nDJANGO_CACHE_URL=redis://127.0.0.1:6379/4\n' >> "$APP_DIR/.env"
+fi
+
+if ! grep -q '^DJANGO_INITIAL_ADMIN_PASSWORD=' "$APP_DIR/.env"; then
+  initial_admin_password="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
+  printf '\nDJANGO_INITIAL_ADMIN_USERNAME=admin\nDJANGO_INITIAL_ADMIN_PASSWORD=%s\n' "$initial_admin_password" >> "$APP_DIR/.env"
 fi
 
 python3 -m venv "$APP_DIR/.venv"

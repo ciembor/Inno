@@ -2,7 +2,8 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.management import call_command
+from django.core.management import CommandError, call_command
+from django.test import override_settings
 from django.urls import reverse
 
 from core.models import Institution, InstitutionNewsSource
@@ -34,6 +35,32 @@ def test_bootstrap_password_change_survives_repeated_bootstrap(client):
     user = get_user_model().objects.get(username="admin")
     assert user.check_password("NewPass-12345")
     assert user.is_superuser and user.is_staff
+
+
+@pytest.mark.django_db
+def test_bootstrap_replaces_the_old_public_password_and_requires_a_configured_secret():
+    user = get_user_model().objects.create_superuser("operator", password="admin")
+
+    with override_settings(INITIAL_ADMIN_PASSWORD="initial-secret"):
+        call_command("bootstrap_admin")
+
+    user.refresh_from_db()
+    assert user.check_password("initial-secret")
+
+    user.set_password("admin")
+    user.save(update_fields=["password"])
+    with (
+        override_settings(INITIAL_ADMIN_PASSWORD=""),
+        pytest.raises(CommandError, match="DJANGO_INITIAL_ADMIN_PASSWORD"),
+    ):
+        call_command("bootstrap_admin")
+
+    user.delete()
+    with (
+        override_settings(INITIAL_ADMIN_PASSWORD=""),
+        pytest.raises(CommandError, match="DJANGO_INITIAL_ADMIN_PASSWORD"),
+    ):
+        call_command("bootstrap_admin")
 
 
 @pytest.mark.django_db

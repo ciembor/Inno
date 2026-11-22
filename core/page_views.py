@@ -1,5 +1,6 @@
 """Widoki stron HTML Innoradar."""
 
+import logging
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -22,6 +23,8 @@ from .services.idea_similarity import similar_ideas
 from .services.partner_matching import recommended_partners
 from .services.partner_needs import add_default_partner_needs
 from .tasks import _score_idea
+
+logger = logging.getLogger(__name__)
 
 
 @never_cache
@@ -103,8 +106,15 @@ def submit_idea_step(request, idea_id):
         else:
             return JsonResponse({"error": "Nieznany etap przetwarzania."}, status=400)
     except Exception:
+        logger.exception("Nie udało się wykonać etapu %s dla zgłoszenia %s.", action, idea.pk)
         return JsonResponse(
-            {"error": "Nie udało się ukończyć etapu. Spróbuj ponownie za chwilę."}, status=503
+            {
+                "error": (
+                    "Zgłoszenie jest zapisane, ale ten etap nie został ukończony. "
+                    "Wznów ocenę, aby spróbować ponownie."
+                )
+            },
+            status=503,
         )
     return JsonResponse({"status": "completed", "action": action})
 

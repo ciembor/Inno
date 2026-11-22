@@ -49,7 +49,13 @@ from core.models import (
     ScoringCalibration,
     ScoringCalibrationExample,
 )
-from core.security import clear_attempts, client_ip, consume_attempt, is_rate_limited
+from core.security import (
+    clear_attempts,
+    client_ip,
+    consume_attempt,
+    is_rate_limited,
+    uses_initial_admin_password,
+)
 from core.services.crawl_schedule import (
     configured_institution_types,
     configured_institutions,
@@ -74,8 +80,7 @@ def panel_login(request):
         clear_attempts("control-login", ip_address)
         if (
             settings.ENFORCE_INITIAL_ADMIN_PASSWORD_CHANGE
-            and request.user.username == "admin"
-            and request.user.check_password("admin")
+            and uses_initial_admin_password(request.user)
         ):
             messages.warning(request, "Zmień domyślne hasło przed dalszą pracą w panelu.")
             return redirect("control_credentials")
